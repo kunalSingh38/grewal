@@ -16,17 +16,13 @@ import 'package:screenshot/screenshot.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 class CreateQuestion extends StatefulWidget {
-
-
   @override
   _ChangePageState createState() => _ChangePageState();
 }
 
 class _ChangePageState extends State<CreateQuestion> {
-  Future<dynamic> _chapterData;
+  Future<dynamic>? _chapterData;
   bool _loading = false;
   var access_token;
   var mcqController = TextEditingController(text: "0");
@@ -46,38 +42,38 @@ class _ChangePageState extends State<CreateQuestion> {
   String email_id = '';
   String order_id = "";
   String profile_image = '';
-  List<bool> isChecked = new List();
-  List<bool> isChecked1 = new List();
+  List<bool> isChecked = [];
+  List<bool> isChecked1 = [];
   var _value = 0.0;
   var _value1 = 0.0;
   List<String> list = [];
   String chapter_id = "";
   String chapter_name = "";
   String type = "";
-  String value1="0";
-  String value2="0";
+  String value1 = "0";
+  String value2 = "0";
 
-  var _type5="";
-  var _type="";
-  var _type3="";
-  String selectedRegion6 ;
-  String selectedRegion;
+  var _type5 = "";
+  var _type = "";
+  var _type3 = "";
+  String? selectedRegion6;
+  String? selectedRegion;
   String selectedRegion3 = "";
   String catData5 = "";
   String catData = "";
   String catData3 = "";
-  Future _batchData;
-  Future _boardData;
-  Future _classData;
+  Future? _batchData;
+  Future? _boardData;
+  Future? _classData;
 
-  int mcq_total=0;
-  int detail_total=0;
-  int mcq1=0;
-  int mcq2=0;
-  int mcq3=0;
-  int detail1=0;
-  int detail2=0;
-  int detail3=0;
+  int mcq_total = 0;
+  int detail_total = 0;
+  int mcq1 = 0;
+  int mcq2 = 0;
+  int mcq3 = 0;
+  int detail1 = 0;
+  int detail2 = 0;
+  int detail3 = 0;
   @override
   void initState() {
     super.initState();
@@ -91,35 +87,33 @@ class _ChangePageState extends State<CreateQuestion> {
         _mobile = prefs.getString('mobile_no').toString();
         user_id = prefs.getString('user_id').toString();
         profile_image = prefs.getString('profile_image').toString();
-
-
       });
     });
   }
+
   var result;
 
   Widget _emptyOrders() {
     return Center(
       child: Container(
           child: Text(
-            'NO RECORDS FOUND!',
-            style:
+        'NO RECORDS FOUND!',
+        style:
             TextStyle(fontSize: 20, letterSpacing: 1, color: Color(0xff2E2A4A)),
-          )),
+      )),
     );
   }
+
   TextStyle normalText2 = GoogleFonts.montserrat(
       fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
   TextStyle normalText1 = GoogleFonts.montserrat(
       fontSize: 13, fontWeight: FontWeight.w300, color: Color(0xff22215B));
   Widget chapterList(Size deviceSize) {
     return Column(
-
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
             width: deviceSize.width,
-
             decoration: new BoxDecoration(
                 color: Colors.white,
                 borderRadius: new BorderRadius.only(
@@ -129,129 +123,118 @@ class _ChangePageState extends State<CreateQuestion> {
                     topRight: const Radius.circular(10.0))),
             margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
             padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
-            child:
-                  Column(children: [
-                    Container(
-                      child: Text("No. of Questions", style: normalText6),
+            child: Column(children: [
+              Container(
+                child: Text("No. of Questions", style: normalText6),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(left: 5, right: 5),
+                child: Row(children: <Widget>[
+                  Container(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.09,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff567DF4),
+                          Color(0xff567DF4),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(3),
                     ),
-                    SizedBox(
-                      height: 10,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '0',
+                          // jsonDecode(snapshot.data.toString())['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(left: 5,right: 5),
-                      child: Row(
-                          children: <Widget>[
-                            Container(
-                              height: 30,
-                              width: MediaQuery.of(context).size.width * 0.09,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xff567DF4),
-                                    Color(0xff567DF4),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    '0',
-                                    // snapshot.data['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
-                                    style: TextStyle(
-                                        color:  Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.68,
-                              child: SliderTheme(
-                                data: SliderTheme.of(context).copyWith(
-                                  activeTrackColor: Color(0xFFe7bf2e),
-                                  inactiveTrackColor:  Color(0xff567DF4),
-                                  trackShape: RoundedRectSliderTrackShape(),
-                                  trackHeight: 4.0,
-                                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                                  thumbColor: Color(0xFFe7bf2e),
-                                  overlayColor: Colors.red.withAlpha(32),
-                                  overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-                                  tickMarkShape: RoundSliderTickMarkShape(),
-                                  activeTickMarkColor: Color(0xFFe7bf2e),
-                                  inactiveTickMarkColor:Color(0xFFe7bf2e),
-                                  valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-                                  valueIndicatorColor: Color(0xFFe7bf2e),
-                                  valueIndicatorTextStyle: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                child: Slider(
-                                  value: _value,
-                                  min: 0,
-                                  max: 100,
-                                  divisions: 10,
-                                  label: '$_value',
-                                  onChanged: (value) {
-                                    setState(
-                                          () {
-                                        _value = value;
-
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 30,
-                              width: MediaQuery.of(context).size.width * 0.09,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-
-                                    Color(0xff567DF4),
-                                    Color(0xff567DF4),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    "100",
-                                    // snapshot.data['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
-                                    style: TextStyle(
-                                        color:  Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ]
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.68,
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: Color(0xFFe7bf2e),
+                        inactiveTrackColor: Color(0xff567DF4),
+                        trackShape: RoundedRectSliderTrackShape(),
+                        trackHeight: 4.0,
+                        thumbShape:
+                            RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                        thumbColor: Color(0xFFe7bf2e),
+                        overlayColor: Colors.red.withAlpha(32),
+                        overlayShape:
+                            RoundSliderOverlayShape(overlayRadius: 28.0),
+                        tickMarkShape: RoundSliderTickMarkShape(),
+                        activeTickMarkColor: Color(0xFFe7bf2e),
+                        inactiveTickMarkColor: Color(0xFFe7bf2e),
+                        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+                        valueIndicatorColor: Color(0xFFe7bf2e),
+                        valueIndicatorTextStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      child: Slider(
+                        value: _value,
+                        min: 0,
+                        max: 100,
+                        divisions: 10,
+                        label: '$_value',
+                        onChanged: (value) {
+                          setState(
+                            () {
+                              _value = value;
+                            },
+                          );
+                        },
                       ),
                     ),
-
-                  ]),
-
+                  ),
+                  Container(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.09,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff567DF4),
+                          Color(0xff567DF4),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "100",
+                          // jsonDecode(snapshot.data.toString())['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
+            ]),
           ),
-
-
           Container(
             width: deviceSize.width,
-
             decoration: new BoxDecoration(
                 color: Colors.white,
                 borderRadius: new BorderRadius.only(
@@ -261,127 +244,118 @@ class _ChangePageState extends State<CreateQuestion> {
                     topRight: const Radius.circular(10.0))),
             margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
             padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
-            child:
-            Column(children: [
+            child: Column(children: [
               Container(
                 child: Text("MCQ / Detailed %", style: normalText6),
               ),
               SizedBox(
                 height: 10,
               ),
-
               Container(
                 width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.only(left: 5,right: 5),
-                child: Row(
-                    children: <Widget>[
-                      Container(
-                        height: 30,
-                        width: MediaQuery.of(context).size.width * 0.09,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0xff567DF4),
-                              Color(0xff567DF4),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              '0',
-                              // snapshot.data['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
-                              style: TextStyle(
-                                  color:  Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            )
-                          ],
-                        ),
+                margin: EdgeInsets.only(left: 5, right: 5),
+                child: Row(children: <Widget>[
+                  Container(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.09,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff567DF4),
+                          Color(0xff567DF4),
+                        ],
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.68,
-                        child: SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: Color(0xFFe7bf2e),
-                            inactiveTrackColor:  Color(0xff567DF4),
-                            trackShape: RoundedRectSliderTrackShape(),
-                            trackHeight: 4.0,
-                            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                            thumbColor: Color(0xFFe7bf2e),
-                            overlayColor: Colors.red.withAlpha(32),
-                            overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-                            tickMarkShape: RoundSliderTickMarkShape(),
-                            activeTickMarkColor: Color(0xFFe7bf2e),
-                            inactiveTickMarkColor:Color(0xFFe7bf2e),
-                            valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-                            valueIndicatorColor: Color(0xFFe7bf2e),
-                            valueIndicatorTextStyle: TextStyle(
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '0',
+                          // jsonDecode(snapshot.data.toString())['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
+                          style: TextStyle(
                               color: Colors.white,
-                            ),
-                          ),
-                          child: Slider(
-                            value: _value1,
-                            min: 0,
-                            max: 100,
-                            divisions: 100,
-                            label: '$_value1',
-                            onChanged: (value) {
-                              setState(
-                                    () {
-                                  _value1 = value;
-
-                                },
-                              );
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.68,
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: Color(0xFFe7bf2e),
+                        inactiveTrackColor: Color(0xff567DF4),
+                        trackShape: RoundedRectSliderTrackShape(),
+                        trackHeight: 4.0,
+                        thumbShape:
+                            RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                        thumbColor: Color(0xFFe7bf2e),
+                        overlayColor: Colors.red.withAlpha(32),
+                        overlayShape:
+                            RoundSliderOverlayShape(overlayRadius: 28.0),
+                        tickMarkShape: RoundSliderTickMarkShape(),
+                        activeTickMarkColor: Color(0xFFe7bf2e),
+                        inactiveTickMarkColor: Color(0xFFe7bf2e),
+                        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+                        valueIndicatorColor: Color(0xFFe7bf2e),
+                        valueIndicatorTextStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      child: Slider(
+                        value: _value1,
+                        min: 0,
+                        max: 100,
+                        divisions: 100,
+                        label: '$_value1',
+                        onChanged: (value) {
+                          setState(
+                            () {
+                              _value1 = value;
                             },
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                      Container(
-                        height: 30,
-                        width: MediaQuery.of(context).size.width * 0.09,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-
-                              Color(0xff567DF4),
-                              Color(0xff567DF4),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "100",
-                              // snapshot.data['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
-                              style: TextStyle(
-                                  color:  Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            )
-                          ],
-                        ),
+                    ),
+                  ),
+                  Container(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.09,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff567DF4),
+                          Color(0xff567DF4),
+                        ],
                       ),
-                    ]
-                ),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "100",
+                          // jsonDecode(snapshot.data.toString())['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                ]),
               ),
-
             ]),
-
           ),
           Container(
             width: deviceSize.width,
-
             decoration: new BoxDecoration(
                 color: Colors.white,
                 borderRadius: new BorderRadius.only(
@@ -391,20 +365,16 @@ class _ChangePageState extends State<CreateQuestion> {
                     topRight: const Radius.circular(10.0))),
             margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
             padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
-            child:
-            Column(children: [
+            child: Column(children: [
               Container(
                 child: Text("Select Topic", style: normalText6),
               ),
               SizedBox(
                 height: 10,
               ),
-
               Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: 6.0, horizontal: 10),
-                margin: EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -416,14 +386,11 @@ class _ChangePageState extends State<CreateQuestion> {
                 ),
                 child: Column(children: <Widget>[
                   Row(children: <Widget>[
-
                     Expanded(
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Container(
-
-                          child: Text(
-                              "Guarantee of Profit",
+                          child: Text("Guarantee of Profit",
                               maxLines: 2,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
@@ -436,11 +403,9 @@ class _ChangePageState extends State<CreateQuestion> {
                     height: 8.0,
                   ),
                   Row(children: <Widget>[
-
                     Expanded(
                       child: Container(
-                        child: Text("10 MCQ/ 12 Detailed",
-                            style: normalText1),
+                        child: Text("10 MCQ/ 12 Detailed", style: normalText1),
                       ),
                     ),
                     Expanded(
@@ -451,31 +416,28 @@ class _ChangePageState extends State<CreateQuestion> {
                             margin: const EdgeInsets.only(right: 8.0, left: 5),
                             child: TextFormField(
                                 controller: mcqController,
-
                                 keyboardType: TextInputType.number,
                                 cursorColor: Color(0xff000000),
-                                textCapitalization: TextCapitalization.sentences,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 validator: (value) {
-
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  mcqController.text = value;
+                                  mcqController.text = value!;
                                 },
                                 onChanged: (value) {
-
                                   setState(() {
-                                    mcq1=int.parse(mcqController.text);
-                                    mcq2=int.parse(mcqController2.text);
-                                    mcq3=int.parse(mcqController3.text);
-                                    mcq_total= mcq1+mcq2+mcq3;
+                                    mcq1 = int.parse(mcqController.text);
+                                    mcq2 = int.parse(mcqController2.text);
+                                    mcq3 = int.parse(mcqController3.text);
+                                    mcq_total = mcq1 + mcq2 + mcq3;
                                   });
-
                                 },
                                 decoration: InputDecoration(
-
                                     isDense: true,
-                                    contentPadding: EdgeInsets.fromLTRB(10, 20, 30, 0),
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(10, 20, 30, 0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5.0),
                                       borderSide: BorderSide(
@@ -501,22 +463,16 @@ class _ChangePageState extends State<CreateQuestion> {
                                       ),
                                     ),
                                     counterText: "",
-
-                                    hintStyle:
-                                    TextStyle(color: Color(0xffBBBFC3), fontSize: 16),
+                                    hintStyle: TextStyle(
+                                        color: Color(0xffBBBFC3), fontSize: 16),
                                     fillColor: Color(0xfff9f9fb),
                                     filled: true)),
                           ),
-
                           SizedBox(height: 5),
-                          Text(
-                              "MCQ",
-                              style: normalText1
-                          ),
+                          Text("MCQ", style: normalText1),
                         ],
                       ),
                     ),
-
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -525,32 +481,28 @@ class _ChangePageState extends State<CreateQuestion> {
                             margin: const EdgeInsets.only(right: 8.0, left: 5),
                             child: TextFormField(
                                 controller: detailController,
-
                                 keyboardType: TextInputType.number,
                                 cursorColor: Color(0xff000000),
-                                textCapitalization: TextCapitalization.sentences,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 validator: (value) {
-
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  detailController.text = value;
+                                  detailController.text = value!;
                                 },
                                 onChanged: (value) {
-
-
-                                    setState(() {
-                                      detail1=int.parse(mcqController.text);
-                                      detail2=int.parse(mcqController2.text);
-                                      detail3=int.parse(mcqController3.text);
-                                      detail_total= detail1+detail2+detail3;
-                                    });
-
+                                  setState(() {
+                                    detail1 = int.parse(mcqController.text);
+                                    detail2 = int.parse(mcqController2.text);
+                                    detail3 = int.parse(mcqController3.text);
+                                    detail_total = detail1 + detail2 + detail3;
+                                  });
                                 },
                                 decoration: InputDecoration(
-
                                     isDense: true,
-                                    contentPadding: EdgeInsets.fromLTRB(10, 20, 20, 0),
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(10, 20, 20, 0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5.0),
                                       borderSide: BorderSide(
@@ -576,9 +528,8 @@ class _ChangePageState extends State<CreateQuestion> {
                                       ),
                                     ),
                                     counterText: "",
-
-                                    hintStyle:
-                                    TextStyle(color: Color(0xffBBBFC3), fontSize: 16),
+                                    hintStyle: TextStyle(
+                                        color: Color(0xffBBBFC3), fontSize: 16),
                                     fillColor: Color(0xfff9f9fb),
                                     filled: true)),
                           ),
@@ -594,10 +545,8 @@ class _ChangePageState extends State<CreateQuestion> {
                 ]),
               ),
               Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: 6.0, horizontal: 10),
-                margin: EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -609,14 +558,11 @@ class _ChangePageState extends State<CreateQuestion> {
                 ),
                 child: Column(children: <Widget>[
                   Row(children: <Widget>[
-
                     Expanded(
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Container(
-
-                          child: Text(
-                              "Partners Capital Account",
+                          child: Text("Partners Capital Account",
                               maxLines: 2,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
@@ -629,11 +575,9 @@ class _ChangePageState extends State<CreateQuestion> {
                     height: 8.0,
                   ),
                   Row(children: <Widget>[
-
                     Expanded(
                       child: Container(
-                        child: Text("5 MCQ/ 6 Detailed",
-                            style: normalText1),
+                        child: Text("5 MCQ/ 6 Detailed", style: normalText1),
                       ),
                     ),
                     Expanded(
@@ -644,30 +588,28 @@ class _ChangePageState extends State<CreateQuestion> {
                             margin: const EdgeInsets.only(right: 8.0, left: 5),
                             child: TextFormField(
                                 controller: mcqController2,
-
                                 keyboardType: TextInputType.number,
                                 cursorColor: Color(0xff000000),
-                                textCapitalization: TextCapitalization.sentences,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 validator: (value) {
-
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  mcqController2.text = value;
+                                  mcqController2.text = value!;
                                 },
                                 onChanged: (value) {
                                   setState(() {
-                                    mcq1=int.parse(mcqController.text);
-                                    mcq2=int.parse(mcqController2.text);
-                                    mcq3=int.parse(mcqController3.text);
-                                    mcq_total= mcq1+mcq2+mcq3;
+                                    mcq1 = int.parse(mcqController.text);
+                                    mcq2 = int.parse(mcqController2.text);
+                                    mcq3 = int.parse(mcqController3.text);
+                                    mcq_total = mcq1 + mcq2 + mcq3;
                                   });
-
                                 },
                                 decoration: InputDecoration(
-
                                     isDense: true,
-                                    contentPadding: EdgeInsets.fromLTRB(10, 20, 30, 0),
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(10, 20, 30, 0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5.0),
                                       borderSide: BorderSide(
@@ -693,22 +635,16 @@ class _ChangePageState extends State<CreateQuestion> {
                                       ),
                                     ),
                                     counterText: "",
-
-                                    hintStyle:
-                                    TextStyle(color: Color(0xffBBBFC3), fontSize: 16),
+                                    hintStyle: TextStyle(
+                                        color: Color(0xffBBBFC3), fontSize: 16),
                                     fillColor: Color(0xfff9f9fb),
                                     filled: true)),
                           ),
-
                           SizedBox(height: 5),
-                          Text(
-                              "MCQ",
-                              style: normalText1
-                          ),
+                          Text("MCQ", style: normalText1),
                         ],
                       ),
                     ),
-
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -720,28 +656,26 @@ class _ChangePageState extends State<CreateQuestion> {
                                 maxLength: 10,
                                 keyboardType: TextInputType.number,
                                 cursorColor: Color(0xff000000),
-                                textCapitalization: TextCapitalization.sentences,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 validator: (value) {
-
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  detailController2.text = value;
+                                  detailController2.text = value!;
                                 },
-
                                 onChanged: (value) {
                                   setState(() {
-                                    detail1=int.parse(mcqController.text);
-                                    detail2=int.parse(mcqController2.text);
-                                    detail3=int.parse(mcqController3.text);
-                                    detail_total= detail1+detail2+detail3;
+                                    detail1 = int.parse(mcqController.text);
+                                    detail2 = int.parse(mcqController2.text);
+                                    detail3 = int.parse(mcqController3.text);
+                                    detail_total = detail1 + detail2 + detail3;
                                   });
-
                                 },
                                 decoration: InputDecoration(
-
                                     isDense: true,
-                                    contentPadding: EdgeInsets.fromLTRB(10, 20, 20, 0),
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(10, 20, 20, 0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5.0),
                                       borderSide: BorderSide(
@@ -767,9 +701,8 @@ class _ChangePageState extends State<CreateQuestion> {
                                       ),
                                     ),
                                     counterText: "",
-
-                                    hintStyle:
-                                    TextStyle(color: Color(0xffBBBFC3), fontSize: 16),
+                                    hintStyle: TextStyle(
+                                        color: Color(0xffBBBFC3), fontSize: 16),
                                     fillColor: Color(0xfff9f9fb),
                                     filled: true)),
                           ),
@@ -785,10 +718,8 @@ class _ChangePageState extends State<CreateQuestion> {
                 ]),
               ),
               Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: 6.0, horizontal: 10),
-                margin: EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -800,14 +731,11 @@ class _ChangePageState extends State<CreateQuestion> {
                 ),
                 child: Column(children: <Widget>[
                   Row(children: <Widget>[
-
                     Expanded(
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Container(
-
-                          child: Text(
-                              "Remuneration to Partners",
+                          child: Text("Remuneration to Partners",
                               maxLines: 2,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
@@ -820,11 +748,9 @@ class _ChangePageState extends State<CreateQuestion> {
                     height: 8.0,
                   ),
                   Row(children: <Widget>[
-
                     Expanded(
                       child: Container(
-                        child: Text("8 MCQ/ 8 Detailed",
-                            style: normalText1),
+                        child: Text("8 MCQ/ 8 Detailed", style: normalText1),
                       ),
                     ),
                     Expanded(
@@ -837,27 +763,26 @@ class _ChangePageState extends State<CreateQuestion> {
                                 controller: mcqController3,
                                 keyboardType: TextInputType.number,
                                 cursorColor: Color(0xff000000),
-                                textCapitalization: TextCapitalization.sentences,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 validator: (value) {
-
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  mcqController.text = value;
+                                  mcqController.text = value!;
                                 },
                                 onChanged: (value) {
                                   setState(() {
-                                    detail1=int.parse(mcqController.text);
-                                    detail2=int.parse(mcqController2.text);
-                                    detail3=int.parse(mcqController3.text);
-                                    detail_total= detail1+detail2+detail3;
+                                    detail1 = int.parse(mcqController.text);
+                                    detail2 = int.parse(mcqController2.text);
+                                    detail3 = int.parse(mcqController3.text);
+                                    detail_total = detail1 + detail2 + detail3;
                                   });
-
                                 },
                                 decoration: InputDecoration(
-
                                     isDense: true,
-                                    contentPadding: EdgeInsets.fromLTRB(10, 20, 30, 0),
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(10, 20, 30, 0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5.0),
                                       borderSide: BorderSide(
@@ -883,22 +808,16 @@ class _ChangePageState extends State<CreateQuestion> {
                                       ),
                                     ),
                                     counterText: "",
-
-                                    hintStyle:
-                                    TextStyle(color: Color(0xffBBBFC3), fontSize: 16),
+                                    hintStyle: TextStyle(
+                                        color: Color(0xffBBBFC3), fontSize: 16),
                                     fillColor: Color(0xfff9f9fb),
                                     filled: true)),
                           ),
-
                           SizedBox(height: 5),
-                          Text(
-                              "MCQ",
-                              style: normalText1
-                          ),
+                          Text("MCQ", style: normalText1),
                         ],
                       ),
                     ),
-
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -907,31 +826,28 @@ class _ChangePageState extends State<CreateQuestion> {
                             margin: const EdgeInsets.only(right: 8.0, left: 5),
                             child: TextFormField(
                                 controller: detailController3,
-
                                 keyboardType: TextInputType.number,
                                 cursorColor: Color(0xff000000),
-                                textCapitalization: TextCapitalization.sentences,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 validator: (value) {
-
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  detailController3.text = value;
+                                  detailController3.text = value!;
                                 },
                                 onChanged: (value) {
-
                                   setState(() {
-                                    detail1=int.parse(mcqController.text);
-                                    detail2=int.parse(mcqController2.text);
-                                    detail3=int.parse(mcqController3.text);
-                                    detail_total= detail1+detail2+detail3;
+                                    detail1 = int.parse(mcqController.text);
+                                    detail2 = int.parse(mcqController2.text);
+                                    detail3 = int.parse(mcqController3.text);
+                                    detail_total = detail1 + detail2 + detail3;
                                   });
-
                                 },
                                 decoration: InputDecoration(
-
                                     isDense: true,
-                                    contentPadding: EdgeInsets.fromLTRB(10, 20, 20, 0),
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(10, 20, 20, 0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5.0),
                                       borderSide: BorderSide(
@@ -957,9 +873,8 @@ class _ChangePageState extends State<CreateQuestion> {
                                       ),
                                     ),
                                     counterText: "",
-
-                                    hintStyle:
-                                    TextStyle(color: Color(0xffBBBFC3), fontSize: 16),
+                                    hintStyle: TextStyle(
+                                        color: Color(0xffBBBFC3), fontSize: 16),
                                     fillColor: Color(0xfff9f9fb),
                                     filled: true)),
                           ),
@@ -974,13 +889,10 @@ class _ChangePageState extends State<CreateQuestion> {
                   ]),
                 ]),
               )
-
             ]),
-
           ),
         ]);
   }
-
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -1020,7 +932,6 @@ class _ChangePageState extends State<CreateQuestion> {
     Size deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
@@ -1068,120 +979,107 @@ class _ChangePageState extends State<CreateQuestion> {
         inAsyncCall: _loading,
         child: Container(
           child: Container(
-
               child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-
-                  const SizedBox(height: 10.0),
-                 Expanded(child: Container(
-                      padding: EdgeInsets.only(left: 10,right: 10,bottom: 10,top: 5),
-
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              const SizedBox(height: 10.0),
+              Expanded(
+                  child: Container(
+                      padding: EdgeInsets.only(
+                          left: 10, right: 10, bottom: 10, top: 5),
                       decoration: BoxDecoration(
                         color: Color(0xff2E2A4A),
-
                       ),
-                      child: ListView(
-                          children: <Widget>[
-
-
-                          Container(child: chapterList(deviceSize))
-                          ]))),
-
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Expanded(
-                            child: Center(
-                              child: Container(
-                                color: Colors.white,
-                                height: 60,
-                                width: MediaQuery.of(context).size.width * 0.50,
-                                // padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      'MCQ',
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 12),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                     mcq_total.toString(),
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 18),
-                                    ),
-                                  ],
+                      child: ListView(children: <Widget>[
+                        Container(child: chapterList(deviceSize))
+                      ]))),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Expanded(
+                        child: Center(
+                          child: Container(
+                            color: Colors.white,
+                            height: 60,
+                            width: MediaQuery.of(context).size.width * 0.50,
+                            // padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'MCQ',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 12),
                                 ),
-                              ),
+                                SizedBox(height: 5),
+                                Text(
+                                  mcq_total.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                              ],
                             ),
                           ),
-                          Expanded(
-                            child: Center(
-                              child: Container(
-                                color: Colors.white,
-                                height: 60,
-                                width: MediaQuery.of(context).size.width * 0.50,
-                                // padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      'Detailed',
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 12),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      "123",
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 18),
-                                    ),
-                                  ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Container(
+                            color: Colors.white,
+                            height: 60,
+                            width: MediaQuery.of(context).size.width * 0.50,
+                            // padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Detailed',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 12),
                                 ),
-                              ),
+                                SizedBox(height: 5),
+                                Text(
+                                  "123",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                              ],
                             ),
                           ),
-
-                          Expanded(
-                            child: Center(
-                              child: GestureDetector(
-
-                                child: Container(
-                                  height: 60,
-                                  color: Color(0xff017EFF),
-                                  width: MediaQuery.of(context).size.width * 0.50,
-                                  // padding: EdgeInsets.only(left: 10,right: 10,top: 15,bottom: 15),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        "Start",
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18),
-                                      ),
-                                    ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: GestureDetector(
+                            child: Container(
+                              height: 60,
+                              color: Color(0xff017EFF),
+                              width: MediaQuery.of(context).size.width * 0.50,
+                              // padding: EdgeInsets.only(left: 10,right: 10,top: 15,bottom: 15),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "Start",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-
-                ],
-              )),
+                ),
+              ),
+            ],
+          )),
         ),
       ),
     );

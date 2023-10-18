@@ -16,7 +16,7 @@ import '../constants.dart';
 class CreateTicket extends StatefulWidget {
   final Object argument;
 
-  const CreateTicket({Key key, this.argument}) : super(key: key);
+  const CreateTicket({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -24,7 +24,7 @@ class CreateTicket extends StatefulWidget {
 
 class _SettingsState extends State<CreateTicket> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -103,13 +103,13 @@ class _SettingsState extends State<CreateTicket> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter ticket subject';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  subjectController.text = value;
+                  subjectController.text = value!;
                 },
                 decoration: InputDecoration(
                     isDense: true,
@@ -156,13 +156,13 @@ class _SettingsState extends State<CreateTicket> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter description';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  descriptionController.text = value;
+                  descriptionController.text = value!;
                 },
                 decoration: InputDecoration(
                     isDense: true,
@@ -212,8 +212,8 @@ class _SettingsState extends State<CreateTicket> {
                 // textColor: Colors.white,
                 // color: Color(0xff017EFF),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     setState(() {
                       _loading = true;
                     });
@@ -386,7 +386,8 @@ class _SettingsState extends State<CreateTicket> {
                           autovalidateMode: _autoValidate
                               ? AutovalidateMode.always
                               : AutovalidateMode.disabled,
-                          child: /*isEnabled1 ? _customContent() :*/ _randomContent(),
+                          child: /*isEnabled1 ? _customContent() :*/
+                              _randomContent(),
                         ),
                       ),
                       SizedBox(

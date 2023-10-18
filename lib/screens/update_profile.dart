@@ -26,7 +26,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
   String user_id = "";
-  Future<dynamic> _profiles;
+  Future<dynamic>? _profiles;
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -35,12 +35,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
   final addressController = TextEditingController();
   var otherController;
   bool _autoValidate = false;
-  Future _boardData;
-  Future _classData;
-  Future _countryData;
-  Future _stateData;
-  Future _cityData;
-  Future _schoolData;
+  Future? _boardData;
+  Future? _classData;
+  Future? _countryData;
+  Future? _stateData;
+  Future? _cityData;
+  Future? _schoolData;
   List<Region> _region = [];
   List<Region2> _region2 = [];
   List<Region3> _region3 = [];
@@ -55,10 +55,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
   var _type5 = "";
   var _type6 = "";
   String selectedRegion = "";
-  String selectedRegion2;
+  String? selectedRegion2;
   String selectedRegion3 = "";
-  String selectedRegion4;
-  String selectedRegion5;
+  String? selectedRegion4;
+  String? selectedRegion5;
   String selectedRegion6 = "";
   String catData = "";
   String catData2 = "";
@@ -108,7 +108,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           final json = JsonDecoder().convert(catData);
           _region =
               (json).map<Region>((item) => Region.fromJson(item)).toList();
-          List<String> item = _region.map((Region map) {
+          List<String?> item = _region.map((Region map) {
             for (int i = 0; i < _region.length; i++) {
               if (selectedRegion == map.THIRD_LEVEL_NAME) {
                 _type = map.THIRD_LEVEL_ID;
@@ -153,7 +153,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           final json = JsonDecoder().convert(catData3);
           _region3 =
               (json).map<Region3>((item) => Region3.fromJson(item)).toList();
-          List<String> item = _region3.map((Region3 map) {
+          List<String?> item = _region3.map((Region3 map) {
             for (int i = 0; i < _region3.length; i++) {
               if (selectedRegion3 == map.THIRD_LEVEL_NAME) {
                 _type3 = map.THIRD_LEVEL_ID;
@@ -197,7 +197,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           final json = JsonDecoder().convert(catData4);
           _region4 =
               (json).map<Region4>((item) => Region4.fromJson(item)).toList();
-          List<String> item = _region4.map((Region4 map) {
+          List<String?> item = _region4.map((Region4 map) {
             for (int i = 0; i < _region4.length; i++) {
               if (selectedRegion4 == map.THIRD_LEVEL_NAME) {
                 _type4 = map.THIRD_LEVEL_ID;
@@ -244,7 +244,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           final json = JsonDecoder().convert(catData2);
           _region2 =
               (json).map<Region2>((item) => Region2.fromJson(item)).toList();
-          List<String> item = _region2.map((Region2 map) {
+          List<String?> item = _region2.map((Region2 map) {
             for (int i = 0; i < _region2.length; i++) {
               if (selectedRegion2 == map.THIRD_LEVEL_NAME) {
                 _type2 = map.THIRD_LEVEL_ID;
@@ -291,7 +291,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           final json = JsonDecoder().convert(catData5);
           _region5 =
               (json).map<Region5>((item) => Region5.fromJson(item)).toList();
-          List<String> item = _region5.map((Region5 map) {
+          List<String?> item = _region5.map((Region5 map) {
             for (int i = 0; i < _region5.length; i++) {
               if (selectedRegion5 == map.THIRD_LEVEL_NAME) {
                 _type5 = map.THIRD_LEVEL_ID;
@@ -336,7 +336,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           final json = JsonDecoder().convert(catData6);
           _region6 =
               (json).map<Region6>((item) => Region6.fromJson(item)).toList();
-          List<String> item = _region6.map((Region6 map) {
+          List<String?> item = _region6.map((Region6 map) {
             for (int i = 0; i < _region6.length; i++) {
               if (selectedRegion6 == map.THIRD_LEVEL_NAME) {
                 _type6 = map.THIRD_LEVEL_ID;
@@ -427,13 +427,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
           cursorColor: Color(0xff000000),
           textCapitalization: TextCapitalization.sentences,
           validator: (value) {
-            if (value.isEmpty) {
+            if (value!.isEmpty) {
               return 'Please enter Name';
             }
             return null;
           },
           onSaved: (value) {
-            nameController.text = value;
+            nameController.text = value!;
           },
           decoration: InputDecoration(
               isDense: true,
@@ -481,13 +481,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
           enabled: false,
           textCapitalization: TextCapitalization.sentences,
           /* validator: (value) {
-            if (value.isEmpty) {
+            if (value!.isEmpty) {
               return 'Please enter email';
             }
             return null;
           },*/
           onSaved: (value) {
-            emailController.text = value;
+            emailController.text = value!;
           },
           decoration: InputDecoration(
               isDense: true,
@@ -535,13 +535,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
           enabled: false,
           textCapitalization: TextCapitalization.sentences,
           /*  validator: (value) {
-            if (value.isEmpty) {
+            if (value!.isEmpty) {
               return 'Please enter mobile no.';
             }
             return null;
           },*/
           onSaved: (value) {
-            mobileController.text = value;
+            mobileController.text = value!;
           },
           decoration: InputDecoration(
               isDense: true,
@@ -590,7 +590,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
     });
   }
 
-  Future<DateTime> getDate() {
+  Future<DateTime?> getDate() {
     // Imagine that this function is
     // more complex and slow.
     return showDatePicker(
@@ -598,29 +598,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
       initialDate: DateTime.now(),
       firstDate: DateTime(1990),
       lastDate: DateTime.now(),
-      builder: (BuildContext context, Widget child) {
-        return Theme(
-          data: ThemeData(
-              primaryColor: Color(0xff017EFF),
-              accentColor: Color(0xff017EFF),
-              primarySwatch: MaterialColor(
-                0xff017EFF,
-                const <int, Color>{
-                  50: const Color(0xff017EFF),
-                  100: const Color(0xff017EFF),
-                  200: const Color(0xff017EFF),
-                  300: const Color(0xff017EFF),
-                  400: const Color(0xff017EFF),
-                  500: const Color(0xff017EFF),
-                  600: const Color(0xff017EFF),
-                  700: const Color(0xff017EFF),
-                  800: const Color(0xff017EFF),
-                  900: const Color(0xff017EFF),
-                },
-              )),
-          child: child,
-        );
-      },
     );
   }
 
@@ -639,16 +616,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
             cursorColor: Color(0xff000000),
             textCapitalization: TextCapitalization.sentences,
             validator: (value) {
-              if (value.isEmpty) {
+              if (value!.isEmpty) {
                 return 'Please enter dob';
               }
               return null;
             },
             onSaved: (value) {
-              dobController.text = value;
+              dobController.text = value!;
             },
             onChanged: (String value) {
-              dobController.text = value;
+              dobController.text = value!;
             },
             decoration: InputDecoration(
                 suffixIcon: Container(
@@ -707,13 +684,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
           cursorColor: Color(0xff000000),
           textCapitalization: TextCapitalization.sentences,
           validator: (value) {
-            if (value.isEmpty) {
+            if (value!.isEmpty) {
               return 'Please enter address';
             }
             return null;
           },
           onSaved: (value) {
-            addressController.text = value;
+            addressController.text = value!;
           },
           decoration: InputDecoration(
               isDense: true,
@@ -760,13 +737,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
           cursorColor: Color(0xff000000),
           textCapitalization: TextCapitalization.sentences,
           validator: (value) {
-            if (value.isEmpty) {
+            if (value!.isEmpty) {
               return 'Please enter school name';
             }
             return null;
           },
           onSaved: (value) {
-            otherController.text = value;
+            otherController.text = value!;
           },
           decoration: InputDecoration(
               isDense: true,
@@ -803,21 +780,24 @@ class _UpdateProfileState extends State<UpdateProfile> {
     );
   }
 
-  File _image;
+  File? _image;
   _imgFromCamera() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50);
+    final picker = ImagePicker();
+    XFile? image =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
-      _image = image;
+      _image = image as File;
     });
   }
 
   _imgFromGallery() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50);
+    final picker = ImagePicker();
+    XFile? image =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+
     setState(() {
-      _image = image;
+      _image = image as File;
     });
   }
 
@@ -869,8 +849,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
       future: _profiles,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          var errorCode = snapshot.data['ErrorCode'];
-          var response = snapshot.data['Response'];
+          Map map = snapshot.data as Map;
+          var errorCode = map['ErrorCode'];
+          var response = map['Response'];
           if (errorCode == 0) {
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -899,7 +880,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.file(
-                                  _image,
+                                  _image!,
                                   fit: BoxFit.cover,
                                   width: 90,
                                   height: 90,
@@ -991,7 +972,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 null /*(newValue) {
                               setState(() {
                                 selectedRegion = newValue;
-                                List<String> item = _region.map((Region map) {
+                                List<String?> item = _region.map((Region map) {
                                   for (int i = 0; i < _region.length; i++) {
                                     if (selectedRegion == map.THIRD_LEVEL_NAME) {
                                       _type = map.THIRD_LEVEL_ID;
@@ -1052,7 +1033,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             onChanged: (newValue) {
                               setState(() {
                                 selectedRegion4 = newValue;
-                                List<String> item = _region4.map((Region4 map) {
+                                List<String?> item =
+                                    _region4.map((Region4 map) {
                                   for (int i = 0; i < _region4.length; i++) {
                                     if (selectedRegion4 ==
                                         map.THIRD_LEVEL_NAME) {
@@ -1117,7 +1099,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 null /*(newValue) {
                               setState(() {
                                 selectedRegion3 = newValue;
-                                List<String> item = _region3.map((Region3 map) {
+                                List<String?> item = _region3.map((Region3 map) {
                                   for (int i = 0; i < _region3.length; i++) {
                                     if (selectedRegion3 == map.THIRD_LEVEL_NAME) {
                                       _type3 = map.THIRD_LEVEL_ID;
@@ -1178,7 +1160,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             onChanged: (newValue) {
                               setState(() {
                                 selectedRegion2 = newValue;
-                                List<String> item = _region2.map((Region2 map) {
+                                List<String?> item =
+                                    _region2.map((Region2 map) {
                                   for (int i = 0; i < _region2.length; i++) {
                                     if (selectedRegion2 ==
                                         map.THIRD_LEVEL_NAME) {
@@ -1240,7 +1223,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             onChanged: (newValue) {
                               setState(() {
                                 selectedRegion5 = newValue;
-                                List<String> item = _region5.map((Region5 map) {
+                                List<String?> item =
+                                    _region5.map((Region5 map) {
                                   for (int i = 0; i < _region5.length; i++) {
                                     if (selectedRegion5 ==
                                         map.THIRD_LEVEL_NAME) {
@@ -1299,7 +1283,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             onChanged: (newValue) {
                               setState(() {
                                 selectedRegion6 = newValue;
-                                List<String> item = _region6.map((Region6 map) {
+                                List<String?> item = _region6.map((Region6 map) {
                                   for (int i = 0; i < _region6.length; i++) {
                                     if (selectedRegion6 == map.THIRD_LEVEL_NAME) {
                                       _type6 = map.THIRD_LEVEL_ID;
@@ -1345,15 +1329,15 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           // textColor: Colors.white,
                           // color: Color(0xff017EFF),
                           onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              _formKey.currentState.save();
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
                               setState(() {
                                 _loading = true;
                               });
                               String base64Image = "";
                               if (_image != null) {
                                 base64Image =
-                                    base64Encode(_image.readAsBytesSync());
+                                    base64Encode(_image!.readAsBytesSync());
                               }
                               final msg = jsonEncode({
                                 "user_id": user_id,
@@ -1366,27 +1350,54 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 "city": _type5.toString(),
                                 "school_name": otherController.text
                               });
-                              Map<String, String> headers = {
-                                'Accept': 'application/json',
-                                'Authorization': 'Bearer $api_token',
-                              };
-                              var response = await http.post(
+
+                              var request = http.MultipartRequest(
+                                'POST',
                                 new Uri.https(BASE_URL,
                                     API_PATH + "/student-update-profile"),
-                                body: {
-                                  "user_id": user_id,
-                                  "name": nameController.text,
-                                  "date_of_birth": dobController.text,
-                                  "profile": base64Image,
-                                  "address": addressController.text,
-                                  "country": _type4.toString(),
-                                  "state": _type2.toString(),
-                                  "city": _type5.toString(),
-                                  "school_name": otherController.text
-                                },
-                                headers: headers,
                               );
-                              print(msg);
+                              request.headers.addAll({
+                                'Accept': 'application/json',
+                                'Authorization': 'Bearer $api_token',
+                              });
+                              request.files.add(
+                                  await http.MultipartFile.fromPath(
+                                      "profile", _image!.path));
+
+                              request.fields['user_id'] = user_id;
+                              request.fields["name"] = nameController.text;
+                              request.fields["date_of_birth"] =
+                                  dobController.text;
+                              request.fields["profile"] = base64Image;
+                              request.fields["address"] =
+                                  addressController.text;
+                              request.fields["country"] = _type4.toString();
+                              request.fields["state"] = _type2.toString();
+                              request.fields["city"] = _type5.toString();
+                              request.fields["school_name"] =
+                                  otherController.text;
+                              final streamedResponse = await request.send();
+                              final response = await http.Response.fromStream(
+                                  streamedResponse);
+
+                              // var response = await http.post(
+                              //   new Uri.https(BASE_URL,
+                              //       API_PATH + "/student-update-profile"),
+                              //   body: {
+                              //     "user_id": user_id,
+                              //     "name": nameController.text,
+                              //     "date_of_birth": dobController.text,
+                              //     "profile": base64Image,
+                              //     "address": addressController.text,
+                              //     "country": _type4.toString(),
+                              //     "state": _type2.toString(),
+                              //     "city": _type5.toString(),
+                              //     "school_name": otherController.text
+                              //   },
+                              //   headers: headers,
+                              // );
+                              // print(msg);
+                              print(response.body);
 
                               if (response.statusCode == 200) {
                                 setState(() {
@@ -1595,7 +1606,7 @@ class Region {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region.fromJson(Map<String, dynamic> json) {
     return new Region(
@@ -1607,7 +1618,7 @@ class Region2 {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region2({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region2({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region2.fromJson(Map<String, dynamic> json) {
     return new Region2(
@@ -1621,7 +1632,7 @@ class Region3 {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region3({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region3({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region3.fromJson(Map<String, dynamic> json) {
     return new Region3(
@@ -1636,7 +1647,10 @@ class Region4 {
   final String THIRD_LEVEL_NAME;
   final String THIRD_LEVEL_CODE;
 
-  Region4({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME, this.THIRD_LEVEL_CODE});
+  Region4(
+      {required this.THIRD_LEVEL_ID,
+      required this.THIRD_LEVEL_NAME,
+      required this.THIRD_LEVEL_CODE});
 
   factory Region4.fromJson(Map<String, dynamic> json) {
     return new Region4(
@@ -1652,8 +1666,8 @@ class Region5 {
   final String THIRD_LEVEL_NAME;
 
   Region5({
-    this.THIRD_LEVEL_ID,
-    this.THIRD_LEVEL_NAME,
+    required this.THIRD_LEVEL_ID,
+    required this.THIRD_LEVEL_NAME,
   });
 
   factory Region5.fromJson(Map<String, dynamic> json) {
@@ -1668,7 +1682,7 @@ class Region6 {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region6({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region6({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region6.fromJson(Map<String, dynamic> json) {
     return new Region6(

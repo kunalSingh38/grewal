@@ -14,7 +14,7 @@ import '../constants.dart';
 class MTS extends StatefulWidget {
   final Object argument;
 
-  const MTS({Key key, this.argument}) : super(key: key);
+  const MTS({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -26,13 +26,16 @@ class _SettingsState extends State<MTS> {
   String name = "";
   bool _loading = false;
   String profile_image = '';
-  Future _chapterData;
+  Future? _chapterData;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
   TextStyle normalText4 = GoogleFonts.montserrat(
       fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff2E2A4A));
   TextStyle normalText3 = GoogleFonts.montserrat(
-      fontSize: 15, fontWeight: FontWeight.w400, decoration: TextDecoration.underline,color: Color(0xff2E2A4A));
+      fontSize: 15,
+      fontWeight: FontWeight.w400,
+      decoration: TextDecoration.underline,
+      color: Color(0xff2E2A4A));
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -43,9 +46,9 @@ class _SettingsState extends State<MTS> {
     var data = json.decode(encodedJson);
     url = data['url'];
     name = data['name'];
-  //  _getUser();
+    //  _getUser();
   }
- /* _getUser() async {
+  /* _getUser() async {
     Preference().getPreferences().then((prefs) {
       setState(() {
         profile_image = prefs.getString('profile_image').toString();
@@ -54,7 +57,7 @@ class _SettingsState extends State<MTS> {
       });
     });
   }*/
- /* Widget _networkImage1(url) {
+  /* Widget _networkImage1(url) {
     return Container(
       margin: EdgeInsets.only(
         right: 8,
@@ -74,7 +77,6 @@ class _SettingsState extends State<MTS> {
     );
   }*/
 
-
   Widget htmlList(Size deviceSize) {
     return Container(
       child: SfPdfViewer.network(
@@ -82,38 +84,39 @@ class _SettingsState extends State<MTS> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0.0,
-        leading: InkWell(
-          child: Row(children: <Widget>[
-            IconButton(
-              icon: Image(
-                image: AssetImage("assets/images/Icon.png"),
-                height: 20.0,
-                width: 10.0,
-                color: Color(0xff2E2A4A),
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 0.0,
+          leading: InkWell(
+            child: Row(children: <Widget>[
+              IconButton(
+                icon: Image(
+                  image: AssetImage("assets/images/Icon.png"),
+                  height: 20.0,
+                  width: 10.0,
+                  color: Color(0xff2E2A4A),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
               ),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-          ]),
-        ),
-        centerTitle: true,
-        title: Container(
-          child: Text(name, style: normalText6),
-        ),
-        flexibleSpace: Container(
-          height: 100,
-          color: Color(0xffffffff),
-        ),
-        actions: <Widget>[
-         /* Align(
+            ]),
+          ),
+          centerTitle: true,
+          title: Container(
+            child: Text(name, style: normalText6),
+          ),
+          flexibleSpace: Container(
+            height: 100,
+            color: Color(0xffffffff),
+          ),
+          actions: <Widget>[
+            /* Align(
             alignment: Alignment.center,
             child: CircleAvatar(
               backgroundColor: Colors.white,
@@ -123,13 +126,12 @@ class _SettingsState extends State<MTS> {
               ),
             ),
           ),*/
-        ],
-        iconTheme: IconThemeData(
-          color: Colors.white, //change your color here
+          ],
+          iconTheme: IconThemeData(
+            color: Colors.white, //change your color here
+          ),
+          backgroundColor: Colors.transparent,
         ),
-        backgroundColor: Colors.transparent,
-      ),
-      body: htmlList( deviceSize)
-    );
+        body: htmlList(deviceSize));
   }
 }

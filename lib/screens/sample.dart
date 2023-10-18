@@ -22,7 +22,7 @@ import '../constants.dart';
 class ViewPerformanceChart extends StatefulWidget {
   final Object argument;
 
-  const ViewPerformanceChart({Key key, this.argument}) : super(key: key);
+  const ViewPerformanceChart({required this.argument});
 
   @override
   State<StatefulWidget> createState() => _SettingsState();
@@ -32,7 +32,7 @@ const double degrees2Radians = math.pi / 180.0;
 
 class _SettingsState extends State<ViewPerformanceChart> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
 
   TextStyle normalText5 = GoogleFonts.montserrat(
@@ -75,7 +75,7 @@ class _SettingsState extends State<ViewPerformanceChart> {
   String type = "";
   String test_id = "";
   String profile_image = '';
-  ZoomPanBehavior _zoomPanBehavior;
+  ZoomPanBehavior? _zoomPanBehavior;
   @override
   void initState() {
     super.initState();
@@ -109,10 +109,10 @@ class _SettingsState extends State<ViewPerformanceChart> {
     );
   }
 
-  List<bool> showExpand = new List();
-  List<String> _value1 = new List();
+  List<bool> showExpand = [];
+  List<String> _value1 = [];
   List<ChartData> chartData = [];
-  TooltipBehavior _tooltipBehavior;
+  TooltipBehavior? _tooltipBehavior;
   var easy;
   var diff;
   var avg;
@@ -237,9 +237,9 @@ class _SettingsState extends State<ViewPerformanceChart> {
     return FutureBuilder(
       future: _chapterData,
       builder: (context, snapshot) {
-        print(snapshot.data.toString());
         if (snapshot.hasData) {
-          if (snapshot.data != null) {
+          Map map = snapshot.data as Map;
+          if (map.isNotEmpty) {
             return Column(mainAxisSize: MainAxisSize.min, children: [
               Expanded(
                 child: Container(
@@ -350,7 +350,7 @@ class _SettingsState extends State<ViewPerformanceChart> {
   }
 
   Color colorName() {
-    Color color;
+    late Color color;
 
     for (int i = 0; i < datas.length; i++) {
       if (datas[i].status == "W") {

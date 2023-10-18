@@ -76,7 +76,7 @@ class _LoginWithLogoState extends State<ChangePassword> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter old password';
                   }
                   return null;
@@ -149,7 +149,7 @@ class _LoginWithLogoState extends State<ChangePassword> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter password';
                   }
                   return null;
@@ -222,7 +222,7 @@ class _LoginWithLogoState extends State<ChangePassword> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please re enter password';
                   } else if (value != newPassController.text) {
                     return 'Password not matched';
@@ -301,8 +301,8 @@ class _LoginWithLogoState extends State<ChangePassword> {
                 // textColor: Colors.white,
                 // color: Color(0xff017EFF),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     setState(() {
                       _loading = true;
                     });

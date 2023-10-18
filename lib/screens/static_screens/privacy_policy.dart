@@ -6,30 +6,22 @@ import 'dart:async';
 
 import 'package:webview_flutter/webview_flutter.dart';
 
-
-
-
-
 class Privacy extends StatefulWidget {
-
-
   @override
   _MyWebViewState createState() => _MyWebViewState();
 }
 
 class _MyWebViewState extends State<Privacy> {
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
-  num position = 1;
+      Completer<WebViewController>();
+  int position = 1;
   final key = UniqueKey();
   var _userId;
-  Future<dynamic> _contest;
+  Future<dynamic>? _contest;
   @override
   void initState() {
     super.initState();
   }
-
-
 
   doneLoading(String value) {
     setState(() {
@@ -43,24 +35,33 @@ class _MyWebViewState extends State<Privacy> {
     });
   }
 
-
   Widget htmlList(Size deviceSize) {
     return IndexedStack(
       index: position,
       children: <Widget>[
         Container(
+            child: WebViewWidget(
+                // initialUrl: "https://www.grewaleducation.com/privacy-policy.php",
 
-          child: WebView(
-            initialUrl:"https://www.grewaleducation.com/privacy-policy.php",
-            javascriptMode: JavascriptMode.unrestricted,
-            key: key,
-            onPageFinished: doneLoading,
-            onPageStarted: startLoading,
-            onWebViewCreated: (WebViewController webViewController) {
-              _controller.complete(webViewController);
-            },
-          ),
-        ),
+                // javascriptMode: JavascriptMode.unrestricted
+                controller: WebViewController()
+                  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                  ..setBackgroundColor(const Color(0x00000000))
+                  ..loadRequest(Uri.parse(
+                      'https://www.grewaleducation.com/privacy-policy.php')))),
+
+        // wv.WebViewWidget(
+        //   initialUrl: "https://www.grewaleducation.com/privacy-policy.php",
+        //   // javascriptMode: JavascriptMode.unrestricted,
+        //   key: key,
+        //   onPageFinished: doneLoading,
+        //   onPageStarted: startLoading,
+        //   onWebViewCreated: (WebViewController webViewController) {
+        //     _controller.complete(webViewController);
+        //   },
+        //   controller: null,
+        // ),
+
         Container(
           child: Center(
             child: CircularProgressIndicator(),
@@ -69,6 +70,7 @@ class _MyWebViewState extends State<Privacy> {
       ],
     );
   }
+
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -77,7 +79,7 @@ class _MyWebViewState extends State<Privacy> {
     Size deviceSize = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar:  AppBar(
+        appBar: AppBar(
           elevation: 0.0,
           leading: InkWell(
             child: Row(children: <Widget>[
@@ -119,11 +121,6 @@ class _MyWebViewState extends State<Privacy> {
           ),
           backgroundColor: Colors.transparent,
         ),
-        body: htmlList( deviceSize)
-    );
+        body: htmlList(deviceSize));
   }
 }
-
-
-
-

@@ -29,7 +29,7 @@ import '../constants.dart';
 class ViewPerformance2 extends StatefulWidget {
   final Object argument;
 
-  const ViewPerformance2({Key key, this.argument}) : super(key: key);
+  const ViewPerformance2({required this.argument});
 
   @override
   State<StatefulWidget> createState() => _SettingsState();
@@ -39,7 +39,7 @@ const double degrees2Radians = math.pi / 180.0;
 
 class _SettingsState extends State<ViewPerformance2> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   ScreenshotController screenshotController = ScreenshotController();
   TextStyle normalText5 = GoogleFonts.montserrat(
@@ -139,10 +139,10 @@ class _SettingsState extends State<ViewPerformance2> {
     );
   }
 
-  List<bool> showExpand = new List();
-  List<String> _value1 = new List();
+  List<bool> showExpand = [];
+  List<String> _value1 = [];
   List<ChartData> chartData = [];
-  TooltipBehavior _tooltipBehavior;
+  TooltipBehavior? _tooltipBehavior;
   var easy;
   var diff;
   var avg;
@@ -372,7 +372,8 @@ class _SettingsState extends State<ViewPerformance2> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data != null) {
+          if (jsonDecode(jsonDecode(snapshot.data.toString()).toString()) !=
+              null) {
             return SingleChildScrollView(
               child: RepaintBoundary(
                 key: _key,
@@ -419,7 +420,10 @@ class _SettingsState extends State<ViewPerformance2> {
                                             ),
                                             Text(
                                                 "You Scored: " +
-                                                    snapshot.data[
+                                                    jsonDecode(jsonDecode(snapshot
+                                                                    .data
+                                                                    .toString())
+                                                                .toString())[
                                                             'total_test_percentage']
                                                         .toString() +
                                                     "%",
@@ -455,7 +459,7 @@ class _SettingsState extends State<ViewPerformance2> {
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                      "${snapshot.data['total_test_right_percentage'].toString()}% correct",
+                                                      "${jsonDecode(jsonDecode(jsonDecode(snapshot.data.toString()).toString()).toString())['total_test_right_percentage'].toString()}% correct",
                                                       style: normalText2)
                                                 ]),
                                           ),
@@ -481,7 +485,7 @@ class _SettingsState extends State<ViewPerformance2> {
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                      "${snapshot.data['total_test_wrong_percentage'].toString()}% incorrect",
+                                                      "${jsonDecode(jsonDecode(snapshot.data.toString()).toString())['total_test_wrong_percentage'].toString()}% incorrect",
                                                       style: normalText2)
                                                 ]),
                                           ),
@@ -490,16 +494,18 @@ class _SettingsState extends State<ViewPerformance2> {
                                   SizedBox(
                                     height: 15.0,
                                   ),
-                                  winner(
-                                      snapshot.data['total_test_percentage']),
+                                  winner(jsonDecode(jsonDecode(
+                                          snapshot.data.toString())
+                                      .toString())['total_test_percentage']),
                                   SizedBox(
                                     height: 15.0,
                                   ),
                                   Container(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 10),
-                                    child: winnerText(
-                                        snapshot.data['total_test_percentage']),
+                                    child: winnerText(jsonDecode(jsonDecode(
+                                            snapshot.data.toString())
+                                        .toString())['total_test_percentage']),
                                   ),
                                 ],
                               ),
@@ -536,7 +542,10 @@ class _SettingsState extends State<ViewPerformance2> {
                           child: ListView.builder(
                               shrinkWrap: true,
                               primary: false,
-                              itemCount: snapshot.data['topic'].length,
+                              itemCount: jsonDecode(
+                                      jsonDecode(snapshot.data.toString())
+                                          .toString())['topic']
+                                  .length,
                               itemBuilder: (context, index) {
                                 return Container(
                                   padding: EdgeInsets.symmetric(
@@ -572,8 +581,11 @@ class _SettingsState extends State<ViewPerformance2> {
                                           child: Container(
                                             padding: EdgeInsets.only(left: 10),
                                             child: Text(
-                                                snapshot.data['topic'][index]
-                                                    ['topic_name'],
+                                                jsonDecode(jsonDecode(snapshot
+                                                            .data
+                                                            .toString())
+                                                        .toString())['topic']
+                                                    [index]['topic_name'],
                                                 maxLines: 2,
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -594,11 +606,16 @@ class _SettingsState extends State<ViewPerformance2> {
                                             _value1[index].toString() +
                                                 "% " +
                                                 "(" +
-                                                snapshot.data['topic'][index][
+                                                jsonDecode(jsonDecode(snapshot.data.toString()).toString())[
+                                                            'topic'][index][
                                                         'total_topic_right_question']
                                                     .toString() +
                                                 "/" +
-                                                snapshot.data['topic'][index]
+                                                jsonDecode(jsonDecode(snapshot
+                                                                    .data
+                                                                    .toString())
+                                                                .toString())['topic']
+                                                            [index]
                                                         ['total_topic_question']
                                                     .toString() +
                                                 ")",
@@ -616,7 +633,7 @@ class _SettingsState extends State<ViewPerformance2> {
                                                 : 0.0,
                                             center: Text(
                                               "",
-                                              // snapshot.data['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
+                                              //  jsonDecode(jsonDecode(snapshot.data.toString()).toString())['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
                                               style: TextStyle(
                                                   color: Color(0xff0293ee),
                                                   fontSize: 12,
@@ -706,11 +723,15 @@ class _SettingsState extends State<ViewPerformance2> {
                           Expanded(
                             child: Container(
                                 child: FAProgressBar(
-                              currentValue: int.parse(
-                                  snapshot.data['easy_right_per'].toString()),
+                              currentValue: double.parse(jsonDecode(
+                                      jsonDecode(snapshot.data.toString())
+                                          .toString())['easy_right_per']
+                                  .toString()),
                               displayText: '%',
                               displayTextStyle: TextStyle(
-                                  color: snapshot.data['easy_right_per']
+                                  color: jsonDecode(jsonDecode(
+                                                      snapshot.data.toString())
+                                                  .toString())['easy_right_per']
                                               .toString() !=
                                           "0"
                                       ? Colors.white
@@ -735,12 +756,16 @@ class _SettingsState extends State<ViewPerformance2> {
                           Expanded(
                             child: Container(
                                 child: FAProgressBar(
-                              currentValue: int.parse(snapshot
-                                  .data['average_right_per']
+                              currentValue: double.parse(jsonDecode(
+                                      jsonDecode(snapshot.data.toString())
+                                          .toString())['average_right_per']
                                   .toString()),
                               displayText: '%',
                               displayTextStyle: TextStyle(
-                                  color: snapshot.data['average_right_per']
+                                  color: jsonDecode(jsonDecode(snapshot.data
+                                                          .toString())
+                                                      .toString())[
+                                                  'average_right_per']
                                               .toString() !=
                                           "0"
                                       ? Colors.white
@@ -765,12 +790,16 @@ class _SettingsState extends State<ViewPerformance2> {
                           Expanded(
                             child: Container(
                                 child: FAProgressBar(
-                              currentValue: int.parse(snapshot
-                                  .data['diffcult_right_per']
+                              currentValue: double.parse(jsonDecode(
+                                      jsonDecode(snapshot.data.toString())
+                                          .toString())['diffcult_right_per']
                                   .toString()),
                               displayText: '%',
                               displayTextStyle: TextStyle(
-                                  color: snapshot.data['diffcult_right_per']
+                                  color: jsonDecode(jsonDecode(snapshot.data
+                                                          .toString())
+                                                      .toString())[
+                                                  'diffcult_right_per']
                                               .toString() !=
                                           "0"
                                       ? Colors.white
@@ -827,11 +856,14 @@ class _SettingsState extends State<ViewPerformance2> {
                         ),
                         Container(
                           child: Text(
-                              snapshot.data['evaluation'][0]
+                              jsonDecode(jsonDecode(snapshot.data.toString())
+                                              .toString())['evaluation'][0]
                                           ['total_time_taken_minut']
                                       .toString() +
                                   " Min " +
-                                  snapshot.data['evaluation'][0]
+                                  jsonDecode(jsonDecode(
+                                                  snapshot.data.toString())
+                                              .toString())['evaluation'][0]
                                           ['total_time_taken_second']
                                       .toString() +
                                   " Sec",
@@ -852,16 +884,19 @@ class _SettingsState extends State<ViewPerformance2> {
                                   animationDuration: 1200,
                                   radius: 100.0,
                                   lineWidth: 10.0,
-                                  percent: double.parse(snapshot
-                                          .data['evaluation'][0]
+                                  percent: double.parse(jsonDecode(jsonDecode(
+                                                      snapshot.data.toString())
+                                                  .toString())['evaluation'][0]
                                               ['accuracy_level']
                                           .toString()) /
                                       100,
                                   backgroundColor: Color(0xffF2F2F2),
 
                                   center: new Text(
-                                      snapshot.data['evaluation'][0]
-                                                  ['accuracy_level']
+                                      jsonDecode(jsonDecode(snapshot.data
+                                                          .toString())
+                                                      .toString())['evaluation']
+                                                  [0]['accuracy_level']
                                               .toString() +
                                           "%",
                                       style: normalText9),
@@ -894,17 +929,23 @@ class _SettingsState extends State<ViewPerformance2> {
                                   lineWidth: 10.0,
                                   reverse: true,
                                   backgroundColor: Color(0xffF2F2F2),
-                                  percent: snapshot.data['evaluation'][0]
+                                  percent: jsonDecode(jsonDecode(
+                                                      snapshot.data.toString())
+                                                  .toString())['evaluation'][0]
                                               ['answer_speed'] >
                                           100
                                       ? (100 / 100)
-                                      : double.parse(snapshot.data['evaluation']
+                                      : double.parse(jsonDecode(jsonDecode(
+                                                          snapshot.data.toString())
+                                                      .toString())['evaluation']
                                                   [0]['answer_speed']
                                               .toString()) /
                                           100,
                                   center: new Text(
-                                      snapshot.data['evaluation'][0]
-                                                  ['answer_speed']
+                                      jsonDecode(jsonDecode(snapshot.data
+                                                          .toString())
+                                                      .toString())['evaluation']
+                                                  [0]['answer_speed']
                                               .toString() +
                                           " s",
                                       style: normalText9),
@@ -1005,7 +1046,7 @@ class _SettingsState extends State<ViewPerformance2> {
                                         series: <CircularSeries>[
                                           DoughnutSeries<ChartData, String>(
                                             animationDuration: 2000,
-                                            enableSmartLabels: true,
+                                            // enableSmartLabels: true,
                                             enableTooltip: true,
                                             explode: true,
                                             dataSource: chartData,
@@ -1151,10 +1192,10 @@ class _SettingsState extends State<ViewPerformance2> {
   final GlobalKey _key = GlobalKey();
   void _takeScreenshot() async {
     RenderRepaintBoundary boundary =
-        _key.currentContext.findRenderObject() as RenderRepaintBoundary;
+        _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
     ui.Image image = await boundary.toImage();
-    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       Uint8List pngBytes = byteData.buffer.asUint8List();
 
@@ -1344,7 +1385,7 @@ class Clipper extends CustomClipper<Path> {
 }
 
 class ChartData {
-  ChartData(this.x, this.y, this.y1, this.z, [this.color]);
+  ChartData(this.x, this.y, this.y1, this.z, this.color);
   final String x;
   final double y;
   final String y1;

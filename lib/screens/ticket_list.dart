@@ -16,7 +16,7 @@ import '../constants.dart';
 class TicketList extends StatefulWidget {
   final Object argument;
 
-  const TicketList({Key key, this.argument}) : super(key: key);
+  const TicketList({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -24,7 +24,7 @@ class TicketList extends StatefulWidget {
 
 class _SettingsState extends State<TicketList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -53,6 +53,7 @@ class _SettingsState extends State<TicketList> {
 
     _getUser();
   }
+
   String api_token = "";
   _getUser() async {
     Preference().getPreferences().then((prefs) {
@@ -67,6 +68,7 @@ class _SettingsState extends State<TicketList> {
       });
     });
   }
+
   Widget _networkImage1(url) {
     return Container(
       margin: EdgeInsets.only(
@@ -82,16 +84,15 @@ class _SettingsState extends State<TicketList> {
           image: NetworkImage(profile_image),
           fit: BoxFit.cover,
         ),
-
       ),
     );
   }
+
   Widget _networkImage(url) {
     return Image(
       image: NetworkImage(url),
     );
   }
-
 
   Future _getChapterData() async {
     Map<String, String> headers = {
@@ -126,27 +127,26 @@ class _SettingsState extends State<TicketList> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if(snapshot.data['ErrorCode']==0){
-          if (snapshot.data['Response'].length != 0) {
-            return
-              Container(
+          Map map = snapshot.data as Map;
+
+          if (map['ErrorCode'] == 0) {
+            if (map['Response'] != null) {
+              List response = map['Response'];
+              return Container(
                 child: ListView.builder(
                     shrinkWrap: true,
                     primary: false,
-                    itemCount: snapshot.data['Response'].length,
+                    itemCount: response.length,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: (){
-
-                            Navigator.pushNamed(
-                              context,
-                              '/ticket-details',
-                              arguments: <String, String>{
-                                'ticket_id': snapshot.data['Response']
-                                [index]['id'].toString(),
-                              },
-                            );
-
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/ticket-details',
+                            arguments: <String, String>{
+                              'ticket_id': response[index]['id'].toString(),
+                            },
+                          );
                         },
                         child: Column(children: <Widget>[
                           Stack(children: <Widget>[
@@ -166,16 +166,16 @@ class _SettingsState extends State<TicketList> {
                                         height: 50,
                                         width: 50,
                                         decoration: new BoxDecoration(
-                                          // color: Color(0xffF6F6F6),
+                                            // color: Color(0xffF6F6F6),
                                             borderRadius: new BorderRadius.only(
                                                 topLeft:
-                                                const Radius.circular(5.0),
+                                                    const Radius.circular(5.0),
                                                 bottomLeft:
-                                                const Radius.circular(5.0),
+                                                    const Radius.circular(5.0),
                                                 bottomRight:
-                                                const Radius.circular(5.0),
-                                                topRight:
-                                                const Radius.circular(5.0))),
+                                                    const Radius.circular(5.0),
+                                                topRight: const Radius.circular(
+                                                    5.0))),
                                         child: CircleAvatar(
                                           backgroundColor: Color(0xff017EFF),
                                           radius: 45,
@@ -205,32 +205,32 @@ class _SettingsState extends State<TicketList> {
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               Expanded(
                                                 child: Text(
-                                                    snapshot.data['Response']
-                                                    [index]['subject'],
+                                                    response[index]['subject'],
                                                     maxLines: 2,
                                                     softWrap: true,
                                                     overflow:
-                                                    TextOverflow.ellipsis,
+                                                        TextOverflow.ellipsis,
                                                     style: normalText5),
                                               ),
                                             ],
                                           ),
                                           Container(
                                             child: Text(
-                                                snapshot.data['Response'][index]
-                                                ['ticket_no']+" - "+snapshot.data['Response'][index]
-                                                ['created_at'],
+                                                response[index]['ticket_no'] +
+                                                    " - " +
+                                                    response[index]
+                                                        ['created_at'],
                                                 maxLines: 1,
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -238,8 +238,7 @@ class _SettingsState extends State<TicketList> {
                                           ),
                                           Container(
                                             child: Text(
-                                                snapshot.data['Response'][index]
-                                                ['description'],
+                                                response[index]['description'],
                                                 maxLines: 2,
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -258,9 +257,9 @@ class _SettingsState extends State<TicketList> {
                                     )
                                   ]),
                             ),
-                            /*  snapshot.data['Response']
+                            /*  jsonDecode(jsonDecode(snapshot.data.toString()).toString())['Response']
                                 [index]['is_taken']==0? Positioned(
-                                  child: myPopMenu(snapshot.data['Response'][index]
+                                  child: myPopMenu(jsonDecode(jsonDecode(snapshot.data.toString()).toString())['Response'][index]
                                           ['id']
                                       .toString()),
                                   right: -5,
@@ -277,35 +276,32 @@ class _SettingsState extends State<TicketList> {
                                       )),*/
                         ]),
                       );
-
                     }),
               );
-
-
+            } else {
+              return _emptyOrders();
+            }
           } else {
-            return _emptyOrders();
-          }
-        }
-          else {
             return _emptyOrders();
           }
         } else {
           return Center(
               child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  child: SpinKitFadingCube(
-                    itemBuilder: (_, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index.isEven ? Color(0xff017EFF) :Color(0xffFFC700),
-                        ),
-                      );
-                    },
-                    size: 30.0,
-                  ),
-                ),
-              ));
+            alignment: Alignment.center,
+            child: Container(
+              child: SpinKitFadingCube(
+                itemBuilder: (_, int index) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color:
+                          index.isEven ? Color(0xff017EFF) : Color(0xffFFC700),
+                    ),
+                  );
+                },
+                size: 30.0,
+              ),
+            ),
+          ));
         }
       },
     );
@@ -315,9 +311,10 @@ class _SettingsState extends State<TicketList> {
     return Center(
       child: Container(
           child: Text(
-            'NO TICKET FOUND!',
-            style: TextStyle(fontSize: 20, letterSpacing: 1, color: Color(0xff2E2A4A)),
-          )),
+        'NO TICKET FOUND!',
+        style:
+            TextStyle(fontSize: 20, letterSpacing: 1, color: Color(0xff2E2A4A)),
+      )),
     );
   }
 
@@ -376,12 +373,9 @@ class _SettingsState extends State<TicketList> {
                 '/create-ticket',
                 arguments: <String, String>{
                   'chapter_id': chapter_id.toString(),
-
                 },
               );
-            }
-            else if (total_query == "1")
-            {
+            } else if (total_query == "1") {
               if (payment == "0") {
                 Navigator.pushNamed(
                   context,
@@ -394,19 +388,16 @@ class _SettingsState extends State<TicketList> {
                     'out': 'in'
                   },
                 );
-              }
-              else {
+              } else {
                 Navigator.pushNamed(
                   context,
                   '/create-ticket',
                   arguments: <String, String>{
                     'chapter_id': chapter_id.toString(),
-
                   },
                 );
               }
-            }
-            else {
+            } else {
               if (payment == "0") {
                 Navigator.pushNamed(
                   context,
@@ -419,24 +410,19 @@ class _SettingsState extends State<TicketList> {
                     'out': 'in'
                   },
                 );
-
-              }
-              else{
+              } else {
                 Navigator.pushNamed(
                   context,
                   '/create-ticket',
                   arguments: <String, String>{
                     'chapter_id': chapter_id.toString(),
-
                   },
                 );
               }
-
             }
-           // Navigator.pop(context);
-
+            // Navigator.pop(context);
           },
-          backgroundColor:Color(0xff017EFF),
+          backgroundColor: Color(0xff017EFF),
           label: Text("Create"),
           icon: Icon(
             Icons.add,
@@ -458,7 +444,7 @@ class _SettingsState extends State<TicketList> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                   /* Container(
+                    /* Container(
                       padding: EdgeInsets.only(left: 15, right: 15, top: 5),
                       margin: EdgeInsets.only(bottom: 5),
                       child: Row(children: <Widget>[

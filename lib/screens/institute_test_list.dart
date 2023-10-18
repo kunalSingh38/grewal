@@ -17,7 +17,7 @@ import '../constants.dart';
 class InstituteTestList extends StatefulWidget {
   /*final Object argument;
 
-  const InstituteTestList({Key key, this.argument}) : super(key: key);*/
+  const InstituteTestList({ required this.argument}) ;*/
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -25,7 +25,7 @@ class InstituteTestList extends StatefulWidget {
 
 class _SettingsState extends State<InstituteTestList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -213,26 +213,28 @@ class _SettingsState extends State<InstituteTestList> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['Response'].length != 0) {
+          if (jsonDecode(snapshot.data.toString())['Response'].length != 0) {
             return Container(
               child: ListView.builder(
                   shrinkWrap: true,
                   primary: false,
-                  itemCount: snapshot.data['Response'].length,
+                  itemCount:
+                      jsonDecode(snapshot.data.toString())['Response'].length,
                   itemBuilder: (context, index) {
                     return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
+                      // actionPane: SlidableDrawerActionPane(),
+                      // actionExtentRatio: 0.25,
                       child: InkWell(
                         onTap: () {
-                          if (snapshot.data['Response'][index]['is_taken'] ==
+                          if (jsonDecode(snapshot.data.toString())['Response']
+                                  [index]['is_taken'] ==
                               0) {
                             Navigator.pushNamed(
                               context,
                               '/test-correct',
                               arguments: <String, String>{
-                                'test_id': snapshot.data['Response'][index]
-                                        ['inst_test_id']
+                                'test_id': jsonDecode(snapshot.data.toString())[
+                                        'Response'][index]['inst_test_id']
                                     .toString(),
                                 'type': "institute",
                               },
@@ -242,8 +244,8 @@ class _SettingsState extends State<InstituteTestList> {
                               context,
                               '/view-performance',
                               arguments: <String, String>{
-                                'test_id': snapshot.data['Response'][index]
-                                        ['inst_test_id']
+                                'test_id': jsonDecode(snapshot.data.toString())[
+                                        'Response'][index]['inst_test_id']
                                     .toString(),
                                 'type': "institute",
                               },
@@ -309,8 +311,10 @@ class _SettingsState extends State<InstituteTestList> {
                                             children: <Widget>[
                                               Expanded(
                                                 child: Text(
-                                                    snapshot.data['Response']
-                                                        [index]['name'],
+                                                    jsonDecode(snapshot.data
+                                                                .toString())[
+                                                            'Response'][index]
+                                                        ['name'],
                                                     maxLines: 2,
                                                     softWrap: true,
                                                     overflow:
@@ -321,8 +325,9 @@ class _SettingsState extends State<InstituteTestList> {
                                           ),
                                           Container(
                                             child: Text(
-                                                snapshot.data['Response'][index]
-                                                    ['name_date'],
+                                                jsonDecode(snapshot.data
+                                                        .toString())['Response']
+                                                    [index]['name_date'],
                                                 maxLines: 1,
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -344,15 +349,15 @@ class _SettingsState extends State<InstituteTestList> {
                           ]),
                         ]),
                       ),
-                      secondaryActions: <Widget>[
-                        /*  snapshot.data['Response'][index]['is_taken'] == 0
+                      // secondaryActions: <Widget>[
+                      /*  jsonDecode(snapshot.data.toString())['Response'][index]['is_taken'] == 0
                             ? IconSlideAction(
                           caption: 'Delete',
                           color: Color(0xff017EFF),
                           icon: Icons.delete,
                           onTap: () {
                             showConfirmDialog(
-                                snapshot.data['Response'][index]['id']
+                                jsonDecode(snapshot.data.toString())['Response'][index]['id']
                                     .toString(),
                                 'Cancel',
                                 'Remove',
@@ -361,7 +366,7 @@ class _SettingsState extends State<InstituteTestList> {
                           },
                         )
                             : Container(),*/
-                      ],
+                      // ],
                     );
                   }),
             );

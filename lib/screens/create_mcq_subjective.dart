@@ -308,7 +308,7 @@ class _LoginWithLogoState extends State<CreateSubjective> {
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
 
-    Map map = ModalRoute.of(context).settings.arguments as Map;
+    Map map = ModalRoute.of(context)!.settings.arguments as Map;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -501,7 +501,7 @@ class _LoginWithLogoState extends State<CreateSubjective> {
                                     Navigator.pushNamed(
                                       context,
                                       '/start-subjective-test',
-                                      arguments: ModalRoute.of(context)
+                                      arguments: ModalRoute.of(context)!
                                           .settings
                                           .arguments,
                                     );
@@ -529,7 +529,7 @@ class Region {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region.fromJson(Map<String, dynamic> json) {
     return new Region(
@@ -541,7 +541,7 @@ class Region3 {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region3({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region3({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region3.fromJson(Map<String, dynamic> json) {
     return new Region3(
@@ -555,7 +555,7 @@ class Region4 {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region4({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region4({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region4.fromJson(Map<String, dynamic> json) {
     return new Region4(
@@ -570,8 +570,8 @@ class Animal {
   final String name;
 
   Animal({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 }
 
@@ -580,8 +580,8 @@ class Animal1 {
   final String name;
 
   Animal1({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 }
 
@@ -590,7 +590,7 @@ class Animal2 {
   final String name;
 
   Animal2({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 }

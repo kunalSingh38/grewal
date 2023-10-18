@@ -3,13 +3,13 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomRadioWidget<T> extends StatelessWidget {
-  final T value;
-  final T groupValue;
-  final String groupName;
-  final ValueChanged<T> onChanged;
-  final double width;
-  final double height;
-  final Color color;
+  final T? value;
+  final T? groupValue;
+  final String? groupName;
+  final ValueChanged<T>? onChanged;
+  final double? width;
+  final double? height;
+  final Color? color;
 
   CustomRadioWidget(
       {this.value,
@@ -27,7 +27,7 @@ class CustomRadioWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onChanged(this.value);
+        onChanged!(this.value as T);
       },
       child: Container(
         padding: EdgeInsets.only(bottom: 8),
@@ -53,8 +53,8 @@ class CustomRadioWidget<T> extends StatelessWidget {
               ),
               child: Center(
                 child: Container(
-                  height: this.height - 0,
-                  width: this.width - 0,
+                  height: this.height! - 0,
+                  width: this.width! - 0,
                   decoration: ShapeDecoration(
                     // color:value == groupValue? Color(0xff51DEA0):Color(0xffF9F9FB) ,
                     shape: CircleBorder(),
@@ -87,11 +87,11 @@ class CustomRadioWidget<T> extends StatelessWidget {
                   border: Border(bottom: BorderSide(color: Colors.grey)),
                 ),
                 "th": Style(
-                  padding: EdgeInsets.all(6),
+                  padding: HtmlPaddings.all(6),
                   backgroundColor: Colors.grey,
                 ),
                 "td": Style(
-                  padding: EdgeInsets.all(6),
+                  padding: HtmlPaddings.all(6),
                   alignment: Alignment.topLeft,
                 ),
                 'h5': Style(maxLines: 2, textOverflow: TextOverflow.ellipsis),

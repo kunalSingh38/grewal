@@ -18,7 +18,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   String profile_image = '';
   String user_id = "";
   String api_token = "";
-  Future _notificationData;
+  Future? _notificationData;
   @override
   void initState() {
     super.initState();
@@ -74,8 +74,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
       future: _notificationData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          var errorCode = snapshot.data['ErrorCode'];
-          var response = snapshot.data['Response'];
+          var errorCode = jsonDecode(snapshot.data.toString())['ErrorCode'];
+          var response = jsonDecode(snapshot.data.toString())['Response'];
           if (errorCode == 0) {
             return ListView.builder(
               itemCount: response.length,

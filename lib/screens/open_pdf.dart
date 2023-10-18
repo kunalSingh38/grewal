@@ -8,7 +8,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class Viewer extends StatefulWidget {
   final Object argument;
-  const Viewer({Key key, this.argument}) : super(key: key);
+  const Viewer({required this.argument});
   @override
   _ViewerState createState() => _ViewerState();
 }

@@ -23,7 +23,7 @@ import '../../constants.dart';
 class StartSubjective extends StatefulWidget {
   final Object argument;
 
-  const StartSubjective({Key key, this.argument}) : super(key: key);
+  StartSubjective({required this.argument});
 
   @override
   _LoginWithLogoState createState() => _LoginWithLogoState();
@@ -42,7 +42,7 @@ class _LoginWithLogoState extends State<StartSubjective>
 
   bool isEnabled2 = false;
 
-  Future _quiz;
+  Future? _quiz;
   String chapter_id = "";
   String chapter_name = "";
   String type = "";
@@ -57,13 +57,13 @@ class _LoginWithLogoState extends State<StartSubjective>
   bool lastAns = false;
   bool done = false;
 
-  List<XMLJSON> xmlList = new List();
+  List<XMLJSON> xmlList = [];
 
   bool full_show = false;
   String testQuestionId = "";
   String totalQuestions = "";
-  List<bool> previousClicked;
-  List<bool> optionsClicked;
+  List<bool>? previousClicked;
+  List<bool>? optionsClicked;
   Map finalMap = {};
   @override
   void initState() {
@@ -85,7 +85,7 @@ class _LoginWithLogoState extends State<StartSubjective>
     _getUser();
   }
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 15,
       fontWeight: FontWeight.w500,
@@ -126,14 +126,16 @@ class _LoginWithLogoState extends State<StartSubjective>
         totalQuestions = data['Response'].length.toString();
       });
 
-      arr = new List(int.parse(totalQuestions));
-      optionsClicked = new List(int.parse(totalQuestions));
-      previousClicked = new List(int.parse(totalQuestions));
+      arr = List.generate(int.parse(totalQuestions), (index) => 0);
+      optionsClicked =
+          List.generate(int.parse(totalQuestions), (index) => false);
+      previousClicked =
+          List.generate(int.parse(totalQuestions), (index) => false);
 
       for (int i = 0; i < int.parse(totalQuestions); i++) {
         setState(() {
-          optionsClicked[i] = false;
-          previousClicked[i] = false;
+          optionsClicked![i] = false;
+          previousClicked![i] = false;
         });
       }
 
@@ -153,7 +155,7 @@ class _LoginWithLogoState extends State<StartSubjective>
   }
 
   int id = 0;
-  List<int> arr;
+  List<int>? arr;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -170,11 +172,11 @@ class _LoginWithLogoState extends State<StartSubjective>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 1,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[0]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -184,11 +186,11 @@ class _LoginWithLogoState extends State<StartSubjective>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 2,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[1]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -198,11 +200,11 @@ class _LoginWithLogoState extends State<StartSubjective>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 3,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[2]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -212,11 +214,11 @@ class _LoginWithLogoState extends State<StartSubjective>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 4,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[3]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -234,7 +236,7 @@ class _LoginWithLogoState extends State<StartSubjective>
               color: Color(0xffF9F9FB),
               groupName: response[0]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -248,7 +250,7 @@ class _LoginWithLogoState extends State<StartSubjective>
               color: Color(0xffF9F9FB),
               groupName: response[1]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -257,8 +259,8 @@ class _LoginWithLogoState extends State<StartSubjective>
 
   selectedRadio(int val, int ind) {
     setState(() {
-      optionsClicked[ind] = true;
-      arr[ind] = val;
+      optionsClicked![ind] = true;
+      arr![ind] = val;
     });
   }
 
@@ -290,13 +292,13 @@ class _LoginWithLogoState extends State<StartSubjective>
 
   @override
   void dispose() {
-    _scrollController.dispose(); // dispose the controller
+    _scrollController!.dispose(); // dispose the controller
     super.dispose();
   }
 
   void _scrollToTop() {
-    _scrollController.animateTo(0,
-        duration: Duration(seconds: 3), curve: Curves.linear);
+    _scrollController!
+        .animateTo(0, duration: Duration(seconds: 3), curve: Curves.linear);
   }
 
   Widget _customContent() {
@@ -305,8 +307,10 @@ class _LoginWithLogoState extends State<StartSubjective>
       builder: (context, snapshot) {
         var getScreenHeight = MediaQuery.of(context).size.height;
         if (snapshot.connectionState == ConnectionState.done) {
-          var errorCode = snapshot.data['ErrorCode'];
-          var response = snapshot.data['Response'];
+          int errorCode = jsonDecode(
+              jsonDecode(snapshot.data.toString()).toString())['ErrorCode'];
+          List response = jsonDecode(
+              jsonDecode(snapshot.data.toString()).toString())['Response'];
 
           if (errorCode == 0) {
             return response.length != 0
@@ -326,7 +330,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                           scrollDirection: Axis.horizontal,
                         ),
                         itemCount: response.length,
-                        itemBuilder: (BuildContext context, int itemIndex) {
+                        itemBuilder: (context, itemIndex, realIndex) {
                           return ListView(primary: false, children: <Widget>[
                             Container(
                                 child: Column(children: <Widget>[
@@ -477,14 +481,14 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                             ),
                                                             "th": Style(
                                                               padding:
-                                                                  EdgeInsets
+                                                                  HtmlPaddings
                                                                       .all(6),
                                                               backgroundColor:
                                                                   Colors.grey,
                                                             ),
                                                             "td": Style(
                                                               padding:
-                                                                  EdgeInsets
+                                                                  HtmlPaddings
                                                                       .all(6),
                                                               alignment:
                                                                   Alignment
@@ -546,14 +550,14 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                             ),
                                                             "th": Style(
                                                               padding:
-                                                                  EdgeInsets
+                                                                  HtmlPaddings
                                                                       .all(6),
                                                               backgroundColor:
                                                                   Colors.grey,
                                                             ),
                                                             "td": Style(
                                                               padding:
-                                                                  EdgeInsets
+                                                                  HtmlPaddings
                                                                       .all(6),
                                                               alignment:
                                                                   Alignment
@@ -651,11 +655,11 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                 ),
                                               ),
                                               "th": Style(
-                                                padding: EdgeInsets.all(6),
+                                                padding: HtmlPaddings.all(6),
                                                 backgroundColor: Colors.grey,
                                               ),
                                               "td": Style(
-                                                padding: EdgeInsets.all(6),
+                                                padding: HtmlPaddings.all(6),
                                                 alignment: Alignment.topLeft,
                                               ),
                                               'h5': Style(
@@ -756,28 +760,31 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                     // color: Color(0xff017EFF),
                                                     onPressed: () async {
                                                       XMLJSON xmljson =
-                                                          new XMLJSON();
+                                                          new XMLJSON(
+                                                              answer: '',
+                                                              question: '',
+                                                              time_taken: '');
                                                       print(xmljson);
                                                       print(arr.toString() +
                                                           " test");
 
-                                                      if (previousClicked
+                                                      if (previousClicked!
                                                           .contains(true)) {
-                                                        if (optionsClicked[
+                                                        if (optionsClicked![
                                                                 itemIndex] ==
                                                             true) {
-                                                          optionsClicked[
+                                                          optionsClicked![
                                                                   itemIndex] =
                                                               false;
                                                         }
                                                       }
                                                       print(previousClicked);
                                                       print(optionsClicked);
-                                                      if (arr[itemIndex] !=
+                                                      if (arr![itemIndex] !=
                                                           null) {
                                                         // print(_controller1.getTime());
 
-                                                        if (arr[itemIndex] ==
+                                                        if (arr![itemIndex] ==
                                                             1) {
                                                           setState(() {
                                                             xmljson.question =
@@ -793,9 +800,9 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                                 'option_value'];
                                                             xmljson.time_taken =
                                                                 _controller1
-                                                                    .getTime();
+                                                                    .getTime()!;
                                                           });
-                                                          if (previousClicked[
+                                                          if (previousClicked![
                                                               itemIndex]) {
                                                             xmlList.removeAt(
                                                                 itemIndex);
@@ -804,7 +811,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                                 xmljson);
                                                             print("a");
                                                           } else {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 false) {
                                                               xmlList.removeAt(
@@ -820,7 +827,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                             }
                                                           }
                                                           print(xmlList);
-                                                        } else if (arr[
+                                                        } else if (arr![
                                                                 itemIndex] ==
                                                             2) {
                                                           setState(() {
@@ -837,9 +844,9 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                                 'option_value'];
                                                             xmljson.time_taken =
                                                                 _controller1
-                                                                    .getTime();
+                                                                    .getTime()!;
                                                           });
-                                                          if (previousClicked[
+                                                          if (previousClicked![
                                                               itemIndex]) {
                                                             xmlList.removeAt(
                                                                 itemIndex);
@@ -848,7 +855,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                                 xmljson);
                                                             print("a");
                                                           } else {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 false) {
                                                               xmlList.removeAt(
@@ -865,7 +872,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                           }
                                                           print(jsonEncode(
                                                               xmlList));
-                                                        } else if (arr[
+                                                        } else if (arr![
                                                                 itemIndex] ==
                                                             3) {
                                                           setState(() {
@@ -882,9 +889,9 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                                 'option_value'];
                                                             xmljson.time_taken =
                                                                 _controller1
-                                                                    .getTime();
+                                                                    .getTime()!;
                                                           });
-                                                          if (previousClicked[
+                                                          if (previousClicked![
                                                               itemIndex]) {
                                                             xmlList.removeAt(
                                                                 itemIndex);
@@ -893,7 +900,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                                 xmljson);
                                                             print("a");
                                                           } else {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 false) {
                                                               xmlList.removeAt(
@@ -910,7 +917,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                           }
                                                           print(jsonEncode(
                                                               xmlList));
-                                                        } else if (arr[
+                                                        } else if (arr![
                                                                 itemIndex] ==
                                                             4) {
                                                           setState(() {
@@ -927,9 +934,9 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                                 'option_value'];
                                                             xmljson.time_taken =
                                                                 _controller1
-                                                                    .getTime();
+                                                                    .getTime()!;
                                                           });
-                                                          if (previousClicked[
+                                                          if (previousClicked![
                                                               itemIndex]) {
                                                             xmlList.removeAt(
                                                                 itemIndex);
@@ -938,7 +945,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                                                                 xmljson);
                                                             print("a");
                                                           } else {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 false) {
                                                               xmlList.removeAt(
@@ -1221,9 +1228,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text(
                   "No",
-                  style: TextStyle(
-                    color: Color(0xff2E2A4A),
-                  ),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               new ElevatedButton(
@@ -1231,8 +1236,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                   Navigator.of(context).pop(false);
                   Navigator.pushNamed(context, '/dashboard');
                 },
-                child:
-                    new Text("Yes", style: TextStyle(color: Color(0xff2E2A4A))),
+                child: new Text("Yes", style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -1340,7 +1344,7 @@ class _LoginWithLogoState extends State<StartSubjective>
                                         height: 0,
 
                                         // Ring Color for Countdown Widget.
-                                        ringColor: Colors.grey[300],
+                                        ringColor: Colors.grey.shade300,
 
                                         // Ring Gradient for Countdown Widget.
                                         ringGradient: null,
@@ -1420,12 +1424,12 @@ class _LoginWithLogoState extends State<StartSubjective>
 
   onNextClick(int itemIndex) {
     setState(() {
-      previousClicked[itemIndex] = false;
-      optionsClicked[itemIndex] = false;
+      previousClicked![itemIndex] = false;
+      optionsClicked![itemIndex] = false;
     });
     buttonCarouselController.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.linear);
-    print(previousClicked);
+    print(previousClicked!);
     print(optionsClicked);
     _controller1.restart();
   }
@@ -1433,11 +1437,11 @@ class _LoginWithLogoState extends State<StartSubjective>
   onPreviousClick(int itemIndex) {
     setState(() {
       lastAns = false;
-      previousClicked[itemIndex - 1] = true;
-      if (optionsClicked[itemIndex] == true) {
-        optionsClicked[itemIndex] = true;
+      previousClicked![itemIndex - 1] = true;
+      if (optionsClicked![itemIndex] == true) {
+        optionsClicked![itemIndex] = true;
       } else {
-        optionsClicked[itemIndex] = false;
+        optionsClicked![itemIndex] = false;
       }
     });
     buttonCarouselController.previousPage(

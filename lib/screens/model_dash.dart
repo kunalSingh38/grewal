@@ -12,8 +12,6 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants.dart';
 
 class ModelDash extends StatefulWidget {
-
-
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -23,13 +21,16 @@ class _SettingsState extends State<ModelDash> {
   String chapter_id = "";
   bool _loading = false;
   String profile_image = '';
-  Future _chapterData;
+  Future? _chapterData;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
   TextStyle normalText4 = GoogleFonts.montserrat(
       fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff2E2A4A));
   TextStyle normalText3 = GoogleFonts.montserrat(
-      fontSize: 15, fontWeight: FontWeight.w400, decoration: TextDecoration.underline,color: Color(0xff2E2A4A));
+      fontSize: 15,
+      fontWeight: FontWeight.w400,
+      decoration: TextDecoration.underline,
+      color: Color(0xff2E2A4A));
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -37,7 +38,7 @@ class _SettingsState extends State<ModelDash> {
   void initState() {
     super.initState();
 
-  //  _getUser();
+    //  _getUser();
   }
   /*_getUser() async {
     Preference().getPreferences().then((prefs) {
@@ -47,7 +48,7 @@ class _SettingsState extends State<ModelDash> {
       });
     });
   }*/
- /* Widget _networkImage1(url) {
+  /* Widget _networkImage1(url) {
     return Container(
       margin: EdgeInsets.only(
         right: 8,
@@ -67,7 +68,6 @@ class _SettingsState extends State<ModelDash> {
     );
   }*/
 
-
   Widget htmlList(Size deviceSize) {
     return Container(
       child: SfPdfViewer.network(
@@ -75,6 +75,7 @@ class _SettingsState extends State<ModelDash> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
@@ -122,32 +123,34 @@ class _SettingsState extends State<ModelDash> {
         ),
         backgroundColor: Colors.transparent,
       ),
-      body:  SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Container(
           child: Row(
             children: [
               Expanded(
                 child: InkWell(
-                     onTap: (){
-                       Navigator.pushNamed(
-                         context,
-                         '/mtp-list',
-                       );
-                            },
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/mtp-list',
+                    );
+                  },
                   child: Container(
-                    padding: const EdgeInsets.only(left: 30.0, top: 20.0,right: 10,bottom: 20),
+                    padding: const EdgeInsets.only(
+                        left: 30.0, top: 20.0, right: 10, bottom: 20),
                     child: Container(
                       decoration: BoxDecoration(
                           color: planbg1,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color:planbg1)),
+                          border: Border.all(color: planbg1)),
                       child: Container(
-                        padding: const EdgeInsets.only(left: 10.0, top: 10.0,right: 10,bottom: 10),
+                        padding: const EdgeInsets.only(
+                            left: 10.0, top: 10.0, right: 10, bottom: 10),
                         child: Column(
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(top: 26.0),
-                               child: Center(
+                              child: Center(
                                 child: Container(
                                   width: 78,
                                   height: 67.01,
@@ -172,7 +175,6 @@ class _SettingsState extends State<ModelDash> {
                                           ),
                                         ),
                                       ),
-
                                     ],
                                   ),
                                 ),
@@ -185,26 +187,27 @@ class _SettingsState extends State<ModelDash> {
                   ),
                 ),
               ),
-
               Expanded(
                 child: InkWell(
-                   onTap: (){
-                     Navigator.pushNamed(
-                       context,
-                       '/answer-list',
-                     );
-                            },
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/answer-list',
+                    );
+                  },
                   child: Container(
-                    padding: const EdgeInsets.only(left: 10.0, top: 20.0,right: 30,bottom: 20),
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 20.0, right: 30, bottom: 20),
                     child: Container(
                       /* width: 151,
                                 height: 176,*/
                       decoration: BoxDecoration(
                           color: planbg1,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color:planbg1)),
+                          border: Border.all(color: planbg1)),
                       child: Container(
-                        padding: const EdgeInsets.only(left: 10.0, top: 10.0,right: 10,bottom: 10),
+                        padding: const EdgeInsets.only(
+                            left: 10.0, top: 10.0, right: 10, bottom: 10),
                         child: Column(
                           children: [
                             Padding(
@@ -223,7 +226,6 @@ class _SettingsState extends State<ModelDash> {
                               padding: const EdgeInsets.only(top: 14.76),
                               child: Center(
                                 child: Container(
-
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -235,7 +237,6 @@ class _SettingsState extends State<ModelDash> {
                                           ),
                                         ),
                                       ),
-
                                     ],
                                   ),
                                 ),

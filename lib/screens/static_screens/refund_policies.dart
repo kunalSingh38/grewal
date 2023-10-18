@@ -6,30 +6,22 @@ import 'dart:async';
 
 import 'package:webview_flutter/webview_flutter.dart';
 
-
-
-
-
 class Refund extends StatefulWidget {
-
-
   @override
   _MyWebViewState createState() => _MyWebViewState();
 }
 
 class _MyWebViewState extends State<Refund> {
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
-  num position = 1;
+      Completer<WebViewController>();
+  int position = 1;
   final key = UniqueKey();
   var _userId;
-  Future<dynamic> _contest;
+  Future<dynamic>? _contest;
   @override
   void initState() {
     super.initState();
   }
-
-
 
   doneLoading(String value) {
     setState(() {
@@ -43,24 +35,22 @@ class _MyWebViewState extends State<Refund> {
     });
   }
 
-
   Widget htmlList(Size deviceSize) {
     return IndexedStack(
       index: position,
       children: <Widget>[
-        Container(
-
-          child: WebView(
-            initialUrl:"https://www.grewaleducation.com/return-refund.php",
-            javascriptMode: JavascriptMode.unrestricted,
-            key: key,
-            onPageFinished: doneLoading,
-            onPageStarted: startLoading,
-            onWebViewCreated: (WebViewController webViewController) {
-              _controller.complete(webViewController);
-            },
-          ),
-        ),
+        // Container(
+        //   child: WebView(
+        //     initialUrl: "https://www.grewaleducation.com/return-refund.php",
+        //     javascriptMode: JavascriptMode.unrestricted,
+        //     key: key,
+        //     onPageFinished: doneLoading,
+        //     onPageStarted: startLoading,
+        //     onWebViewCreated: (WebViewController webViewController) {
+        //       _controller.complete(webViewController);
+        //     },
+        //   ),
+        // ),
         Container(
           child: Center(
             child: CircularProgressIndicator(),
@@ -69,6 +59,7 @@ class _MyWebViewState extends State<Refund> {
       ],
     );
   }
+
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -77,7 +68,7 @@ class _MyWebViewState extends State<Refund> {
     Size deviceSize = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar:  AppBar(
+        appBar: AppBar(
           elevation: 0.0,
           leading: InkWell(
             child: Row(children: <Widget>[
@@ -119,11 +110,6 @@ class _MyWebViewState extends State<Refund> {
           ),
           backgroundColor: Colors.transparent,
         ),
-        body: htmlList( deviceSize)
-    );
+        body: htmlList(deviceSize));
   }
 }
-
-
-
-

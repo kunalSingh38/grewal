@@ -28,7 +28,7 @@ import 'clock.dart';
 class StartOlyMCQ extends StatefulWidget {
   final Object argument;
 
-  const StartOlyMCQ({Key key, this.argument}) : super(key: key);
+  const StartOlyMCQ({required this.argument});
 
   @override
   _LoginWithLogoState createState() => _LoginWithLogoState();
@@ -47,7 +47,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
 
   bool isEnabled2 = false;
 
-  Future _quiz;
+  Future? _quiz;
   String chapter_id = "";
   String chapter_name = "";
   String type = "";
@@ -64,13 +64,13 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
   bool lastNext = false;
   bool done = false;
 
-  List<XMLJSON> xmlList = new List();
+  List<XMLJSON> xmlList = [];
 
   bool full_show = false;
 //  int _duration = 1800;
-  List<bool> previousClicked;
-  List<bool> optionsClicked;
-  List<String> list = new List();
+  List<bool>? previousClicked;
+  List<bool>? optionsClicked;
+  List<String> list = [];
   String api_token = "";
   int time = 0;
   @override
@@ -89,7 +89,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
     _getUser();
   }
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 15,
       fontWeight: FontWeight.w500,
@@ -135,19 +135,20 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      arr = new List(data['Response'].length);
+      arr = List.generate(data['Response'].length, (index) => 0);
 
-      previousClicked = new List(data['Response'].length);
-      optionsClicked = new List(data['Response'].length);
-      list = new List(data['Response'].length);
+      previousClicked =
+          List.generate(data['Response'].length, (index) => false);
+      optionsClicked = List.generate(data['Response'].length, (index) => false);
+      list = List.generate(data['Response'].length, (index) => "");
       setState(() {
         //  _duration=(data['Response'].length*2);
 
         question_attempt = data['question_attempt'].toString();
 
         for (int i = 0; i < data['Response'].length; i++) {
-          optionsClicked[i] = false;
-          previousClicked[i] = false;
+          optionsClicked![i] = false;
+          previousClicked![i] = false;
         }
       });
 
@@ -168,7 +169,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
   }
 
   int id = 0;
-  List<int> arr;
+  List<int>? arr;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -185,7 +186,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 1,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[0]['option_name'],
               onChanged: (val) {
@@ -196,7 +197,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                   Fluttertoast.showToast(
                       msg: question_attempt + " Questions already selected");
                 } else {
-                  selectedRadio(val, index, response1);
+                  selectedRadio(int.parse(val.toString()), index, response1);
                 }
               },
             ),
@@ -207,7 +208,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 2,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[1]['option_name'],
               onChanged: (val) {
@@ -218,7 +219,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                   Fluttertoast.showToast(
                       msg: question_attempt + " Questions already selected");
                 } else {
-                  selectedRadio(val, index, response1);
+                  selectedRadio(int.parse(val.toString()), index, response1);
                 }
               },
             ),
@@ -229,7 +230,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 3,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[2]['option_name'],
               onChanged: (val) {
@@ -240,7 +241,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                   Fluttertoast.showToast(
                       msg: question_attempt + " Questions already selected");
                 } else {
-                  selectedRadio(val, index, response1);
+                  selectedRadio(int.parse(val.toString()), index, response1);
                 }
               },
             ),
@@ -251,7 +252,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 4,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[3]['option_name'],
               onChanged: (val) {
@@ -262,7 +263,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                   Fluttertoast.showToast(
                       msg: question_attempt + " Questions already selected");
                 } else {
-                  selectedRadio(val, index, response1);
+                  selectedRadio(int.parse(val.toString()), index, response1);
                 }
               },
             ),
@@ -272,109 +273,109 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
 
   selectedRadio(int val, int ind, response) {
     setState(() {
-      if (optionsClicked[ind] == true) {
-        optionsClicked[ind] = false;
+      if (optionsClicked![ind] == true) {
+        optionsClicked![ind] = false;
       } else {
-        optionsClicked[ind] = true;
+        optionsClicked![ind] = true;
       }
 
-      arr[ind] = val;
-      print(arr[ind]);
-      XMLJSON xmljson = new XMLJSON();
-      if (arr[ind] == 1) {
+      arr![ind] = val;
+      print(arr![ind]);
+      XMLJSON xmljson = new XMLJSON(answer: '', question: '', time_taken: '');
+      if (arr![ind] == 1) {
         setState(() {
           xmljson.question = response[ind]['id'].toString();
           xmljson.answer = response[ind]['question_option'][0]['option_value'];
           xmljson.time_taken = "";
         });
-        if (previousClicked[ind]) {
-          optionsClicked[ind] = true;
+        if (previousClicked![ind]) {
+          optionsClicked![ind] = true;
           xmlList.removeAt(ind);
           xmlList.insert(ind, xmljson);
           print("a");
         } else {
-          if (optionsClicked[ind] == false) {
-            optionsClicked[ind] = true;
+          if (optionsClicked![ind] == false) {
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
             print("b");
           } else {
-            optionsClicked[ind] = true;
+            optionsClicked![ind] = true;
 
             xmlList.add(xmljson);
             print("c");
           }
         }
         print(xmlList);
-      } else if (arr[ind] == 2) {
+      } else if (arr![ind] == 2) {
         setState(() {
           xmljson.question = response[ind]['id'].toString();
           xmljson.answer = response[ind]['question_option'][1]['option_value'];
           xmljson.time_taken = "";
         });
-        if (previousClicked[ind]) {
-          optionsClicked[ind] = true;
+        if (previousClicked![ind]) {
+          optionsClicked![ind] = true;
           xmlList.removeAt(ind);
           xmlList.insert(ind, xmljson);
           print("a");
         } else {
-          if (optionsClicked[ind] == false) {
-            optionsClicked[ind] = true;
+          if (optionsClicked![ind] == false) {
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
             print("b");
           } else {
-            optionsClicked[ind] = true;
+            optionsClicked![ind] = true;
 
             xmlList.add(xmljson);
             print("c");
           }
         }
         print(jsonEncode(xmlList));
-      } else if (arr[ind] == 3) {
+      } else if (arr![ind] == 3) {
         setState(() {
           xmljson.question = response[ind]['id'].toString();
           xmljson.answer = response[ind]['question_option'][2]['option_value'];
           xmljson.time_taken = "";
         });
-        if (previousClicked[ind]) {
-          optionsClicked[ind] = true;
+        if (previousClicked![ind]) {
+          optionsClicked![ind] = true;
           xmlList.removeAt(ind);
           xmlList.insert(ind, xmljson);
           print("a");
         } else {
-          if (optionsClicked[ind] == false) {
-            optionsClicked[ind] = true;
+          if (optionsClicked![ind] == false) {
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
             print("b");
           } else {
-            optionsClicked[ind] = true;
+            optionsClicked![ind] = true;
 
             xmlList.add(xmljson);
             print("c");
           }
         }
         print(jsonEncode(xmlList));
-      } else if (arr[ind] == 4) {
+      } else if (arr![ind] == 4) {
         setState(() {
           xmljson.question = response[ind]['id'].toString();
           xmljson.answer = response[ind]['question_option'][3]['option_value'];
           xmljson.time_taken = "";
         });
-        if (previousClicked[ind]) {
-          optionsClicked[ind] = true;
+        if (previousClicked![ind]) {
+          optionsClicked![ind] = true;
           xmlList.removeAt(ind);
           xmlList.insert(ind, xmljson);
           print("a");
         } else {
-          if (optionsClicked[ind] == false) {
-            optionsClicked[ind] = true;
+          if (optionsClicked![ind] == false) {
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
             print("b");
           } else {
-            optionsClicked[ind] = true;
+            optionsClicked![ind] = true;
 
             xmlList.add(xmljson);
             print("c");
@@ -409,6 +410,8 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
     } else if (response[itemIndex]['type'] == "Assertion Reasoning") {
       return _radioBuilderMCQ(
           response[itemIndex]['question_option'], itemIndex, response);
+    } else {
+      return SizedBox();
     }
   }
 
@@ -426,14 +429,14 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
 
   @override
   void dispose() {
-    _scrollController.dispose(); // dispose the controller
+    _scrollController!.dispose(); // dispose the controller
 
     super.dispose();
   }
 
   void _scrollToTop() {
-    _scrollController.animateTo(0,
-        duration: Duration(seconds: 3), curve: Curves.linear);
+    _scrollController!
+        .animateTo(0, duration: Duration(seconds: 3), curve: Curves.linear);
   }
 
   Future<bool> _submitPop() async {
@@ -539,8 +542,8 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
       builder: (context, snapshot) {
         var getScreenHeight = MediaQuery.of(context).size.height;
         if (snapshot.connectionState == ConnectionState.done) {
-          var errorCode = snapshot.data['ErrorCode'];
-          var response = snapshot.data['Response'];
+          var errorCode = jsonDecode(snapshot.data.toString())['ErrorCode'];
+          var response = jsonDecode(snapshot.data.toString())['Response'];
           if (errorCode == 0) {
             return response.length != 0
                 ? Container(
@@ -559,7 +562,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                           scrollDirection: Axis.horizontal,
                         ),
                         itemCount: response.length,
-                        itemBuilder: (BuildContext context, int itemIndex) {
+                        itemBuilder: (context, itemIndex, realIndex) {
                           return ListView(
                               shrinkWrap: true,
                               primary: false,
@@ -624,7 +627,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                                                                   ),
                                                                   "th": Style(
                                                                     padding:
-                                                                        EdgeInsets
+                                                                        HtmlPaddings
                                                                             .all(6),
                                                                     backgroundColor:
                                                                         Colors
@@ -632,7 +635,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                                                                   ),
                                                                   "td": Style(
                                                                     padding:
-                                                                        EdgeInsets
+                                                                        HtmlPaddings
                                                                             .all(6),
                                                                     alignment:
                                                                         Alignment
@@ -734,14 +737,14 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                                                                         "th":
                                                                             Style(
                                                                           padding:
-                                                                              EdgeInsets.all(6),
+                                                                              HtmlPaddings.all(6),
                                                                           backgroundColor:
                                                                               Colors.grey,
                                                                         ),
                                                                         "td":
                                                                             Style(
                                                                           padding:
-                                                                              EdgeInsets.all(6),
+                                                                              HtmlPaddings.all(6),
                                                                           alignment:
                                                                               Alignment.topLeft,
                                                                         ),
@@ -804,14 +807,14 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                                                                         "th":
                                                                             Style(
                                                                           padding:
-                                                                              EdgeInsets.all(6),
+                                                                              HtmlPaddings.all(6),
                                                                           backgroundColor:
                                                                               Colors.grey,
                                                                         ),
                                                                         "td":
                                                                             Style(
                                                                           padding:
-                                                                              EdgeInsets.all(6),
+                                                                              HtmlPaddings.all(6),
                                                                           alignment:
                                                                               Alignment.topLeft,
                                                                         ),
@@ -918,12 +921,14 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                                                     ),
                                                   ),
                                                   "th": Style(
-                                                    padding: EdgeInsets.all(6),
+                                                    padding:
+                                                        HtmlPaddings.all(6),
                                                     backgroundColor:
                                                         Colors.grey,
                                                   ),
                                                   "td": Style(
-                                                    padding: EdgeInsets.all(6),
+                                                    padding:
+                                                        HtmlPaddings.all(6),
                                                     alignment:
                                                         Alignment.topLeft,
                                                   ),
@@ -1028,22 +1033,23 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                                                         // color:
                                                         //     Color(0xff017EFF),
                                                         onPressed: () async {
-                                                          print(arr);
+                                                          print(arr!);
 
-                                                          if (previousClicked
+                                                          if (previousClicked!
                                                               .contains(true)) {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 true) {
-                                                              optionsClicked[
+                                                              optionsClicked![
                                                                       itemIndex] =
                                                                   false;
                                                             }
                                                           }
                                                           print(
-                                                              previousClicked);
-                                                          print(optionsClicked);
-                                                          if (arr[itemIndex] !=
+                                                              previousClicked!);
+                                                          print(
+                                                              optionsClicked!);
+                                                          if (arr![itemIndex] !=
                                                               null) {
                                                             onNextClick(
                                                                 itemIndex);
@@ -1204,7 +1210,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                                                   // textColor: Colors.white,
                                                   // color: Color(0xff017EFF),
                                                   onPressed: () async {
-                                                    if (optionsClicked[
+                                                    if (optionsClicked![
                                                             itemIndex] ==
                                                         true) {
                                                       Fluttertoast.showToast(
@@ -1278,9 +1284,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text(
                   "No",
-                  style: TextStyle(
-                    color: Color(0xff2E2A4A),
-                  ),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               new ElevatedButton(
@@ -1291,8 +1295,7 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                   Navigator.of(context).pop(false);
                   Navigator.pushNamed(context, '/oly-test-list');
                 },
-                child:
-                    new Text("Yes", style: TextStyle(color: Color(0xff2E2A4A))),
+                child: new Text("Yes", style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -1396,10 +1399,10 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
                                     // shape: RoundedRectangleBorder(
                                     //     borderRadius:
                                     //         BorderRadius.circular(10.0)),
-                                    // textColor: arr[index] != null
+                                    // textColor: arr![index] != null
                                     //     ? Colors.white
                                     //     : Color(0xff017EFF),
-                                    // color: arr[index] != null
+                                    // color: arr![index] != null
                                     //     ? Color(0xff017EFF)
                                     //     : Colors.white,
                                     onPressed: () async {
@@ -1517,24 +1520,24 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
 
   onNextClick(int itemIndex) {
     setState(() {
-      previousClicked[itemIndex] = false;
-      optionsClicked[itemIndex] = false;
+      previousClicked![itemIndex] = false;
+      optionsClicked![itemIndex] = false;
     });
     buttonCarouselController.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.linear);
     print(previousClicked);
-    print(optionsClicked);
+    print(optionsClicked!);
   }
 
   onSkipClick(int itemIndex) {
     /* setState(() {
       previousClicked[itemIndex]=false;
-      optionsClicked[itemIndex]=false;
+      optionsClicked![itemIndex]=false;
     });*/
     buttonCarouselController.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.linear);
-    /* print(previousClicked);
-    print(optionsClicked);*/
+    /* print(previousClicked!);
+    print(optionsClicked!);*/
   }
 
   onPreviousClick(int itemIndex) {
@@ -1542,11 +1545,11 @@ class _LoginWithLogoState extends State<StartOlyMCQ>
     if (itemIndex > 0) {
       setState(() {
         lastAns = false;
-        previousClicked[itemIndex - 1] = true;
-        if (optionsClicked[itemIndex] == true) {
-          optionsClicked[itemIndex] = true;
+        previousClicked![itemIndex - 1] = true;
+        if (optionsClicked![itemIndex] == true) {
+          optionsClicked![itemIndex] = true;
         } else {
-          optionsClicked[itemIndex] = false;
+          optionsClicked![itemIndex] = false;
         }
       });
       buttonCarouselController.previousPage(

@@ -22,7 +22,7 @@ class ChapterList extends StatefulWidget {
 
 class _SettingsState extends State<ChapterList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -103,8 +103,8 @@ class _SettingsState extends State<ChapterList> {
     );
   }
 
-  List<bool> showExpand = new List();
-  Future _getChapterData(String terms_ids) async {
+  List<bool> showExpand = [];
+  Future<Map> _getChapterData(String terms_ids) async {
     _searchResult.clear();
     _userDetails.clear();
     completeController.text = "";
@@ -113,6 +113,7 @@ class _SettingsState extends State<ChapterList> {
       'Accept': 'application/json',
       'Authorization': 'Bearer $api_token',
     };
+    print(Uri.https(BASE_URL, API_PATH + "/chapter"));
     var response = await http.post(
       new Uri.https(BASE_URL, API_PATH + "/chapter"),
       body: {
@@ -138,7 +139,7 @@ class _SettingsState extends State<ChapterList> {
     });
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      var result = data['Response'];
+      List result = data['Response'];
       setState(() {
         for (Map user in result) {
           _userDetails.add(UserDetails.fromJson(user));
@@ -201,7 +202,9 @@ class _SettingsState extends State<ChapterList> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['Response'].length != 0) {
+          Map map = snapshot.data as Map;
+          List data = map['Response'];
+          if (data.length != 0) {
             return _searchResult.length != 0 ||
                     completeController.text.isNotEmpty
                 ? Container(
@@ -237,7 +240,7 @@ class _SettingsState extends State<ChapterList> {
                                               bottomLeft: const Radius.circular(5.0),
                                               bottomRight: const Radius.circular(5.0),
                                               topRight: const Radius.circular(5.0))),
-                                      child: */ /*_networkImage(snapshot.data['url']+snapshot.data['Response'][index]['image']),*/ /*
+                                      child: */ /*_networkImage(jsonDecode(snapshot.data.toString())['url']+jsonDecode(snapshot.data.toString())['Response'][index]['image']),*/ /*
                                       Center(
                                         child: Text(
                                           _searchResult[index].chapter_name[0]
@@ -435,13 +438,12 @@ class _SettingsState extends State<ChapterList> {
                                                           Navigator.pushNamed(
                                                             context,
                                                             '/start-subjective-list',
-                                                            arguments: <String,
-                                                                String>{
-                                                              'chapter_id': snapshot
-                                                                  .data[
-                                                                      'Response']
-                                                                      [index]
-                                                                      ['id']
+                                                            arguments: {
+                                                              'chapter_id': jsonDecode(snapshot
+                                                                          .data
+                                                                          .toString())['Response']
+                                                                      [
+                                                                      index]['id']
                                                                   .toString(),
                                                             },
                                                           );
@@ -527,7 +529,7 @@ class _SettingsState extends State<ChapterList> {
                     child: ListView.builder(
                         shrinkWrap: true,
                         primary: false,
-                        itemCount: snapshot.data['Response'].length,
+                        itemCount: data.length,
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
@@ -556,7 +558,7 @@ class _SettingsState extends State<ChapterList> {
                                                   bottomLeft: const Radius.circular(5.0),
                                                   bottomRight: const Radius.circular(5.0),
                                                   topRight: const Radius.circular(5.0))),
-                                       child: */ /*_networkImage(snapshot.data['url']+snapshot.data['Response'][index]['image']),*/ /*
+                                       child: */ /*_networkImage(jsonDecode(snapshot.data.toString())['url']+jsonDecode(snapshot.data.toString())['Response'][index]['image']),*/ /*
                                           Center(
                                             child: Text(
                                               snapshot
@@ -585,8 +587,7 @@ class _SettingsState extends State<ChapterList> {
                                               children: <Widget>[
                                                 Expanded(
                                                   child: Text(
-                                                      snapshot.data['Response']
-                                                              [index]
+                                                      data[index]
                                                           ['chapter_name'],
                                                       maxLines: 3,
                                                       softWrap: true,
@@ -652,15 +653,15 @@ class _SettingsState extends State<ChapterList> {
                                               Expanded(
                                                 child: InkWell(
                                                   onTap: () {
+                                                    print("object");
                                                     Navigator.pushNamed(
                                                       context,
                                                       '/chapter-overview',
                                                       arguments: <String,
                                                           String>{
-                                                        'chapter_id': snapshot
-                                                            .data['Response']
-                                                                [index]['id']
-                                                            .toString(),
+                                                        'chapter_id':
+                                                            data[index]['id']
+                                                                .toString(),
                                                       },
                                                     );
                                                   },
@@ -680,10 +681,9 @@ class _SettingsState extends State<ChapterList> {
                                                       '/videos',
                                                       arguments: <String,
                                                           String>{
-                                                        'chapter_id': snapshot
-                                                            .data['Response']
-                                                                [index]['id']
-                                                            .toString(),
+                                                        'chapter_id':
+                                                            data[index]['id']
+                                                                .toString(),
                                                       },
                                                     );
                                                   },
@@ -709,30 +709,31 @@ class _SettingsState extends State<ChapterList> {
                                                 child: InkWell(
                                                   onTap: () {
                                                     if (term == "1") {
-                                                      print(jsonEncode({
-                                                        'chapter_id': snapshot
-                                                            .data['Response']
-                                                                [index]['id']
-                                                            .toString(),
-                                                        'chapter_name': snapshot
-                                                            .data['Response']
-                                                                [index]
-                                                                ['chapter_name']
-                                                            .toString(),
-                                                        'type': "inside"
-                                                      }));
+                                                      // print(jsonEncode({
+                                                      //   'chapter_id': data[
+                                                      //                   index]
+                                                      //               ['Response']
+                                                      //           [index]['id']
+                                                      //       .toString(),
+                                                      //   'chapter_name': data[
+                                                      //                       index]
+                                                      //                   [
+                                                      //                   'Response']
+                                                      //               [index]
+                                                      //           ['chapter_name']
+                                                      //       .toString(),
+                                                      //   'type': "inside"
+                                                      // }));
                                                       Navigator.pushNamed(
                                                         context,
                                                         '/test-list',
                                                         arguments: <String,
                                                             String>{
-                                                          'chapter_id': snapshot
-                                                              .data['Response']
-                                                                  [index]['id']
-                                                              .toString(),
-                                                          'chapter_name': snapshot
-                                                              .data['Response']
-                                                                  [index][
+                                                          'chapter_id':
+                                                              data[index]['id']
+                                                                  .toString(),
+                                                          'chapter_name': data[
+                                                                      index][
                                                                   'chapter_name']
                                                               .toString(),
                                                           'type': "inside"
@@ -744,10 +745,9 @@ class _SettingsState extends State<ChapterList> {
                                                         '/mcq-level-testing',
                                                         arguments: <String,
                                                             String>{
-                                                          'chapter_id': snapshot
-                                                              .data['Response']
-                                                                  [index]['id']
-                                                              .toString(),
+                                                          'chapter_id':
+                                                              data[index]['id']
+                                                                  .toString(),
                                                           'term':
                                                               term.toString()
                                                         },
@@ -783,10 +783,8 @@ class _SettingsState extends State<ChapterList> {
                                                             '/start-subjective-list',
                                                             arguments: <String,
                                                                 String>{
-                                                              'chapter_id': snapshot
-                                                                  .data[
-                                                                      'Response']
-                                                                      [index]
+                                                              'chapter_id': data[
+                                                                          index]
                                                                       ['id']
                                                                   .toString(),
                                                             },
@@ -1105,12 +1103,12 @@ class UserDetails {
   final String id, chapter_name, short_description;
 
   UserDetails({
-    this.id,
-    this.chapter_name,
-    this.short_description,
+    required this.id,
+    required this.chapter_name,
+    required this.short_description,
   });
 
-  factory UserDetails.fromJson(Map<String, dynamic> json) {
+  factory UserDetails.fromJson(Map json) {
     return new UserDetails(
         id: json['id'].toString(),
         chapter_name: json['chapter_name'].toString(),

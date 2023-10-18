@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 //dev url
-const String BASE_URL = "dev.techstreet.in";
-const String API_PATH = "/grewal/api";
-const String URL = "https://dev.techstreet.in/grewal/api/";
-
+const String BASE_URL = "salesleader.in";
+const String API_PATH = "/grewal/public/api";
+// const String URL = "https://dev.techstreet.in/grewal/api/";
+// https://salesleader.in/grewal/public/api/
 const String ALERT_DIALOG_TITLE = "Alert";
 
 //live url
@@ -29,5 +29,5 @@ final List<Draw> drawerItems = [
 
 class Draw {
   final String title;
-  Draw({this.title});
+  Draw({required this.title});
 }

@@ -22,7 +22,7 @@ class OlyTestList extends StatefulWidget {
 
 class _SettingsState extends State<OlyTestList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -44,14 +44,14 @@ class _SettingsState extends State<OlyTestList> {
   String order_id = "";
   String api_token = "";
   String amount = "";
-  Razorpay _razorpay;
+  Razorpay? _razorpay;
   @override
   void initState() {
     super.initState();
     _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay!.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     _getUser();
   }
 
@@ -112,7 +112,7 @@ class _SettingsState extends State<OlyTestList> {
   }
 
   Future<void> _handlePaymentError(PaymentFailureResponse response) async {
-    print("ERROR: " + response.message);
+    // print("ERROR: " + response.message);
     final msg = jsonEncode({
       "student_id": user_id,
       "trancation_id": "",
@@ -151,8 +151,9 @@ class _SettingsState extends State<OlyTestList> {
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    Fluttertoast.showToast(msg: "EXTERNAL_WALLET: " + response.walletName);
-    print("EXTERNAL_WALLET: " + response.walletName);
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName.toString());
+    print("EXTERNAL_WALLET: " + response.walletName.toString());
   }
 
   Widget _networkImage1(url) {
@@ -219,14 +220,17 @@ class _SettingsState extends State<OlyTestList> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['ErrorCode'] == 0) {
-            if (snapshot.data['pay_status'] != "false") {
-              if (snapshot.data['Response'].length != 0) {
+          if (jsonDecode(snapshot.data.toString())['ErrorCode'] == 0) {
+            if (jsonDecode(snapshot.data.toString())['pay_status'] != "false") {
+              if (jsonDecode(snapshot.data.toString())['Response'].length !=
+                  0) {
                 return Container(
                   child: ListView.builder(
                       shrinkWrap: true,
                       primary: false,
-                      itemCount: snapshot.data['Response'].length,
+                      itemCount:
+                          jsonDecode(snapshot.data.toString())['Response']
+                              .length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
@@ -234,8 +238,8 @@ class _SettingsState extends State<OlyTestList> {
                               context,
                               '/section-list',
                               arguments: <String, String>{
-                                'test_id': snapshot.data['Response'][index]
-                                        ['id']
+                                'test_id': jsonDecode(snapshot.data.toString())[
+                                        'Response'][index]['id']
                                     .toString(),
                               },
                             );
@@ -315,8 +319,10 @@ class _SettingsState extends State<OlyTestList> {
                                               children: <Widget>[
                                                 Expanded(
                                                   child: Text(
-                                                      snapshot.data['Response']
-                                                          [index]['name'],
+                                                      jsonDecode(snapshot.data
+                                                                  .toString())[
+                                                              'Response'][index]
+                                                          ['name'],
                                                       maxLines: 2,
                                                       softWrap: true,
                                                       overflow:
@@ -327,8 +333,10 @@ class _SettingsState extends State<OlyTestList> {
                                             ),
                                             Container(
                                               child: Text(
-                                                  snapshot.data['Response']
-                                                      [index]['date'],
+                                                  jsonDecode(snapshot.data
+                                                              .toString())[
+                                                          'Response'][index]
+                                                      ['date'],
                                                   maxLines: 1,
                                                   softWrap: true,
                                                   overflow:
@@ -357,7 +365,8 @@ class _SettingsState extends State<OlyTestList> {
                 return _emptyOrders();
               }
             } else {
-              return _payment(snapshot.data['pay_amount'].toString());
+              return _payment(jsonDecode(snapshot.data.toString())['pay_amount']
+                  .toString());
             }
           } else {
             return _emptyOrders2();
@@ -420,9 +429,9 @@ class _SettingsState extends State<OlyTestList> {
     };
 
     try {
-      _razorpay.open(options);
+      _razorpay!.open(options);
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e as String?);
     }
   }
 

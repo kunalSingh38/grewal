@@ -34,9 +34,9 @@ class _LoginWithLogoState extends State<SignIn> {
   bool isEnabled1 = true;
   bool isEnabled2 = false;
 
-  Future _boardData;
-  Future _classData;
-  Future _countryData;
+  Future? _boardData;
+  Future? _classData;
+  Future? _countryData;
   List<Region> _region = [];
   List<Region3> _region3 = [];
   List<Region4> _region4 = [];
@@ -55,15 +55,15 @@ class _LoginWithLogoState extends State<SignIn> {
   int othersIndex = 0;
 
   String fcmToken = "";
-  Stream<String> _tokenStream;
-  StreamSubscription iosSubscription;
+  Stream<String>? _tokenStream;
+  StreamSubscription? iosSubscription;
   TextEditingController otherCountryCode = new TextEditingController();
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging.instance.getToken().then(setToken);
+    FirebaseMessaging.instance.getToken();
     _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
-    _tokenStream.listen(setToken);
+    _tokenStream!.listen(setToken);
     _boardData = _getBoardCategories();
   }
 
@@ -99,7 +99,7 @@ class _LoginWithLogoState extends State<SignIn> {
           final json = JsonDecoder().convert(catData);
           _region =
               (json).map<Region>((item) => Region.fromJson(item)).toList();
-          List<String> item = _region.map((Region map) {
+          List<String?> item = _region.map((Region map) {
             for (int i = 0; i < _region.length; i++) {
               if (selectedRegion == map.THIRD_LEVEL_NAME) {
                 _type = map.THIRD_LEVEL_ID;
@@ -144,7 +144,7 @@ class _LoginWithLogoState extends State<SignIn> {
           final json = JsonDecoder().convert(catData3);
           _region3 =
               (json).map<Region3>((item) => Region3.fromJson(item)).toList();
-          List<String> item = _region3.map((Region3 map) {
+          List<String?> item = _region3.map((Region3 map) {
             for (int i = 0; i < _region3.length; i++) {
               if (selectedRegion3 == map.THIRD_LEVEL_NAME) {
                 _type3 = map.THIRD_LEVEL_ID;
@@ -194,7 +194,7 @@ class _LoginWithLogoState extends State<SignIn> {
           final json = JsonDecoder().convert(catData);
           _region4 =
               (json).map<Region4>((item) => Region4.fromJson(item)).toList();
-          List<String> item = _region4.map((Region4 map) {
+          List<String?> item = _region4.map((Region4 map) {
             for (int i = 0; i < _region4.length; i++) {
               if (selectedRegion4 == map.THIRD_LEVEL_NAME) {
                 _type4 = map.THIRD_LEVEL_ID;
@@ -232,13 +232,13 @@ class _LoginWithLogoState extends State<SignIn> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter Name';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  nameController.text = value;
+                  nameController.text = value!;
                 },
                 decoration: InputDecoration(
                     isDense: true,
@@ -309,8 +309,8 @@ class _LoginWithLogoState extends State<SignIn> {
                   isDense: true,
                   onChanged: (newValue) {
                     setState(() {
-                      selectedRegion3 = newValue;
-                      List<String> item = _region3.map((Region3 map) {
+                      selectedRegion3 = newValue!;
+                      List<String?> item = _region3.map((Region3 map) {
                         for (int i = 0; i < _region3.length; i++) {
                           if (selectedRegion3 == map.THIRD_LEVEL_NAME) {
                             _type3 = map.THIRD_LEVEL_ID;
@@ -341,13 +341,13 @@ class _LoginWithLogoState extends State<SignIn> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter email';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  emailController.text = value;
+                  emailController.text = value!;
                 },
                 decoration: InputDecoration(
                     isDense: true,
@@ -423,8 +423,8 @@ class _LoginWithLogoState extends State<SignIn> {
                     });
                     if (newValue == "Other") {
                       setState(() {
-                        selectedRegion5 = newValue;
-                        List<String> item = _region4.map((Region4 map) {
+                        selectedRegion5 = newValue!;
+                        List<String?> item = _region4.map((Region4 map) {
                           for (int i = 0; i < _region4.length; i++) {
                             if (selectedRegion5 == map.THIRD_LEVEL_NAME) {
                               _type4 = map.THIRD_LEVEL_ID;
@@ -494,8 +494,8 @@ class _LoginWithLogoState extends State<SignIn> {
                           ]).show();
                     } else {
                       setState(() {
-                        selectedRegion5 = newValue;
-                        List<String> item = _region4.map((Region4 map) {
+                        selectedRegion5 = newValue!;
+                        List<String?> item = _region4.map((Region4 map) {
                           for (int i = 0; i < _region4.length; i++) {
                             if (selectedRegion5 == map.THIRD_LEVEL_NAME) {
                               _type4 = map.THIRD_LEVEL_ID;
@@ -554,8 +554,8 @@ class _LoginWithLogoState extends State<SignIn> {
                     onChanged: (newValue) {
                       print(newValue);
                       setState(() {
-                        selectedRegion4 = newValue;
-                        List<String> item = _region4.map((Region4 map) {
+                        selectedRegion4 = newValue!;
+                        List<String?> item = _region4.map((Region4 map) {
                           for (int i = 0; i < _region4.length; i++) {
                             if (selectedRegion4 == map.THIRD_LEVEL_CODE) {
                               _type4 = map.THIRD_LEVEL_ID;
@@ -586,13 +586,13 @@ class _LoginWithLogoState extends State<SignIn> {
                     cursorColor: Color(0xff000000),
                     textCapitalization: TextCapitalization.sentences,
                     validator: (value) {
-                      if (value.isEmpty) {
+                      if (value!.isEmpty) {
                         return 'Please enter mobile no.';
                       }
                       return null;
                     },
                     onSaved: (value) {
-                      mobileController.text = value;
+                      mobileController.text = value!;
                     },
                     decoration: InputDecoration(
                         isDense: true,
@@ -665,8 +665,8 @@ class _LoginWithLogoState extends State<SignIn> {
                   isDense: true,
                   onChanged: (newValue) {
                     setState(() {
-                      selectedRegion = newValue;
-                      List<String> item = _region.map((Region map) {
+                      selectedRegion = newValue!;
+                      List<String?> item = _region.map((Region map) {
                         for (int i = 0; i < _region.length; i++) {
                           if (selectedRegion == map.THIRD_LEVEL_NAME) {
                             _type = map.THIRD_LEVEL_ID;
@@ -697,7 +697,7 @@ class _LoginWithLogoState extends State<SignIn> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter password';
                   }
                   return null;
@@ -770,7 +770,7 @@ class _LoginWithLogoState extends State<SignIn> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please re enter password';
                   } else if (value != passController.text) {
                     return 'Password not matched';
@@ -898,8 +898,8 @@ class _LoginWithLogoState extends State<SignIn> {
                 // textColor: Colors.white,
                 // color: Color(0xff017EFF),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     if (selectedRegion4 != "") {
                       setState(() {
                         _loading = true;
@@ -921,6 +921,7 @@ class _LoginWithLogoState extends State<SignIn> {
                       Map<String, String> headers = {
                         'Accept': 'application/json',
                       };
+
                       var response = await http.post(
                         new Uri.https(BASE_URL, API_PATH + "/student_signup"),
                         body: {
@@ -1118,7 +1119,7 @@ class Region {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region.fromJson(Map<String, dynamic> json) {
     return new Region(
@@ -1130,7 +1131,7 @@ class Region3 {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region3({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region3({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region3.fromJson(Map<String, dynamic> json) {
     return new Region3(
@@ -1145,7 +1146,10 @@ class Region4 {
   final String THIRD_LEVEL_NAME;
   String THIRD_LEVEL_CODE;
 
-  Region4({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME, this.THIRD_LEVEL_CODE});
+  Region4(
+      {required this.THIRD_LEVEL_ID,
+      required this.THIRD_LEVEL_NAME,
+      required this.THIRD_LEVEL_CODE});
 
   factory Region4.fromJson(Map<String, dynamic> json) {
     return new Region4(

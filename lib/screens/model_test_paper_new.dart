@@ -360,7 +360,7 @@ class _ModelTestPaperNewListState extends State<ModelTestPaperNewList> {
                               ),
                             ],
                           ),
-                          collapsed: null,
+                          collapsed: SizedBox(),
                         ),
                       ),
                     );
@@ -375,7 +375,7 @@ class _ModelTestPaperNewListState extends State<ModelTestPaperNewList> {
 class TestSeriesPDF extends StatefulWidget {
   String url;
   String topicName;
-  TestSeriesPDF({this.url, this.topicName});
+  TestSeriesPDF({required this.url, required this.topicName});
   @override
   _TestSeriesPDFState createState() => _TestSeriesPDFState();
 }

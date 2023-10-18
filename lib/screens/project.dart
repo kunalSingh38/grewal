@@ -14,7 +14,7 @@ import '../constants.dart';
 class Project extends StatefulWidget {
   /* final Object argument;
 
-  const MTS({Key key, this.argument}) : super(key: key);*/
+  const MTS({ required this.argument}) ;*/
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -25,20 +25,22 @@ class _SettingsState extends State<Project> {
   String chapter_id = "";
   bool _loading = false;
   String profile_image = '';
-  Future _chapterData;
+  Future? _chapterData;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
   TextStyle normalText4 = GoogleFonts.montserrat(
       fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff2E2A4A));
   TextStyle normalText3 = GoogleFonts.montserrat(
-      fontSize: 15, fontWeight: FontWeight.w400, decoration: TextDecoration.underline,color: Color(0xff2E2A4A));
+      fontSize: 15,
+      fontWeight: FontWeight.w400,
+      decoration: TextDecoration.underline,
+      color: Color(0xff2E2A4A));
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
   @override
   void initState() {
     super.initState();
-
   }
 
   Widget htmlList(Size deviceSize) {
@@ -48,6 +50,7 @@ class _SettingsState extends State<Project> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
@@ -79,7 +82,7 @@ class _SettingsState extends State<Project> {
           color: Color(0xffffffff),
         ),
         actions: <Widget>[
-         /* Align(
+          /* Align(
             alignment: Alignment.center,
             child: CircleAvatar(
               backgroundColor: Colors.white,
@@ -95,13 +98,15 @@ class _SettingsState extends State<Project> {
         ),
         backgroundColor: Colors.transparent,
       ),
-      body: htmlList( deviceSize) /*Container(
+      body: htmlList(
+          deviceSize) /*Container(
         color: Colors.white,
         child: Center(
           child: Container(
 
               child: Text('COMING SOON...',style: TextStyle(color: Color(0xff2E2A4A)),)),
-        )*/,
+        )*/
+      ,
     );
   }
 }

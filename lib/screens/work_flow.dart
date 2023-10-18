@@ -14,7 +14,7 @@ import '../constants.dart';
 class AppFlow extends StatefulWidget {
   /* final Object argument;
 
-  const MTS({Key key, this.argument}) : super(key: key);*/
+  const MTS({ required this.argument}) ;*/
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -25,13 +25,16 @@ class _SettingsState extends State<AppFlow> {
   String chapter_id = "";
   bool _loading = false;
   String profile_image = '';
-  Future _chapterData;
+  Future? _chapterData;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
   TextStyle normalText4 = GoogleFonts.montserrat(
       fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff2E2A4A));
   TextStyle normalText3 = GoogleFonts.montserrat(
-      fontSize: 15, fontWeight: FontWeight.w400, decoration: TextDecoration.underline,color: Color(0xff2E2A4A));
+      fontSize: 15,
+      fontWeight: FontWeight.w400,
+      decoration: TextDecoration.underline,
+      color: Color(0xff2E2A4A));
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -40,10 +43,10 @@ class _SettingsState extends State<AppFlow> {
     super.initState();
     /* var encodedJson = json.encode(widget.argument);
     var data = json.decode(encodedJson);
-    chapter_id = data['chapter_id'];*//*
+    chapter_id = data['chapter_id'];*/ /*
     _getUser();*/
   }
- /* _getUser() async {
+  /* _getUser() async {
     Preference().getPreferences().then((prefs) {
       setState(() {
         profile_image = prefs.getString('profile_image').toString();
@@ -52,7 +55,7 @@ class _SettingsState extends State<AppFlow> {
       });
     });
   }*/
- /* Widget _networkImage1(url) {
+  /* Widget _networkImage1(url) {
     return Container(
       margin: EdgeInsets.only(
         right: 8,
@@ -80,6 +83,7 @@ class _SettingsState extends State<AppFlow> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
@@ -111,7 +115,7 @@ class _SettingsState extends State<AppFlow> {
           color: Color(0xffffffff),
         ),
         actions: <Widget>[
-         /* Align(
+          /* Align(
             alignment: Alignment.center,
             child: CircleAvatar(
               backgroundColor: Colors.white,
@@ -127,13 +131,15 @@ class _SettingsState extends State<AppFlow> {
         ),
         backgroundColor: Colors.transparent,
       ),
-      body: htmlList( deviceSize) /*Container(
+      body: htmlList(
+          deviceSize) /*Container(
         color: Colors.white,
         child: Center(
           child: Container(
 
               child: Text('COMING SOON...',style: TextStyle(color: Color(0xff2E2A4A)),)),
-        )*/,
+        )*/
+      ,
     );
   }
 }

@@ -12,7 +12,7 @@ import '../constants.dart';
 class SupportOverview extends StatefulWidget {
   final Object argument;
 
-  const SupportOverview({Key key, this.argument}) : super(key: key);
+  const SupportOverview({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -23,15 +23,18 @@ class _SettingsState extends State<SupportOverview> {
   String support_id = "";
   bool _loading = false;
   String profile_image = '';
-  Future _chapterData;
+  Future? _chapterData;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 22, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
-  TextStyle normalText2= GoogleFonts.montserrat(
+  TextStyle normalText2 = GoogleFonts.montserrat(
       fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
   TextStyle normalText4 = GoogleFonts.montserrat(
       fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff2E2A4A));
   TextStyle normalText3 = GoogleFonts.montserrat(
-      fontSize: 15, fontWeight: FontWeight.w400, decoration: TextDecoration.underline,color: Color(0xff2E2A4A));
+      fontSize: 15,
+      fontWeight: FontWeight.w400,
+      decoration: TextDecoration.underline,
+      color: Color(0xff2E2A4A));
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
   String api_token = "";
@@ -43,16 +46,17 @@ class _SettingsState extends State<SupportOverview> {
     support_id = data['support_id'];
     _getUser();
   }
+
   _getUser() async {
     Preference().getPreferences().then((prefs) {
       setState(() {
         profile_image = prefs.getString('profile_image').toString();
         api_token = prefs.getString('api_token').toString();
         _chapterData = _getChapterData();
-
       });
     });
   }
+
   Widget _networkImage1(url) {
     return Container(
       margin: EdgeInsets.only(
@@ -68,7 +72,6 @@ class _SettingsState extends State<SupportOverview> {
           image: NetworkImage(profile_image),
           fit: BoxFit.cover,
         ),
-
       ),
     );
   }
@@ -92,23 +95,24 @@ class _SettingsState extends State<SupportOverview> {
       throw Exception('Something went wrong');
     }
   }
+
   Widget _networkImage(url) {
     return Image(
       image: NetworkImage(url),
     );
   }
+
   Widget _chapterBuilder(Size deviceSize) {
     return FutureBuilder(
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          var errorCode = snapshot.data['ErrorCode'];
-          var response = snapshot.data['Response'];
+          var errorCode = jsonDecode(snapshot.data.toString())['ErrorCode'];
+          var response = jsonDecode(snapshot.data.toString())['Response'];
           if (errorCode == 0) {
             return Container(
               child: ListView(
                 children: <Widget>[
-
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     // height: MediaQuery.of(context).size.height * 0.75,
@@ -123,15 +127,18 @@ class _SettingsState extends State<SupportOverview> {
                         SizedBox(
                           height: 10,
                         ),
-                        Text("Topic: "+response[0]['type'], style: normalText2),
+                        Text("Topic: " + response[0]['type'],
+                            style: normalText2),
                         SizedBox(
                           height: 10,
                         ),
-                        Text("Subject: "+response[0]['subject'], style: normalText5),
+                        Text("Subject: " + response[0]['subject'],
+                            style: normalText5),
                         SizedBox(
                           height: 10,
                         ),
-                        Text("Message: "+response[0]['message'], style: normalText4),
+                        Text("Message: " + response[0]['message'],
+                            style: normalText4),
                         SizedBox(
                           height: 20,
                         ),
@@ -145,17 +152,24 @@ class _SettingsState extends State<SupportOverview> {
                       decoration: BoxDecoration(
                         color: Color(0xffF6F6F6),
                       ),
-                      child: response[0]['attachment']!=null?Container(
-                        decoration: new BoxDecoration(
-                          // color: Color(0xffF6F6F6),
-                            borderRadius: new BorderRadius.only(
-                                topLeft: const Radius.circular(5.0),
-                                bottomLeft: const Radius.circular(5.0),
-                                bottomRight: const Radius.circular(5.0),
-                                topRight: const Radius.circular(5.0))),
-                        child:  _networkImage(snapshot.data['url']+"/"+response[0]['attachment'] ,
-                        ),
-                      ):Container(height: 200,)),
+                      child: response[0]['attachment'] != null
+                          ? Container(
+                              decoration: new BoxDecoration(
+                                  // color: Color(0xffF6F6F6),
+                                  borderRadius: new BorderRadius.only(
+                                      topLeft: const Radius.circular(5.0),
+                                      bottomLeft: const Radius.circular(5.0),
+                                      bottomRight: const Radius.circular(5.0),
+                                      topRight: const Radius.circular(5.0))),
+                              child: _networkImage(
+                                jsonDecode(snapshot.data.toString())['url'] +
+                                    "/" +
+                                    response[0]['attachment'],
+                              ),
+                            )
+                          : Container(
+                              height: 200,
+                            )),
                 ],
               ),
             );
@@ -165,20 +179,21 @@ class _SettingsState extends State<SupportOverview> {
         } else {
           return Center(
               child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  child: SpinKitFadingCube(
-                    itemBuilder: (_, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index.isEven ? Color(0xff017EFF) :Color(0xffFFC700),
-                        ),
-                      );
-                    },
-                    size: 30.0,
-                  ),
-                ),
-              ));
+            alignment: Alignment.center,
+            child: Container(
+              child: SpinKitFadingCube(
+                itemBuilder: (_, int index) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color:
+                          index.isEven ? Color(0xff017EFF) : Color(0xffFFC700),
+                    ),
+                  );
+                },
+                size: 30.0,
+              ),
+            ),
+          ));
         }
       },
     );
@@ -239,9 +254,7 @@ class _SettingsState extends State<SupportOverview> {
               inAsyncCall: _loading,
               child: Container(
                 margin: EdgeInsets.symmetric(
-                    horizontal: deviceSize.width * 0.03,
-                    vertical: 10
-                ),
+                    horizontal: deviceSize.width * 0.03, vertical: 10),
                 child: _chapterBuilder(deviceSize),
               ),
             ),

@@ -16,7 +16,7 @@ import '../constants.dart';
 class CreateMCQ extends StatefulWidget {
   final Object argument;
 
-  const CreateMCQ({Key key, this.argument}) : super(key: key);
+  const CreateMCQ({required this.argument});
 
   @override
   _LoginWithLogoState createState() => _LoginWithLogoState();
@@ -34,9 +34,9 @@ class _LoginWithLogoState extends State<CreateMCQ> {
 
   bool isEnabled2 = false;
 
-  Future _diffData;
-  Future _chapData;
-  Future _topicData;
+  Future? _diffData;
+  Future? _chapData;
+  Future? _topicData;
   List<Region> _region = [];
   List<Region3> _region3 = [];
   List<Region4> _region4 = [];
@@ -44,9 +44,9 @@ class _LoginWithLogoState extends State<CreateMCQ> {
 
   var _type3 = "";
   var _type4 = "";
-  String selectedRegion;
-  String selectedRegion3;
-  String selectedRegion4;
+  String? selectedRegion;
+  String? selectedRegion3;
+  String? selectedRegion4;
   String catData = "";
   String catData3 = "";
   String catData4 = "";
@@ -84,6 +84,9 @@ class _LoginWithLogoState extends State<CreateMCQ> {
     chapter_id = data['chapter_id'];
     chapter_name = data['chapter_name'];
     type = data['type'];
+    print(type);
+    print(chapter_id);
+    print(chapter_name);
     _getUser();
   }
 
@@ -177,6 +180,7 @@ class _LoginWithLogoState extends State<CreateMCQ> {
       body: {"board_id": board_id, "class_id": class_id, "subject_id": "8"},
       headers: headers,
     );
+
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       var result = data['Response'];
@@ -303,6 +307,12 @@ class _LoginWithLogoState extends State<CreateMCQ> {
       },
       child: Scaffold(
           backgroundColor: Color(0xff2E2A4A),
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
           body: ModalProgressHUD(
             inAsyncCall: _loading,
             progressIndicator: Center(
@@ -332,90 +342,231 @@ class _LoginWithLogoState extends State<CreateMCQ> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            board_id != "14"
-                                ? Column(children: <Widget>[
-                                    Container(
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.only(top: 50),
-                                      child: Image.asset(
-                                        'assets/images/intro_2.png',
-                                        width: 180,
-                                        height: 180,
-                                      ),
+                            // board_id != "14"
+                            //     ?
+                            Column(children: <Widget>[
+                              Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.only(top: 50),
+                                child: Image.asset(
+                                  'assets/images/intro_2.png',
+                                  width: 180,
+                                  height: 180,
+                                ),
+                              ),
+                              const SizedBox(height: 25.0),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                    "This test comprises of easy, medium and difficult questions.",
+                                    style: normalText1),
+                              ),
+                              const SizedBox(height: 25.0),
+                              Table(
+                                border: TableBorder.all(
+                                  color: Colors.white,
+                                ),
+                                columnWidths: {
+                                  0: FlexColumnWidth(2),
+                                  1: FlexColumnWidth(1),
+                                },
+                                children: [
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Type", style: normalText3),
                                     ),
-                                    const SizedBox(height: 25.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                          "This test comprises of easy, medium and difficult questions.",
-                                          style: normalText1),
-                                    ),
-                                    const SizedBox(height: 25.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text("MCQ- 9 Questions.",
-                                          style: normalText2),
-                                    ),
-                                    const SizedBox(height: 10.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                          "Assertion / Reasoning- 2 Questions.",
-                                          style: normalText2),
-                                    ),
-                                    const SizedBox(height: 10.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                          "Case based Questions- 1 (4 Questions).",
-                                          style: normalText2),
-                                    ),
-                                    const SizedBox(height: 25.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                          "Time to complete this test - 30 Minutes.",
-                                          style: normalText3),
-                                    ),
-                                  ])
-                                : Column(children: <Widget>[
-                                    Container(
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.only(top: 50),
-                                      child: Image.asset(
-                                        'assets/images/intro_2.png',
-                                        width: 180,
-                                        height: 180,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 25.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                          "This test comprises of easy, medium and difficult questions.",
-                                          style: normalText1),
-                                    ),
-                                    const SizedBox(height: 25.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text("MCQ- 11 Questions.",
-                                          style: normalText2),
-                                    ),
-                                    const SizedBox(height: 10.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                          "Case based Questions- 1 (4 Questions).",
-                                          style: normalText2),
-                                    ),
-                                    const SizedBox(height: 25.0),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                          "Time to complete this test - 30 Minutes.",
-                                          style: normalText3),
-                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Ques", style: normalText3),
+                                    )
                                   ]),
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("True False",
+                                          style: normalText2),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("1", style: normalText2),
+                                    )
+                                  ]),
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Combinations",
+                                          style: normalText2),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("1", style: normalText2),
+                                    )
+                                  ]),
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Fill in the blanks",
+                                          style: normalText2),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("2", style: normalText2),
+                                    )
+                                  ]),
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Assertion / Reasoning",
+                                          style: normalText2),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("2", style: normalText2),
+                                    )
+                                  ]),
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child:
+                                          Text("Sequence", style: normalText2),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("1", style: normalText2),
+                                    )
+                                  ]),
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Match the following",
+                                          style: normalText2),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("1", style: normalText2),
+                                    )
+                                  ]),
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("MCQ", style: normalText2),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("5", style: normalText2),
+                                    )
+                                  ]),
+                                  TableRow(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Case Study",
+                                          style: normalText2),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("2", style: normalText2),
+                                    )
+                                  ]),
+                                ],
+                              ),
+                              // Container(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Text("True False - 1 Questions.",
+                              //       style: normalText2),
+                              // ),
+                              // const SizedBox(height: 25.0),
+                              // Container(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Text("Combinations - 1 Questions.",
+                              //       style: normalText2),
+                              // ),
+                              // const SizedBox(height: 25.0),
+                              // Container(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Text("Fill in the blanks - 2 Questions.",
+                              //       style: normalText2),
+                              // ),
+                              // const SizedBox(height: 10.0),
+                              // Container(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Text(
+                              //       "Assertion / Reasoning - 2 Questions.",
+                              //       style: normalText2),
+                              // ),
+                              // const SizedBox(height: 10.0),
+                              // Container(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Text("Sequence - 2 Questions.",
+                              //       style: normalText2),
+                              // ),
+                              // const SizedBox(height: 10.0),
+                              // Container(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Text(
+                              //       "Match the following - 1 Questions.",
+                              //       style: normalText2),
+                              // ),
+                              // const SizedBox(height: 25.0),
+                              // Container(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Text("MCQ - 5 Questions.",
+                              //       style: normalText2),
+                              // ),
+                              // const SizedBox(height: 10.0),
+                              // Container(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Text(
+                              //       "Case based Questions - 2 Questions.",
+                              //       style: normalText2),
+                              // ),
+                              const SizedBox(height: 25.0),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                    "Time to complete this test - 30 Minutes.",
+                                    style: normalText3),
+                              ),
+                            ])
+                            // : Column(children: <Widget>[
+                            //     Container(
+                            //       alignment: Alignment.center,
+                            //       padding: EdgeInsets.only(top: 50),
+                            //       child: Image.asset(
+                            //         'assets/images/intro_2.png',
+                            //         width: 180,
+                            //         height: 180,
+                            //       ),
+                            //     ),
+                            //     const SizedBox(height: 25.0),
+                            //     Container(
+                            //       alignment: Alignment.topLeft,
+                            //       child: Text(
+                            //           "This test comprises of easy, medium and difficult questions.",
+                            //           style: normalText1),
+                            //     ),
+                            //     const SizedBox(height: 25.0),
+                            //     Container(
+                            //       alignment: Alignment.topLeft,
+                            //       child: Text("MCQ- 11 Questions.",
+                            //           style: normalText2),
+                            //     ),
+                            //     const SizedBox(height: 10.0),
+                            //     Container(
+                            //       alignment: Alignment.topLeft,
+                            //       child: Text(
+                            //           "Case based Questions- 1 (4 Questions).",
+                            //           style: normalText2),
+                            //     ),
+                            //     const SizedBox(height: 25.0),
+                            //     Container(
+                            //       alignment: Alignment.topLeft,
+                            //       child: Text(
+                            //           "Time to complete this test - 30 Minutes.",
+                            //           style: normalText3),
+                            //     ),
+                            // ]),
+                            ,
                             SizedBox(
                               height: 10,
                             ),
@@ -450,6 +601,7 @@ class _LoginWithLogoState extends State<CreateMCQ> {
                                       'Accept': 'application/json',
                                       'Authorization': 'Bearer $api_token',
                                     };
+                                    print(api_token);
                                     var response = await http.post(
                                       new Uri.https(BASE_URL,
                                           API_PATH + "/test-create-random"),
@@ -460,11 +612,15 @@ class _LoginWithLogoState extends State<CreateMCQ> {
                                       },
                                       headers: headers,
                                     );
+                                    // print(api_token);
                                     print(jsonEncode({
                                       "type": type == "outside" ? "1" : "0",
                                       "student_id": user_id,
                                       "chapter": chapter_id,
                                     }));
+                                    print(BASE_URL +
+                                        API_PATH +
+                                        "/test-create-random");
 
                                     if (response.statusCode == 200) {
                                       setState(() {
@@ -494,6 +650,7 @@ class _LoginWithLogoState extends State<CreateMCQ> {
                                           },
                                         );
                                       } else {
+                                        print("object");
                                         setState(() {
                                           _loading = false;
                                         });
@@ -517,7 +674,7 @@ class Region {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region.fromJson(Map<String, dynamic> json) {
     return new Region(
@@ -529,7 +686,7 @@ class Region3 {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region3({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region3({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region3.fromJson(Map<String, dynamic> json) {
     return new Region3(
@@ -543,7 +700,7 @@ class Region4 {
   final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region4({this.THIRD_LEVEL_ID, this.THIRD_LEVEL_NAME});
+  Region4({required this.THIRD_LEVEL_ID, required this.THIRD_LEVEL_NAME});
 
   factory Region4.fromJson(Map<String, dynamic> json) {
     return new Region4(
@@ -558,8 +715,8 @@ class Animal {
   final String name;
 
   Animal({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 }
 
@@ -568,8 +725,8 @@ class Animal1 {
   final String name;
 
   Animal1({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 }
 
@@ -578,7 +735,7 @@ class Animal2 {
   final String name;
 
   Animal2({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 }

@@ -18,14 +18,14 @@ import '../constants.dart';
 class ChapterListScreen extends StatefulWidget {
   final Object argument;
 
-  const ChapterListScreen({Key key, this.argument}) : super(key: key);
+  const ChapterListScreen({required this.argument});
 
   @override
   _ChangePageState createState() => _ChangePageState();
 }
 
 class _ChangePageState extends State<ChapterListScreen> {
-  Future<dynamic> _chapterData;
+  Future<dynamic>? _chapterData;
   bool _loading = false;
   var access_token;
   String api_token = "";
@@ -40,7 +40,7 @@ class _ChangePageState extends State<ChapterListScreen> {
   String email_id = '';
   String order_id = "";
   String profile_image = '';
-  List<bool> isChecked = new List();
+  List<bool> isChecked = [];
 
   List<String> list = [];
   String chapter_id = "";
@@ -127,12 +127,14 @@ class _ChangePageState extends State<ChapterListScreen> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['Response'].length != 0) {
+          Map map = snapshot.data as Map;
+          List list = map['Response'];
+          if (list.length != 0) {
             return Container(
               child: ListView.builder(
                   shrinkWrap: true,
                   primary: false,
-                  itemCount: snapshot.data['Response'].length,
+                  itemCount: list.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                         child: Container(
@@ -150,9 +152,7 @@ class _ChangePageState extends State<ChapterListScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Expanded(
-                              child: Text(
-                                  snapshot.data['Response'][index]
-                                      ['chapter_name'],
+                              child: Text(list[index]['chapter_name'],
                                   maxLines: 2,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
@@ -179,17 +179,15 @@ class _ChangePageState extends State<ChapterListScreen> {
                                     onChanged: (value) {
                                       setState(
                                         () {
-                                          isChecked[index] = value;
+                                          isChecked[index] = value!;
                                           if (isChecked[index] == true) {
-                                            list.add(snapshot.data['Response']
-                                                    [index]['id']
-                                                .toString());
+                                            list.add(
+                                                list[index]['id'].toString());
                                             print(list);
                                           } else if (isChecked[index] ==
                                               false) {
-                                            list.remove(snapshot
-                                                .data['Response'][index]['id']
-                                                .toString());
+                                            list.remove(
+                                                list[index]['id'].toString());
                                             print(list);
                                           }
                                         },
@@ -298,11 +296,11 @@ class _ChangePageState extends State<ChapterListScreen> {
                     checkColor: Color(0xffffffff),
                     activeColor: Color(0xff2E2A4A),
                     value: this.valuefirst,
-                    onChanged: (bool value) {
+                    onChanged: (value) {
                       setState(() {
                         isChecked.clear();
                         list.clear();
-                        this.valuefirst = value;
+                        this.valuefirst = value!;
 
                         if (valuefirst == true) {
                           for (int i = 0; i < result.length; i++) {

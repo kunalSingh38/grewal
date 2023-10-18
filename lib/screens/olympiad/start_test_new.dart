@@ -28,7 +28,7 @@ import 'clock.dart';
 class StartOlyMCQNEW extends StatefulWidget {
   final Object argument;
 
-  const StartOlyMCQNEW({Key key, this.argument}) : super(key: key);
+  const StartOlyMCQNEW({required this.argument});
 
   @override
   _LoginWithLogoState createState() => _LoginWithLogoState();
@@ -47,7 +47,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
 
   bool isEnabled2 = false;
 
-  Future _quiz;
+  Future? _quiz;
   String chapter_id = "";
   String chapter_name = "";
   String type = "";
@@ -64,10 +64,10 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
   bool lastNext = false;
   bool done = false;
 
-  List<XMLJSON> xmlList = new List();
-  List<bool> optionsClicked;
+  List<XMLJSON> xmlList = [];
+  List<bool>? optionsClicked;
   bool full_show = false;
-  List<String> list = new List();
+  List<String> list = [];
   String api_token = "";
   int time = 0;
 
@@ -87,7 +87,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
     _getUser();
   }
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 15,
       fontWeight: FontWeight.w500,
@@ -133,10 +133,10 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      arr = new List(data['Response'].length);
+      arr = List.generate(data['Response'].length, (index) => 0);
       print(arr);
-      list = new List(data['Response'].length);
-      optionsClicked = new List(data['Response'].length);
+      list = List.generate(data['Response'].length, (index) => "");
+      optionsClicked = List.generate(data['Response'].length, (index) => false);
       xmlList.length = data['Response'].length;
       print(xmlList.length);
       print(xmlList);
@@ -144,7 +144,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
         question_attempt = data['question_attempt'].toString();
       });
       for (int i = 0; i < data['Response'].length; i++) {
-        optionsClicked[i] = false;
+        optionsClicked![i] = false;
       }
       print(data);
       return data;
@@ -163,7 +163,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
   }
 
   int id = 0;
-  List<int> arr;
+  List<int>? arr;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -180,11 +180,11 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 1,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[0]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index, response1);
+                selectedRadio(int.parse(val.toString()), index, response1);
               },
             ),
           ]),
@@ -194,11 +194,11 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 2,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[1]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index, response1);
+                selectedRadio(int.parse(val.toString()), index, response1);
               },
             ),
           ]),
@@ -208,11 +208,11 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 3,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[2]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index, response1);
+                selectedRadio(int.parse(val.toString()), index, response1);
               },
             ),
           ]),
@@ -222,116 +222,116 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 4,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName: response[3]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index, response1);
+                selectedRadio(int.parse(val.toString()), index, response1);
               },
             ),
           ]),
         ]));
   }
 
-  XMLJSON xmljson = new XMLJSON();
+  XMLJSON xmljson = new XMLJSON(answer: '', question: '', time_taken: '');
   selectedRadio(int val, int ind, response) {
     setState(() {
-      optionsClicked[ind] = !optionsClicked[ind];
-      print(optionsClicked);
+      optionsClicked![ind] = !optionsClicked![ind];
+      print(optionsClicked!);
 
-      if (arr[ind] == null) {
-        arr[ind] = val;
+      if (arr![ind] == null) {
+        arr![ind] = val;
         print(arr);
-        if (arr[ind] == 1) {
+        if (arr![ind] == 1) {
           xmljson.question = response[ind]['id'].toString();
           xmljson.answer = response[ind]['question_option'][0]['option_value'];
           xmljson.time_taken = "";
-          if (optionsClicked[ind] == false) {
-            optionsClicked[ind] = true;
+          if (optionsClicked![ind] == false) {
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
 
             print("1");
           } else {
-            optionsClicked[ind] = true;
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
             print("2");
           }
           print(xmlList);
         }
-        if (arr[ind] == 2) {
+        if (arr![ind] == 2) {
           xmljson.question = response[ind]['id'].toString();
           xmljson.answer = response[ind]['question_option'][1]['option_value'];
           xmljson.time_taken = "";
-          if (optionsClicked[ind] == false) {
-            optionsClicked[ind] = true;
+          if (optionsClicked![ind] == false) {
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
             print("3");
           } else {
-            optionsClicked[ind] = true;
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
             print("4");
           }
           print(xmlList);
         }
-        if (arr[ind] == 3) {
+        if (arr![ind] == 3) {
           xmljson.question = response[ind]['id'].toString();
           xmljson.answer = response[ind]['question_option'][2]['option_value'];
           xmljson.time_taken = "";
-          if (optionsClicked[ind] == false) {
-            optionsClicked[ind] = true;
+          if (optionsClicked![ind] == false) {
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
           } else {
-            optionsClicked[ind] = true;
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
           }
           print(xmlList);
         }
-        if (arr[ind] == 4) {
+        if (arr![ind] == 4) {
           xmljson.question = response[ind]['id'].toString();
           xmljson.answer = response[ind]['question_option'][3]['option_value'];
           xmljson.time_taken = "";
-          if (optionsClicked[ind] == false) {
-            optionsClicked[ind] = true;
+          if (optionsClicked![ind] == false) {
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
           } else {
-            optionsClicked[ind] = true;
+            optionsClicked![ind] = true;
             xmlList.removeAt(ind);
             xmlList.insert(ind, xmljson);
           }
           print(xmlList);
         }
-        if (arr.where((item) => item != null).toList().length >=
+        if (arr!.where((item) => item != null).toList().length >=
             int.parse(question_attempt)) {
           setState(() {
             lastAns = true;
           });
         }
-        if (!arr.contains(null)) {
+        if (!arr!.contains(null)) {
           setState(() {
             lastAns = true;
           });
         }
       } else {
         setState(() {
-          arr[ind] = null;
+          arr![ind] = 0;
           xmlList.removeAt(ind);
-          xmlList.insert(ind, null);
+          xmlList.insert(ind, xmlList.first);
           print(arr);
           print(xmlList);
-          if (arr.indexWhere((item) => item == null) >=
+          if (arr!.indexWhere((item) => item == null) >=
               int.parse(question_attempt)) {
             setState(() {
               lastAns = true;
             });
           }
-          if (!arr.contains(null)) {
+          if (!arr!.contains(null)) {
             setState(() {
               lastAns = true;
             });
@@ -353,12 +353,14 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
     } else if (response[itemIndex]['type'] == "Assertion Reasoning") {
       return _radioBuilderMCQ(
           response[itemIndex]['question_option'], itemIndex, response);
+    } else {
+      return SizedBox();
     }
   }
 
   @override
   void dispose() {
-    _scrollController.dispose(); // dispose the controller
+    _scrollController!.dispose(); // dispose the controller
 
     super.dispose();
   }
@@ -466,8 +468,8 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
       builder: (context, snapshot) {
         var getScreenHeight = MediaQuery.of(context).size.height;
         if (snapshot.connectionState == ConnectionState.done) {
-          var errorCode = snapshot.data['ErrorCode'];
-          var response = snapshot.data['Response'];
+          var errorCode = jsonDecode(snapshot.data.toString())['ErrorCode'];
+          var response = jsonDecode(snapshot.data.toString())['Response'];
           if (errorCode == 0) {
             return response.length != 0
                 ? Container(
@@ -486,7 +488,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                           scrollDirection: Axis.horizontal,
                         ),
                         itemCount: response.length,
-                        itemBuilder: (BuildContext context, int itemIndex) {
+                        itemBuilder: (context, itemIndex, realIndex) {
                           return ListView(
                               shrinkWrap: true,
                               primary: false,
@@ -551,7 +553,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                                                                   ),
                                                                   "th": Style(
                                                                     padding:
-                                                                        EdgeInsets
+                                                                        HtmlPaddings
                                                                             .all(6),
                                                                     backgroundColor:
                                                                         Colors
@@ -559,7 +561,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                                                                   ),
                                                                   "td": Style(
                                                                     padding:
-                                                                        EdgeInsets
+                                                                        HtmlPaddings
                                                                             .all(6),
                                                                     alignment:
                                                                         Alignment
@@ -661,14 +663,14 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                                                                         "th":
                                                                             Style(
                                                                           padding:
-                                                                              EdgeInsets.all(6),
+                                                                              HtmlPaddings.all(6),
                                                                           backgroundColor:
                                                                               Colors.grey,
                                                                         ),
                                                                         "td":
                                                                             Style(
                                                                           padding:
-                                                                              EdgeInsets.all(6),
+                                                                              HtmlPaddings.all(6),
                                                                           alignment:
                                                                               Alignment.topLeft,
                                                                         ),
@@ -731,14 +733,14 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                                                                         "th":
                                                                             Style(
                                                                           padding:
-                                                                              EdgeInsets.all(6),
+                                                                              HtmlPaddings.all(6),
                                                                           backgroundColor:
                                                                               Colors.grey,
                                                                         ),
                                                                         "td":
                                                                             Style(
                                                                           padding:
-                                                                              EdgeInsets.all(6),
+                                                                              HtmlPaddings.all(6),
                                                                           alignment:
                                                                               Alignment.topLeft,
                                                                         ),
@@ -834,12 +836,14 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                                                     ),
                                                   ),
                                                   "th": Style(
-                                                    padding: EdgeInsets.all(6),
+                                                    padding:
+                                                        HtmlPaddings.all(6),
                                                     backgroundColor:
                                                         Colors.grey,
                                                   ),
                                                   "td": Style(
-                                                    padding: EdgeInsets.all(6),
+                                                    padding:
+                                                        HtmlPaddings.all(6),
                                                     alignment:
                                                         Alignment.topLeft,
                                                   ),
@@ -987,12 +991,12 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                                                         // color: Color(0xff017EFF),
                                                         onPressed: () async {
                                                           print(arr);
-                                                          print(arr
+                                                          print(arr!
                                                               .where((item) =>
                                                                   item != null)
                                                               .toList()
                                                               .length);
-                                                          if (arr
+                                                          if (arr!
                                                                   .where(
                                                                       (item) =>
                                                                           item !=
@@ -1080,9 +1084,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text(
                   "No",
-                  style: TextStyle(
-                    color: Color(0xff2E2A4A),
-                  ),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               new ElevatedButton(
@@ -1093,8 +1095,7 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                   Navigator.of(context).pop(false);
                   Navigator.pushNamed(context, '/oly-test-list');
                 },
-                child:
-                    new Text("Yes", style: TextStyle(color: Color(0xff2E2A4A))),
+                child: new Text("Yes", style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -1199,10 +1200,10 @@ class _LoginWithLogoState extends State<StartOlyMCQNEW>
                                     // shape: RoundedRectangleBorder(
                                     //     borderRadius:
                                     //         BorderRadius.circular(10.0)),
-                                    // textColor: arr[index] != null
+                                    // textColor: arr![index] != null
                                     //     ? Colors.white
                                     //     : Color(0xff017EFF),
-                                    // color: arr[index] != null
+                                    // color: arr![index] != null
                                     //     ? Color(0xff017EFF)
                                     //     : Colors.white,
                                     onPressed: () async {

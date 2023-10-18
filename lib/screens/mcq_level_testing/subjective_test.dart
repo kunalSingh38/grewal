@@ -15,8 +15,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class StartSubjectiveTest extends StatefulWidget {
   final Object argument;
-
-  const StartSubjectiveTest({Key key, this.argument}) : super(key: key);
+  StartSubjectiveTest({required this.argument});
   @override
   _StartSubjectiveTestState createState() => _StartSubjectiveTestState();
 }
@@ -227,31 +226,19 @@ class _StartSubjectiveTestState extends State<StartSubjectiveTest> {
                               //         color: Colors.black),
                               //   ),
                               // ),
-                              value: e,
+                              value: e['totaldetails'].toString(),
                             );
                           }).toList(),
                           onChanged: (val) {
                             setState(() {
                               topicSelect = true;
-                              print(int.parse(val['totaldetails']
-                                  .toString()
-                                  .substring(
-                                      0,
-                                      val['totaldetails']
-                                          .toString()
-                                          .indexOf(" "))));
+
                               selectedTopicIndex = topicsList.indexOf(val);
                               currentSelectedTopicLen.clear();
-                              currentSelectedTopicLen.addAll(
-                                  new List<int>.generate(
-                                      int.parse(val['totaldetails']
-                                          .toString()
-                                          .substring(
-                                              0,
-                                              val['totaldetails']
-                                                  .toString()
-                                                  .indexOf(" "))),
-                                      (i) => i + 1));
+                              currentSelectedTopicLen.addAll(List<int>.generate(
+                                  int.parse(val.toString().substring(
+                                      0, val.toString().indexOf(" "))),
+                                  (i) => i + 1));
                             });
                           }),
                       SizedBox(
@@ -287,7 +274,8 @@ class _StartSubjectiveTestState extends State<StartSubjectiveTest> {
                                                 .toList(),
                                             onChanged: (val) {
                                               setState(() {
-                                                noOfQuestionSelected = val;
+                                                noOfQuestionSelected =
+                                                    int.parse(val.toString());
                                               });
                                             }),
                                       ),

@@ -37,7 +37,7 @@ class _LoginWithLogoState extends State<IntroScreens>
 
   bool isEnabled2 = false;
 
-  Future _quiz;
+  Future? _quiz;
   String chapter_id = "";
   String chapter_name = "";
   String type = "";
@@ -51,7 +51,7 @@ class _LoginWithLogoState extends State<IntroScreens>
   bool lastAns = false;
   bool done = false;
 
-  List<XMLJSON> xmlList = new List();
+  List<XMLJSON> xmlList = [];
 
   bool full_show = false;
 
@@ -106,7 +106,7 @@ class _LoginWithLogoState extends State<IntroScreens>
               scrollDirection: Axis.horizontal,
             ),
             itemCount: 4,
-            itemBuilder: (BuildContext context, int itemIndex) {
+            itemBuilder: (context, itemIndex, realIndex) {
               if (itemIndex == 0) {
                 return SingleChildScrollView(
                   child: Container(
@@ -139,6 +139,31 @@ class _LoginWithLogoState extends State<IntroScreens>
                                     style: normalText2),
                               ),
                               const SizedBox(height: 15.0),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text("\u2022 True & False",
+                                    style: normalText3),
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text("\u2022 Combinations",
+                                    style: normalText3),
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text("\u2022 Fill in the Blanks",
+                                    style: normalText3),
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text("\u2022 Sequencing",
+                                    style: normalText3),
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text("\u2022 Match the following",
+                                    style: normalText3),
+                              ),
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text("\u2022 MCQs", style: normalText3),

@@ -17,7 +17,7 @@ import '../../constants.dart';
 class SectionList extends StatefulWidget {
   final Object argument;
 
-  const SectionList({Key key, this.argument}) : super(key: key);
+  const SectionList({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -25,7 +25,7 @@ class SectionList extends StatefulWidget {
 
 class _SettingsState extends State<SectionList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -145,28 +145,34 @@ class _SettingsState extends State<SectionList> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['Response']['section'].length != 0) {
+          if (jsonDecode(snapshot.data.toString())['Response']['section']
+                  .length !=
+              0) {
             return Container(
               child: ListView.builder(
                   shrinkWrap: true,
                   primary: false,
-                  itemCount: snapshot.data['Response']['section'].length,
+                  itemCount: jsonDecode(snapshot.data.toString())['Response']
+                          ['section']
+                      .length,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        if (snapshot.data['Response']['section'][index]
-                                ['testdone'] ==
+                        if (jsonDecode(snapshot.data.toString())['Response']
+                                ['section'][index]['testdone'] ==
                             0) {
                           Navigator.pushNamed(
                             context,
                             '/start-test-new',
                             arguments: <String, String>{
                               'test_id': test_id,
-                              'section_id': snapshot.data['Response']['section']
-                                      [index]['section_id']
+                              'section_id': jsonDecode(
+                                          snapshot.data.toString())['Response']
+                                      ['section'][index]['section_id']
                                   .toString(),
-                              'time': (snapshot.data['Response']['section']
-                                          [index]['question_attempt'] *
+                              'time': (jsonDecode(snapshot.data.toString())[
+                                              'Response']['section'][index]
+                                          ['question_attempt'] *
                                       120)
                                   .toString(),
                             },
@@ -177,8 +183,9 @@ class _SettingsState extends State<SectionList> {
                             '/review-test',
                             arguments: <String, String>{
                               'test_id': test_id,
-                              'section_id': snapshot.data['Response']['section']
-                                      [index]['section_id']
+                              'section_id': jsonDecode(
+                                          snapshot.data.toString())['Response']
+                                      ['section'][index]['section_id']
                                   .toString(),
                             },
                           );
@@ -252,9 +259,10 @@ class _SettingsState extends State<SectionList> {
                                           children: <Widget>[
                                             Expanded(
                                               child: Text(
-                                                  snapshot.data['Response']
-                                                          ['section'][index]
-                                                      ['name'],
+                                                  jsonDecode(snapshot.data
+                                                              .toString())[
+                                                          'Response']['section']
+                                                      [index]['name'],
                                                   maxLines: 2,
                                                   softWrap: true,
                                                   overflow:

@@ -12,12 +12,12 @@ class SubjectList extends StatefulWidget {
   String total_test;
   String payment;
   SubjectList(
-      {this.mobile,
-      this.email_id,
-      this.order_id,
-      this.payment,
-      this.total_test,
-      this.user_id});
+      {required this.mobile,
+      required this.email_id,
+      required this.order_id,
+      required this.payment,
+      required this.total_test,
+      required this.user_id});
 
   @override
   _SubjectListState createState() => _SubjectListState();

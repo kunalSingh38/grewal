@@ -20,7 +20,7 @@ class MTPList extends StatefulWidget {
 
 class _SettingsState extends State<MTPList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -112,27 +112,31 @@ class _SettingsState extends State<MTPList> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['Response']['mtpList'].length != 0) {
+          if (jsonDecode(snapshot.data.toString())['Response']['mtpList']
+                  .length !=
+              0) {
             return Container(
               child: ListView.builder(
                   shrinkWrap: true,
                   primary: false,
-                  itemCount: snapshot.data['Response']['mtpList'].length,
+                  itemCount: jsonDecode(snapshot.data.toString())['Response']
+                          ['mtpList']
+                      .length,
                   itemBuilder: (context, index) {
                     return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
+                      // actionPane: SlidableDrawerActionPane(),
+                      // actionExtentRatio: 0.25,
                       child: InkWell(
                         onTap: () {
                           Navigator.pushNamed(
                             context,
                             '/mts',
                             arguments: <String, String>{
-                              'url': snapshot.data['Response']['mtpList'][index]
-                                      ['mtpFile']
+                              'url': jsonDecode(snapshot.data.toString())[
+                                      'Response']['mtpList'][index]['mtpFile']
                                   .toString(),
-                              'name': snapshot.data['Response']['mtpList']
-                                      [index]['name']
+                              'name': jsonDecode(snapshot.data.toString())[
+                                      'Response']['mtpList'][index]['name']
                                   .toString(),
                             },
                           );
@@ -192,7 +196,9 @@ class _SettingsState extends State<MTPList> {
                                             children: <Widget>[
                                               Expanded(
                                                 child: Text(
-                                                    snapshot.data['Response']
+                                                    jsonDecode(snapshot.data
+                                                                    .toString())[
+                                                                'Response']
                                                             ['mtpList'][index]
                                                         ['name'],
                                                     maxLines: 2,

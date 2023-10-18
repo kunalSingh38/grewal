@@ -16,7 +16,7 @@ import '../constants.dart';
 class SignOTPVerification extends StatefulWidget {
   final Object argument;
 
-  const SignOTPVerification({Key key, this.argument}) : super(key: key);
+  SignOTPVerification({required this.argument});
 
   @override
   _LoginWithLogoState createState() => _LoginWithLogoState();
@@ -31,7 +31,7 @@ class _LoginWithLogoState extends State<SignOTPVerification> {
   bool _autoValidate = false;
 
   // ignore: close_sinks
-  StreamController<ErrorAnimationType> errorController;
+  StreamController<ErrorAnimationType>? errorController;
 
   bool hasError = false;
   String currentText = "";
@@ -84,7 +84,7 @@ class _LoginWithLogoState extends State<SignOTPVerification> {
                   // blinkWhenObscuring: true,
                   animationType: AnimationType.fade,
                   validator: (v) {
-                    if (v.length < 4) {
+                    if (v!.length < 4) {
                       return "Please fill all values";
                     } else {
                       return null;
@@ -208,8 +208,8 @@ class _LoginWithLogoState extends State<SignOTPVerification> {
                 // textColor: Colors.white,
                 // color: Color(0xff017EFF),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     setState(() {
                       _loading = true;
                     });

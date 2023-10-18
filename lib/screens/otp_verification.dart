@@ -14,7 +14,7 @@ import '../constants.dart';
 class OTPVerification extends StatefulWidget {
   final Object argument;
 
-  const OTPVerification({Key key, this.argument}) : super(key: key);
+  OTPVerification({required this.argument});
 
   @override
   _LoginWithLogoState createState() => _LoginWithLogoState();
@@ -28,7 +28,7 @@ class _LoginWithLogoState extends State<OTPVerification> {
   // ..text = "123456";
 
   // ignore: close_sinks
-  StreamController<ErrorAnimationType> errorController;
+  StreamController<ErrorAnimationType>? errorController;
 
   bool hasError = false;
   String currentText = "";
@@ -68,7 +68,7 @@ class _LoginWithLogoState extends State<OTPVerification> {
                 // blinkWhenObscuring: true,
                 animationType: AnimationType.fade,
                 validator: (v) {
-                  if (v.length < 4) {
+                  if (v!.length < 4) {
                     return "Please fill all values";
                   } else {
                     return null;
@@ -159,7 +159,6 @@ class _LoginWithLogoState extends State<OTPVerification> {
                   var otp = data['otp'];
                   /* Fluttertoast.showToast(
                         msg: "Otp Send: " + otp.toString());*/
-
                 } else {
                   setState(() {
                     _loading = false;
@@ -193,8 +192,8 @@ class _LoginWithLogoState extends State<OTPVerification> {
                 // textColor: Colors.white,
                 // color: Color(0xff017EFF),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     setState(() {
                       _loading = true;
                     });

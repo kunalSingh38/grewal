@@ -14,7 +14,7 @@ import 'package:grewal/components/progress_bar.dart';
 class SubjectiveTestListGiven extends StatefulWidget {
   final Object argument;
 
-  const SubjectiveTestListGiven({Key key, this.argument}) : super(key: key);
+  SubjectiveTestListGiven({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -40,7 +40,7 @@ class _SettingsState extends State<SubjectiveTestListGiven> {
   bool isLoading = true;
   String chapter_id = "";
   String user_id = "";
-  Future data;
+  Future? data;
   String totalSubjects = "0";
   _getUser() async {
     Preference().getPreferences().then((prefs) {
@@ -137,18 +137,18 @@ class _SettingsState extends State<SubjectiveTestListGiven> {
                   future: _getData(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data.length > 0) {
+                      List data = jsonDecode(snapshot.data.toString()) as List;
+                      if (data.length > 0) {
                         return ListView.builder(
                           shrinkWrap: true,
                           primary: false,
-                          itemCount: snapshot.data.length,
+                          itemCount: data.length,
                           itemBuilder: (context, index) {
                             return ListTile(
-                              title:
-                                  Text(snapshot.data[index]['name'].toString()),
-                              subtitle: Text(snapshot.data[index]['created_at']
-                                  .toString()),
-                              trailing: snapshot.data[index]['is_taken'] == 1
+                              title: Text(data[index]['name'].toString()),
+                              subtitle:
+                                  Text(data[index]['created_at'].toString()),
+                              trailing: data[index]['is_taken'] == 1
                                   ? IconButton(
                                       onPressed: () {
                                         ProgressBarLoading()
@@ -156,8 +156,7 @@ class _SettingsState extends State<SubjectiveTestListGiven> {
                                         MCQLevelTestAPI()
                                             .getTotalQuestionCountofTest(
                                                 user_id,
-                                                snapshot.data[index]['id']
-                                                    .toString())
+                                                data[index]['id'].toString())
                                             .then((value) {
                                           Navigator.pop(context);
                                           if (value > 0) {
@@ -165,8 +164,7 @@ class _SettingsState extends State<SubjectiveTestListGiven> {
                                               context,
                                               '/view-performance-new',
                                               arguments: <String, String>{
-                                                'test_id': snapshot.data[index]
-                                                        ['id']
+                                                'test_id': data[index]['id']
                                                     .toString(),
                                                 'type': "",
                                                 'total_ques': "".toString(),
@@ -181,7 +179,7 @@ class _SettingsState extends State<SubjectiveTestListGiven> {
                                             //   context,
                                             //   '/view-test-new',
                                             //   arguments: <String, String>{
-                                            //     'test_id': snapshot.data[index]
+                                            //     'test_id': jsonDecode(snapshot.data.toString())[index]
                                             //             ['id']
                                             //         .toString(),
                                             //     'total_question':
@@ -206,13 +204,11 @@ class _SettingsState extends State<SubjectiveTestListGiven> {
                                               "ErrorCode": 0,
                                               "ErrorMessage": "Success",
                                               "Response": {
-                                                "testId": snapshot.data[index]
-                                                    ['id'],
-                                                "TestQuestionId":
-                                                    snapshot.data[index]
-                                                        ['test_question_id']
+                                                "testId": data[index]['id'],
+                                                "TestQuestionId": data[index]
+                                                    ['test_question_id']
                                               },
-                                              "chapter_id": snapshot.data[index]
+                                              "chapter_id": data[index]
                                                       ['chapter']
                                                   .toString()
                                             });

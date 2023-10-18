@@ -13,7 +13,7 @@ import '../constants.dart';
 class ChapterOverview extends StatefulWidget {
   final Object argument;
 
-  const ChapterOverview({Key key, this.argument}) : super(key: key);
+  const ChapterOverview({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -24,13 +24,16 @@ class _SettingsState extends State<ChapterOverview> {
   String chapter_id = "";
   bool _loading = false;
   String profile_image = '';
-  Future _chapterData;
+  Future? _chapterData;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
   TextStyle normalText4 = GoogleFonts.montserrat(
       fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff2E2A4A));
   TextStyle normalText3 = GoogleFonts.montserrat(
-      fontSize: 15, fontWeight: FontWeight.w400, decoration: TextDecoration.underline,color: Color(0xff2E2A4A));
+      fontSize: 15,
+      fontWeight: FontWeight.w400,
+      decoration: TextDecoration.underline,
+      color: Color(0xff2E2A4A));
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
   String api_token = "";
@@ -42,16 +45,17 @@ class _SettingsState extends State<ChapterOverview> {
     chapter_id = data['chapter_id'];
     _getUser();
   }
+
   _getUser() async {
     Preference().getPreferences().then((prefs) {
       setState(() {
         profile_image = prefs.getString('profile_image').toString();
         api_token = prefs.getString('api_token').toString();
-       _chapterData = _getChapterData();
-
+        _chapterData = _getChapterData();
       });
     });
   }
+
   Widget _networkImage1(url) {
     return Container(
       margin: EdgeInsets.only(
@@ -67,7 +71,6 @@ class _SettingsState extends State<ChapterOverview> {
           image: NetworkImage(profile_image),
           fit: BoxFit.cover,
         ),
-
       ),
     );
   }
@@ -92,18 +95,23 @@ class _SettingsState extends State<ChapterOverview> {
       throw Exception('Something went wrong');
     }
   }
+
   Widget _networkImage(url) {
     return Image(
       image: CachedNetworkImageProvider(url),
     );
   }
+
   Widget _chapterBuilder(Size deviceSize) {
     return FutureBuilder(
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          var errorCode = snapshot.data['ErrorCode'];
-          var response = snapshot.data['Response'];
+          Map map = snapshot.data as Map;
+          List data = map['Response'];
+          var errorCode = map['ErrorCode'];
+          String url = map['url'].toString();
+          print(map);
           if (errorCode == 0) {
             return Container(
               child: ListView(
@@ -115,17 +123,22 @@ class _SettingsState extends State<ChapterOverview> {
                       decoration: BoxDecoration(
                         color: Color(0xffF6F6F6),
                       ),
-                      child: response[0]['image']!=null?Container(
-                        decoration: new BoxDecoration(
-                           // color: Color(0xffF6F6F6),
-                            borderRadius: new BorderRadius.only(
-                                topLeft: const Radius.circular(5.0),
-                                bottomLeft: const Radius.circular(5.0),
-                                bottomRight: const Radius.circular(5.0),
-                                topRight: const Radius.circular(5.0))),
-                          child:  _networkImage(snapshot.data['url']+response[0]['image'],
-                      ),
-                      ):Container(height: 200,)),
+                      child: data[0]['image'] != null
+                          ? Container(
+                              decoration: new BoxDecoration(
+                                  // color: Color(0xffF6F6F6),
+                                  borderRadius: new BorderRadius.only(
+                                      topLeft: const Radius.circular(5.0),
+                                      bottomLeft: const Radius.circular(5.0),
+                                      bottomRight: const Radius.circular(5.0),
+                                      topRight: const Radius.circular(5.0))),
+                              child: _networkImage(
+                                url + data[0]['image'],
+                              ),
+                            )
+                          : Container(
+                              height: 200,
+                            )),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     // height: MediaQuery.of(context).size.height * 0.75,
@@ -140,34 +153,30 @@ class _SettingsState extends State<ChapterOverview> {
                         SizedBox(
                           height: 10,
                         ),
-                        Text(response[0]['chapter_name'], style: normalText5),
+                        Text(data[0]['chapter_name'], style: normalText5),
                         SizedBox(
                           height: 10,
                         ),
-                        Text(response[0]['overview'], style: normalText4),
+                        Text(data[0]['overview'], style: normalText4),
                         SizedBox(
                           height: 50,
                         ),
                         InkWell(
-                          onTap: (){
-                            if(response[0]['pdf']!=null) {
+                          onTap: () {
+                            if (data[0]['pdf'] != null) {
                               Navigator.pushNamed(
                                 context,
                                 '/open-pdf',
-
                                 arguments: <String, String>{
-                                  'dataSet': snapshot.data['url'] +
-                                      response[0]['pdf'],
-
+                                  'dataSet': url + data[0]['pdf'],
                                 },
-
                               );
                             }
-
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Text("View Attachment", style: normalText3)),
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child:
+                                  Text("View Attachment", style: normalText3)),
                         ),
                       ],
                     ),
@@ -181,20 +190,21 @@ class _SettingsState extends State<ChapterOverview> {
         } else {
           return Center(
               child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  child: SpinKitFadingCube(
-                    itemBuilder: (_, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index.isEven ? Color(0xff017EFF) :Color(0xffFFC700),
-                        ),
-                      );
-                    },
-                    size: 30.0,
-                  ),
-                ),
-              ));
+            alignment: Alignment.center,
+            child: Container(
+              child: SpinKitFadingCube(
+                itemBuilder: (_, int index) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color:
+                          index.isEven ? Color(0xff017EFF) : Color(0xffFFC700),
+                    ),
+                  );
+                },
+                size: 30.0,
+              ),
+            ),
+          ));
         }
       },
     );
@@ -253,16 +263,14 @@ class _SettingsState extends State<ChapterOverview> {
           child: Container(
 
               child: Text('COMING SOON...',style: TextStyle(color: Color(0xff2E2A4A)),)),
-        )*/ Column(children: <Widget>[
-
+        )*/
+            Column(children: <Widget>[
           Expanded(
             child: ModalProgressHUD(
               inAsyncCall: _loading,
               child: Container(
                 margin: EdgeInsets.symmetric(
-                  horizontal: deviceSize.width * 0.03,
-                  vertical: 10
-                ),
+                    horizontal: deviceSize.width * 0.03, vertical: 10),
                 child: _chapterBuilder(deviceSize),
               ),
             ),

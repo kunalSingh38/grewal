@@ -16,7 +16,7 @@ import '../constants.dart';
 class TestList extends StatefulWidget {
   final Object argument;
 
-  const TestList({Key key, this.argument}) : super(key: key);
+  const TestList({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -24,7 +24,7 @@ class TestList extends StatefulWidget {
 
 class _SettingsState extends State<TestList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -287,27 +287,27 @@ class _SettingsState extends State<TestList> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['Response'].length != 0) {
+          Map map = snapshot.data as Map;
+          print(map);
+          List data = map['Response'];
+          if (data.length != 0) {
             return Container(
               child: ListView.builder(
                   shrinkWrap: true,
                   primary: false,
-                  itemCount: snapshot.data['Response'].length,
+                  itemCount: data.length,
                   itemBuilder: (context, index) {
                     return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
+                      // actionPane: SlidableDrawerActionPane(),
+                      // actionExtentRatio: 0.25,
                       child: InkWell(
                         onTap: () {
-                          if (snapshot.data['Response'][index]['is_taken'] ==
-                              0) {
+                          if (data[index]['is_taken'] == 0) {
                             Navigator.pushNamed(
                               context,
                               '/test-correct',
                               arguments: <String, String>{
-                                'test_id': snapshot.data['Response'][index]
-                                        ['id']
-                                    .toString(),
+                                'test_id': data[index]['id'].toString(),
                                 'type': "",
                               },
                             );
@@ -316,9 +316,7 @@ class _SettingsState extends State<TestList> {
                               context,
                               '/view-performance',
                               arguments: <String, String>{
-                                'test_id': snapshot.data['Response'][index]
-                                        ['id']
-                                    .toString(),
+                                'test_id': data[index]['id'].toString(),
                                 'type': "",
                               },
                             );
@@ -392,8 +390,7 @@ class _SettingsState extends State<TestList> {
                                             children: <Widget>[
                                               Expanded(
                                                 child: Text(
-                                                    snapshot.data['Response']
-                                                            [index]['name']
+                                                    data[index]['name']
                                                         .toString(),
                                                     maxLines: 2,
                                                     softWrap: true,
@@ -405,9 +402,7 @@ class _SettingsState extends State<TestList> {
                                           ),
                                           Container(
                                             child: Text(
-                                                snapshot.data['Response'][index]
-                                                        ['date']
-                                                    .toString(),
+                                                data[index]['date'].toString(),
                                                 maxLines: 1,
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -426,9 +421,9 @@ class _SettingsState extends State<TestList> {
                                     )
                                   ]),
                             ),
-                            /*  snapshot.data['Response']
+                            /*  jsonDecode(snapshot.data.toString())['Response']
                                 [index]['is_taken']==0? Positioned(
-                                  child: myPopMenu(snapshot.data['Response'][index]
+                                  child: myPopMenu(jsonDecode(snapshot.data.toString())['Response'][index]
                                           ['id']
                                       .toString()),
                                   right: -5,
@@ -445,24 +440,27 @@ class _SettingsState extends State<TestList> {
                                       )),*/
                         ]),
                       ),
-                      secondaryActions: <Widget>[
-                        snapshot.data['Response'][index]['is_taken'] == 0
-                            ? IconSlideAction(
-                                caption: 'Delete',
-                                color: Color(0xff017EFF),
-                                icon: Icons.delete,
-                                onTap: () {
-                                  showConfirmDialog(
-                                      snapshot.data['Response'][index]['id']
-                                          .toString(),
-                                      'Cancel',
-                                      'Remove',
-                                      'Remove Item',
-                                      'Are you sure want to remove this item?');
-                                },
-                              )
-                            : Container(),
-                      ],
+                      // secondaryActions: <Widget>[
+                      //   jsonDecode(snapshot.data.toString())['Response'][index]
+                      //               ['is_taken'] ==
+                      //           0
+                      //       ? IconSlideAction(
+                      //           caption: 'Delete',
+                      //           color: Color(0xff017EFF),
+                      //           icon: Icons.delete,
+                      //           onTap: () {
+                      //             showConfirmDialog(
+                      //                 jsonDecode(snapshot.data.toString())[
+                      //                         'Response'][index]['id']
+                      //                     .toString(),
+                      //                 'Cancel',
+                      //                 'Remove',
+                      //                 'Remove Item',
+                      //                 'Are you sure want to remove this item?');
+                      //           },
+                      //         )
+                      //       : Container(),
+                      // ],
                     );
                   }),
             );
@@ -554,6 +552,7 @@ class _SettingsState extends State<TestList> {
           onPressed: () {
             if (type == "outside") {
               if (total_test_quetion == "0") {
+                print("1");
                 Navigator.pushNamed(
                   context,
                   '/chapter-select',
@@ -564,19 +563,7 @@ class _SettingsState extends State<TestList> {
                   },
                 );
               } else if (total_test_quetion == "1") {
-                // if (payment == "0") {
-                //   Navigator.pushNamed(
-                //     context,
-                //     '/plan',
-                //     arguments: <String, String>{
-                //       'order_id': order_id.toString(),
-                //       'signupid': user_id.toString(),
-                //       'mobile': _mobile,
-                //       'email': email_id,
-                //       'out': 'in'
-                //     },
-                //   );
-                // } else {
+                print("2");
                 Navigator.pushNamed(
                   context,
                   '/chapter-select',
@@ -588,6 +575,7 @@ class _SettingsState extends State<TestList> {
                 );
                 // }
               } else {
+                print("3");
                 Navigator.pushNamed(
                   context,
                   '/chapter-select',
@@ -600,6 +588,7 @@ class _SettingsState extends State<TestList> {
               }
             } else if (type == "inside") {
               if (total_test_quetion == "0") {
+                print("4");
                 Navigator.pushNamed(
                   context,
                   '/create-mcq',
@@ -610,19 +599,7 @@ class _SettingsState extends State<TestList> {
                   },
                 );
               } else if (total_test_quetion == "1") {
-                // if (payment == "0") {
-                //   Navigator.pushNamed(
-                //     context,
-                //     '/plan',
-                //     arguments: <String, String>{
-                //       'order_id': order_id.toString(),
-                //       'signupid': user_id.toString(),
-                //       'mobile': _mobile,
-                //       'email': email_id,
-                //       'out': 'in'
-                //     },
-                //   );
-                // } else {
+                print("5");
                 Navigator.pushNamed(
                   context,
                   '/create-mcq',
@@ -634,6 +611,7 @@ class _SettingsState extends State<TestList> {
                 );
                 // }
               } else {
+                print("6");
                 Navigator.pushNamed(
                   context,
                   '/create-mcq',

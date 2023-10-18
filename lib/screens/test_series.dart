@@ -11,7 +11,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 class TestSeries extends StatefulWidget {
   final Object argument;
 
-  const TestSeries({Key key, this.argument}) : super(key: key);
+  TestSeries({required this.argument});
   @override
   _TestSeriesState createState() => _TestSeriesState();
 }
@@ -112,7 +112,7 @@ class _TestSeriesState extends State<TestSeries> {
 
 class TestSeriesList extends StatefulWidget {
   String id;
-  TestSeriesList({this.id});
+  TestSeriesList({required this.id});
   @override
   _TestSeriesListState createState() => _TestSeriesListState();
 }
@@ -469,7 +469,7 @@ class _TestSeriesListState extends State<TestSeriesList> {
                               ),
                             ],
                           ),
-                          collapsed: null,
+                          collapsed: SizedBox(),
                         ),
                       ),
                     );
@@ -484,7 +484,7 @@ class _TestSeriesListState extends State<TestSeriesList> {
 class TestSeriesPDF extends StatefulWidget {
   String url;
   String topicName;
-  TestSeriesPDF({this.url, this.topicName});
+  TestSeriesPDF({required this.url, required this.topicName});
   @override
   _TestSeriesPDFState createState() => _TestSeriesPDFState();
 }

@@ -21,7 +21,7 @@ import '../constants.dart';
 class StartMCQ2 extends StatefulWidget {
   final Object argument;
 
-  const StartMCQ2({Key key, this.argument}) : super(key: key);
+  const StartMCQ2({required this.argument});
 
   @override
   _LoginWithLogoState createState() => _LoginWithLogoState();
@@ -40,7 +40,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
 
   bool isEnabled2 = false;
 
-  Future _quiz;
+  Future? _quiz;
   String chapter_id = "";
   String chapter_name = "";
   String type = "";
@@ -55,12 +55,12 @@ class _LoginWithLogoState extends State<StartMCQ2>
   bool lastAns = false;
   bool done = false;
 
-  List<XMLJSON> xmlList = new List();
+  List<XMLJSON> xmlList = [];
 
   bool full_show = false;
 
-  List<bool> previousClicked;
-  List<bool> optionsClicked;
+  List<bool>? previousClicked;
+  List<bool>? optionsClicked;
   Map finalMap = {};
   @override
   void initState() {
@@ -82,7 +82,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
     _getUser();
   }
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
   TextStyle normalText6 = GoogleFonts.montserrat(
       fontSize: 15,
       fontWeight: FontWeight.w500,
@@ -124,16 +124,16 @@ class _LoginWithLogoState extends State<StartMCQ2>
     if (response.statusCode == 200) {
       Map a = jsonDecode(response.body);
       Map data = {};
-      arr = new List(10);
-      optionsClicked = new List(10);
-      previousClicked = new List(10);
+      arr = List.generate(10, (index) => 0);
+      optionsClicked = List.generate(10, (index) => false);
+      previousClicked = List.generate(10, (index) => false);
 
       data['ErrorCode'] = a["ErrorCode"].toString();
       List temp = [];
       for (int i = 0; i < 10; i++) {
         setState(() {
-          optionsClicked[i] = false;
-          previousClicked[i] = false;
+          optionsClicked![i] = false;
+          previousClicked![i] = false;
         });
         temp.add(a['Response'][i.toString()]);
       }
@@ -165,7 +165,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
   }
 
   int id = 0;
-  List<int> arr;
+  List<int>? arr;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xff2E2A4A));
 
@@ -182,12 +182,12 @@ class _LoginWithLogoState extends State<StartMCQ2>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 1,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName:
                   response[0]['option_name'].toString().replaceAll("?", "₹"),
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -197,12 +197,12 @@ class _LoginWithLogoState extends State<StartMCQ2>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 2,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName:
                   response[1]['option_name'].toString().replaceAll("?", "₹"),
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -212,12 +212,12 @@ class _LoginWithLogoState extends State<StartMCQ2>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 3,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName:
                   response[2]['option_name'].toString().replaceAll("?", "₹"),
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -227,12 +227,12 @@ class _LoginWithLogoState extends State<StartMCQ2>
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CustomRadioWidget(
               value: 4,
-              groupValue: arr[index],
+              groupValue: arr![index],
               color: Color(0xffF9F9FB),
               groupName:
                   response[3]['option_name'].toString().replaceAll("?", "₹"),
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -250,7 +250,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
               color: Color(0xffF9F9FB),
               groupName: response[0]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -264,7 +264,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
               color: Color(0xffF9F9FB),
               groupName: response[1]['option_name'],
               onChanged: (val) {
-                selectedRadio(val, index);
+                selectedRadio(int.parse(val.toString()), index);
               },
             ),
           ]),
@@ -273,8 +273,8 @@ class _LoginWithLogoState extends State<StartMCQ2>
 
   selectedRadio(int val, int ind) {
     setState(() {
-      optionsClicked[ind] = true;
-      arr[ind] = val;
+      optionsClicked![ind] = true;
+      arr![ind] = val;
     });
   }
 
@@ -290,6 +290,8 @@ class _LoginWithLogoState extends State<StartMCQ2>
     } else if (response[itemIndex]['type'] == "Assertion Reasoning") {
       return _radioBuilderMCQ(
           response[itemIndex]['question_option'], itemIndex);
+    } else {
+      return SizedBox();
     }
   }
 
@@ -307,13 +309,13 @@ class _LoginWithLogoState extends State<StartMCQ2>
 
   @override
   void dispose() {
-    _scrollController.dispose(); // dispose the controller
+    _scrollController!.dispose(); // dispose the controller
     super.dispose();
   }
 
   void _scrollToTop() {
-    _scrollController.animateTo(0,
-        duration: Duration(seconds: 3), curve: Curves.linear);
+    _scrollController!
+        .animateTo(0, duration: Duration(seconds: 3), curve: Curves.linear);
   }
 
   Widget _customContent() {
@@ -322,8 +324,8 @@ class _LoginWithLogoState extends State<StartMCQ2>
       builder: (context, snapshot) {
         var getScreenHeight = MediaQuery.of(context).size.height;
         if (snapshot.connectionState == ConnectionState.done) {
-          var errorCode = snapshot.data['ErrorCode'];
-          var response = snapshot.data['Response'];
+          var errorCode = jsonDecode(snapshot.data.toString())['ErrorCode'];
+          var response = jsonDecode(snapshot.data.toString())['Response'];
           if (errorCode == "0") {
             return response.length != 0
                 ? Container(
@@ -342,7 +344,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                           scrollDirection: Axis.horizontal,
                         ),
                         itemCount: response.length,
-                        itemBuilder: (BuildContext context, int itemIndex) {
+                        itemBuilder: (context, itemIndex, realIndex) {
                           return ListView(primary: false, children: <Widget>[
                             Container(
                                 child: Column(children: <Widget>[
@@ -801,11 +803,11 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                 ),
                                               ),
                                               "th": Style(
-                                                padding: EdgeInsets.all(6),
+                                                padding: HtmlPaddings.all(6),
                                                 backgroundColor: Colors.grey,
                                               ),
                                               "td": Style(
-                                                padding: EdgeInsets.all(6),
+                                                padding: HtmlPaddings.all(6),
                                                 alignment: Alignment.topLeft,
                                               ),
                                               'h5': Style(
@@ -906,26 +908,29 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                     // color: Color(0xff017EFF),
                                                     onPressed: () async {
                                                       XMLJSON xmljson =
-                                                          new XMLJSON();
+                                                          new XMLJSON(
+                                                              answer: '',
+                                                              question: '',
+                                                              time_taken: '');
                                                       print(arr);
 
-                                                      if (previousClicked
+                                                      if (previousClicked!
                                                           .contains(true)) {
-                                                        if (optionsClicked[
+                                                        if (optionsClicked![
                                                                 itemIndex] ==
                                                             true) {
-                                                          optionsClicked[
+                                                          optionsClicked![
                                                                   itemIndex] =
                                                               false;
                                                         }
                                                       }
                                                       print(previousClicked);
                                                       print(optionsClicked);
-                                                      if (arr[itemIndex] !=
+                                                      if (arr![itemIndex] !=
                                                           null) {
                                                         // print(_controller1.getTime());
 
-                                                        if (arr[itemIndex] ==
+                                                        if (arr![itemIndex] ==
                                                             1) {
                                                           setState(() {
                                                             xmljson.question =
@@ -941,9 +946,9 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                                 'option_value'];
                                                             xmljson.time_taken =
                                                                 _controller1
-                                                                    .getTime();
+                                                                    .getTime()!;
                                                           });
-                                                          if (previousClicked[
+                                                          if (previousClicked![
                                                               itemIndex]) {
                                                             xmlList.removeAt(
                                                                 itemIndex);
@@ -952,7 +957,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                                 xmljson);
                                                             print("a");
                                                           } else {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 false) {
                                                               xmlList.removeAt(
@@ -968,7 +973,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                             }
                                                           }
                                                           print(xmlList);
-                                                        } else if (arr[
+                                                        } else if (arr![
                                                                 itemIndex] ==
                                                             2) {
                                                           setState(() {
@@ -985,9 +990,9 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                                 'option_value'];
                                                             xmljson.time_taken =
                                                                 _controller1
-                                                                    .getTime();
+                                                                    .getTime()!;
                                                           });
-                                                          if (previousClicked[
+                                                          if (previousClicked![
                                                               itemIndex]) {
                                                             xmlList.removeAt(
                                                                 itemIndex);
@@ -996,7 +1001,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                                 xmljson);
                                                             print("a");
                                                           } else {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 false) {
                                                               xmlList.removeAt(
@@ -1013,7 +1018,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                           }
                                                           print(jsonEncode(
                                                               xmlList));
-                                                        } else if (arr[
+                                                        } else if (arr![
                                                                 itemIndex] ==
                                                             3) {
                                                           setState(() {
@@ -1030,9 +1035,9 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                                 'option_value'];
                                                             xmljson.time_taken =
                                                                 _controller1
-                                                                    .getTime();
+                                                                    .getTime()!;
                                                           });
-                                                          if (previousClicked[
+                                                          if (previousClicked![
                                                               itemIndex]) {
                                                             xmlList.removeAt(
                                                                 itemIndex);
@@ -1041,7 +1046,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                                 xmljson);
                                                             print("a");
                                                           } else {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 false) {
                                                               xmlList.removeAt(
@@ -1058,7 +1063,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                           }
                                                           print(jsonEncode(
                                                               xmlList));
-                                                        } else if (arr[
+                                                        } else if (arr![
                                                                 itemIndex] ==
                                                             4) {
                                                           setState(() {
@@ -1075,9 +1080,9 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                                 'option_value'];
                                                             xmljson.time_taken =
                                                                 _controller1
-                                                                    .getTime();
+                                                                    .getTime()!;
                                                           });
-                                                          if (previousClicked[
+                                                          if (previousClicked![
                                                               itemIndex]) {
                                                             xmlList.removeAt(
                                                                 itemIndex);
@@ -1086,7 +1091,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                                 xmljson);
                                                             print("a");
                                                           } else {
-                                                            if (optionsClicked[
+                                                            if (optionsClicked![
                                                                     itemIndex] ==
                                                                 false) {
                                                               xmlList.removeAt(
@@ -1373,7 +1378,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                 child: new Text(
                   "No",
                   style: TextStyle(
-                    color: Color(0xff2E2A4A),
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -1382,8 +1387,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                   Navigator.of(context).pop(false);
                   Navigator.pushNamed(context, '/dashboard');
                 },
-                child:
-                    new Text("Yes", style: TextStyle(color: Color(0xff2E2A4A))),
+                child: new Text("Yes", style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -1394,6 +1398,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
+    print("on this page");
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -1495,7 +1500,7 @@ class _LoginWithLogoState extends State<StartMCQ2>
                                                 4,
 
                                         // Ring Color for Countdown Widget.
-                                        ringColor: Colors.grey[300],
+                                        ringColor: Colors.grey.shade300,
 
                                         // Ring Gradient for Countdown Widget.
                                         ringGradient: null,
@@ -1575,8 +1580,8 @@ class _LoginWithLogoState extends State<StartMCQ2>
 
   onNextClick(int itemIndex) {
     setState(() {
-      previousClicked[itemIndex] = false;
-      optionsClicked[itemIndex] = false;
+      previousClicked![itemIndex] = false;
+      optionsClicked![itemIndex] = false;
     });
     buttonCarouselController.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.linear);
@@ -1588,11 +1593,11 @@ class _LoginWithLogoState extends State<StartMCQ2>
   onPreviousClick(int itemIndex) {
     setState(() {
       lastAns = false;
-      previousClicked[itemIndex - 1] = true;
-      if (optionsClicked[itemIndex] == true) {
-        optionsClicked[itemIndex] = true;
+      previousClicked![itemIndex - 1] = true;
+      if (optionsClicked![itemIndex] == true) {
+        optionsClicked![itemIndex] = true;
       } else {
-        optionsClicked[itemIndex] = false;
+        optionsClicked![itemIndex] = false;
       }
     });
     buttonCarouselController.previousPage(

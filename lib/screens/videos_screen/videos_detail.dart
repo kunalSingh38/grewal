@@ -11,28 +11,26 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoDetail extends StatefulWidget {
   final Object argument;
-  const VideoDetail({Key key, this.argument}) : super(key: key);
-
+  const VideoDetail({required this.argument});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-
 class _MyHomePageState extends State<VideoDetail> {
-  YoutubePlayerController _controller;
+  late YoutubePlayerController _controller;
 
-  PlayerState _playerState;
-  YoutubeMetaData _videoMetaData;
+  PlayerState? _playerState;
+  YoutubeMetaData? _videoMetaData;
   double _volume = 100;
   bool _muted = false;
   bool _isPlayerReady = false;
-  String _youtube_id="";
-  String _heading="";
-  String _description="";
-  String user_id="";
-  String profile_image="";
-  String board_id="";
+  String _youtube_id = "";
+  String _heading = "";
+  String _description = "";
+  String user_id = "";
+  String profile_image = "";
+  String board_id = "";
   String payment = '';
   String total_test_quetion = '';
   String _mobile = "";
@@ -69,10 +67,10 @@ class _MyHomePageState extends State<VideoDetail> {
   }
 
   void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+    if (_isPlayerReady && mounted && !_controller!.value.isFullScreen) {
       setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
+        _playerState = _controller!.value.playerState;
+        _videoMetaData = _controller!.metadata;
       });
     }
   }
@@ -80,15 +78,16 @@ class _MyHomePageState extends State<VideoDetail> {
   @override
   void deactivate() {
     // Pauses video while navigating to next page.
-    _controller.pause();
+    _controller!.pause();
     super.deactivate();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     super.dispose();
   }
+
   Widget _networkImage1(url) {
     return Container(
       margin: EdgeInsets.only(
@@ -104,10 +103,10 @@ class _MyHomePageState extends State<VideoDetail> {
           image: NetworkImage(profile_image),
           fit: BoxFit.cover,
         ),
-
       ),
     );
   }
+
   _getUser() async {
     Preference().getPreferences().then((prefs) {
       setState(() {
@@ -115,29 +114,32 @@ class _MyHomePageState extends State<VideoDetail> {
         _mobile = prefs.getString('mobile_no').toString();
 
         profile_image = prefs.getString('profile_image').toString();
-
-
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return YoutubePlayerBuilder(
-      onEnterFullScreen: () { SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]); _controller.play(); },
+      onEnterFullScreen: () {
+        SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.landscapeLeft]);
+        _controller!.play();
+      },
       onExitFullScreen: () {
         // The player forces portraitUp after exiting fullscreen. This overrides the behaviour.
         SystemChrome.setPreferredOrientations(DeviceOrientation.values);
       },
       player: YoutubePlayer(
         controller: _controller,
+        aspectRatio: 16 / 9,
         showVideoProgressIndicator: true,
         progressIndicatorColor: Color(0xff2E2A4A),
-
         topActions: <Widget>[
           const SizedBox(width: 8.0),
           Expanded(
             child: Text(
-              _controller.metadata.title,
+              _controller!.metadata.title,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
@@ -146,21 +148,19 @@ class _MyHomePageState extends State<VideoDetail> {
               maxLines: 1,
             ),
           ),
-
         ],
         onReady: () {
           _isPlayerReady = true;
         },
         onEnded: (data) {
-          _controller.pause();
-          _controller.load(_youtube_id);
-
+          _controller!.pause();
+          _controller!.load(_youtube_id);
         },
       ),
       builder: (context, player) => Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          leading:Row(children: <Widget>[
+          leading: Row(children: <Widget>[
             IconButton(
               icon: Image(
                 image: AssetImage("assets/images/Icon.png"),
@@ -172,7 +172,6 @@ class _MyHomePageState extends State<VideoDetail> {
                 Navigator.of(context).pop(false);
               },
             ),
-
           ]),
           centerTitle: true,
           title: Container(
@@ -224,11 +223,11 @@ class _MyHomePageState extends State<VideoDetail> {
                           label: '${(_volume).round()}',
                           onChanged: _isPlayerReady
                               ? (value) {
-                            setState(() {
-                              _volume = value;
-                            });
-                            _controller.setVolume(_volume.round());
-                          }
+                                  setState(() {
+                                    _volume = value;
+                                  });
+                                  _controller!.setVolume(_volume.round());
+                                }
                               : null,
                         ),
                       ),
@@ -237,40 +236,38 @@ class _MyHomePageState extends State<VideoDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-
                       IconButton(
                         icon: Icon(
-                          _controller.value.isPlaying
+                          _controller!.value.isPlaying
                               ? Icons.pause
                               : Icons.play_arrow,
                         ),
                         onPressed: _isPlayerReady
                             ? () {
-                          _controller.value.isPlaying
-                              ? _controller.pause()
-                              : _controller.play();
-                          setState(() {});
-                        }
+                                _controller!.value.isPlaying
+                                    ? _controller!.pause()
+                                    : _controller!.play();
+                                setState(() {});
+                              }
                             : null,
                       ),
                       IconButton(
                         icon: Icon(_muted ? Icons.volume_off : Icons.volume_up),
                         onPressed: _isPlayerReady
                             ? () {
-                          _muted
-                              ? _controller.unMute()
-                              : _controller.mute();
-                          setState(() {
-                            _muted = !_muted;
-                          });
-                        }
+                                _muted
+                                    ? _controller!.unMute()
+                                    : _controller!.mute();
+                                setState(() {
+                                  _muted = !_muted;
+                                });
+                              }
                             : null,
                       ),
                       FullScreenButton(
                         controller: _controller,
-                        color:Color(0xff2E2A4A),
+                        color: Color(0xff2E2A4A),
                       ),
-
                     ],
                   ),
                   _space,
@@ -284,8 +281,6 @@ class _MyHomePageState extends State<VideoDetail> {
                       ),
                     ),
                   ),
-
-
                 ],
               ),
             ),
@@ -295,10 +290,5 @@ class _MyHomePageState extends State<VideoDetail> {
     );
   }
 
-
-
   Widget get _space => const SizedBox(height: 10);
-
-
-
 }

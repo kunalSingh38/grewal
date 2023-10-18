@@ -6,7 +6,11 @@ class TabItem extends StatelessWidget {
   final bool isSelected;
   final Function onTap;
 
-  const TabItem({Key key, this.icon,this.dot, this.isSelected, this.onTap}) : super(key: key);
+  const TabItem(
+      {required this.icon,
+      required this.dot,
+      required this.isSelected,
+      required this.onTap});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -15,12 +19,20 @@ class TabItem extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Image.asset(icon,width: 16,height: 16,color: isSelected ? Color(0xff017EFF) : Colors.black,),
-            Text(dot, style: TextStyle(color: isSelected ?Color(0xff017EFF):Colors.white,fontWeight: FontWeight.bold ))
+            Image.asset(
+              icon,
+              width: 16,
+              height: 16,
+              color: isSelected ? Color(0xff017EFF) : Colors.black,
+            ),
+            Text(dot,
+                style: TextStyle(
+                    color: isSelected ? Color(0xff017EFF) : Colors.white,
+                    fontWeight: FontWeight.bold))
           ],
         ),
       ),
-      onTap: onTap,
+      onTap: onTap(),
     );
   }
 }

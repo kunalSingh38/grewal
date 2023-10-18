@@ -23,7 +23,7 @@ class AddSupport extends StatefulWidget {
 
 class _SettingsState extends State<AddSupport> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -42,11 +42,11 @@ class _SettingsState extends State<AddSupport> {
   String type = "";
   String profile_image = '';
   bool _loading = false;
-  Future _classData;
+  Future? _classData;
   List<Region3> _region3 = [];
   var _type3 = "";
   String api_token = "";
-  String selectedRegion3;
+  String? selectedRegion3;
 
   String catData3 = "";
 
@@ -114,7 +114,7 @@ class _SettingsState extends State<AddSupport> {
           final json = JsonDecoder().convert(catData3);
           _region3 =
               (json).map<Region3>((item) => Region3.fromJson(item)).toList();
-          List<String> item = _region3.map((Region3 map) {
+          List<String?> item = _region3.map((Region3 map) {
             for (int i = 0; i < _region3.length; i++) {
               if (selectedRegion3 == map.THIRD_LEVEL_NAME) {}
             }
@@ -208,13 +208,13 @@ class _SettingsState extends State<AddSupport> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter subject';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  subjectController.text = value;
+                  subjectController.text = value!;
                 },
                 decoration: InputDecoration(
                     isDense: true,
@@ -261,13 +261,13 @@ class _SettingsState extends State<AddSupport> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter message';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  descriptionController.text = value;
+                  descriptionController.text = value!;
                 },
                 decoration: InputDecoration(
                     isDense: true,
@@ -323,7 +323,7 @@ class _SettingsState extends State<AddSupport> {
                   : ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: Image.file(
-                        _image,
+                        _image!,
                         fit: BoxFit.cover,
                         width: 90,
                         height: 90,
@@ -343,8 +343,8 @@ class _SettingsState extends State<AddSupport> {
                 // textColor: Colors.white,
                 // color: Color(0xff017EFF),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     if (selectedRegion3 != null) {
                       if (_image != null) {
                         setState(() {
@@ -354,20 +354,21 @@ class _SettingsState extends State<AddSupport> {
                           'Accept': 'application/json',
                           'Authorization': 'Bearer $api_token',
                         };
-                        var uri = Uri.parse(URL + 'support');
+                        var uri = new Uri.https(BASE_URL, API_PATH + 'support');
                         final uploadRequest =
                             http.MultipartRequest('POST', uri);
-                        final mimeTypeData = lookupMimeType(_image.path,
-                            headerBytes: [0xFF, 0xD8]).split('/');
+                        final mimeTypeData = lookupMimeType(_image!.path,
+                                headerBytes: [0xFF, 0xD8])!
+                            .split('/');
 
                         final file = await http.MultipartFile.fromPath(
-                            'attachment', _image.path,
+                            'attachment', _image!.path,
                             contentType:
                                 MediaType(mimeTypeData[0], mimeTypeData[1]));
                         uploadRequest.headers.addAll(headers);
                         uploadRequest.files.add(file);
                         uploadRequest.fields['student_id'] = user_id;
-                        uploadRequest.fields['type'] = selectedRegion3;
+                        uploadRequest.fields['type'] = selectedRegion3!;
                         uploadRequest.fields['subject'] =
                             subjectController.text;
                         uploadRequest.fields['message'] =
@@ -417,12 +418,12 @@ class _SettingsState extends State<AddSupport> {
                           'Accept': 'application/json',
                           'Authorization': 'Bearer $api_token',
                         };
-                        var uri = Uri.parse(URL + 'support');
+                        var uri = new Uri.https(BASE_URL, API_PATH + 'support');
                         final uploadRequest =
                             http.MultipartRequest('POST', uri);
                         uploadRequest.headers.addAll(headers);
                         uploadRequest.fields['student_id'] = user_id;
-                        uploadRequest.fields['type'] = selectedRegion3;
+                        uploadRequest.fields['type'] = selectedRegion3!;
                         uploadRequest.fields['subject'] =
                             subjectController.text;
                         uploadRequest.fields['message'] =
@@ -541,22 +542,25 @@ class _SettingsState extends State<AddSupport> {
         });
   }
 
-  File _image;
+  File? _image;
 
   _imgFromCamera() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50);
+    final picker = ImagePicker();
+    XFile? image =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
-      _image = image;
+      _image = image as File;
     });
   }
 
   _imgFromGallery() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50);
+    final picker = ImagePicker();
+    XFile? image =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+
     setState(() {
-      _image = image;
+      _image = image as File;
     });
   }
 
@@ -645,7 +649,8 @@ class _SettingsState extends State<AddSupport> {
                           autovalidateMode: _autoValidate
                               ? AutovalidateMode.always
                               : AutovalidateMode.disabled,
-                          child: /*isEnabled1 ? _customContent() :*/ _randomContent(),
+                          child: /*isEnabled1 ? _customContent() :*/
+                              _randomContent(),
                         ),
                       ),
                       SizedBox(
@@ -663,7 +668,7 @@ class Region3 {
   // final String THIRD_LEVEL_ID;
   final String THIRD_LEVEL_NAME;
 
-  Region3({this.THIRD_LEVEL_NAME});
+  Region3({required this.THIRD_LEVEL_NAME});
 
   factory Region3.fromJson(Map<String, dynamic> json) {
     return new Region3(

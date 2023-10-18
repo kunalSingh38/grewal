@@ -11,19 +11,17 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:http/http.dart' as http;
 import '../../constants.dart';
 
-
-
 class VideosList extends StatefulWidget {
   final Object argument;
 
-  const VideosList({Key key, this.argument}) : super(key: key);
+  const VideosList({required this.argument});
   @override
   _SettingsState createState() => _SettingsState();
 }
 
 class _SettingsState extends State<VideosList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -36,9 +34,9 @@ class _SettingsState extends State<VideosList> {
   String profile_image = '';
   List<UserDetails> _userDetails = [];
   List<UserDetails> _searchResult = [];
-  String user_id="";
-  String class_id="";
-  String board_id="";
+  String user_id = "";
+  String class_id = "";
+  String board_id = "";
   String payment = '';
   String total_test_quetion = '';
   String _mobile = "";
@@ -53,10 +51,8 @@ class _SettingsState extends State<VideosList> {
     var data = json.decode(encodedJson);
     chapter_id = data['chapter_id'];
     _getUser();
-
-
-
   }
+
   Widget _networkImage1(url) {
     return Container(
       margin: EdgeInsets.only(
@@ -72,10 +68,10 @@ class _SettingsState extends State<VideosList> {
           image: NetworkImage(profile_image),
           fit: BoxFit.cover,
         ),
-
       ),
     );
   }
+
   _getUser() async {
     Preference().getPreferences().then((prefs) {
       setState(() {
@@ -89,7 +85,7 @@ class _SettingsState extends State<VideosList> {
         total_test_quetion = prefs.getString('total_test').toString();
         payment = prefs.getString('payment').toString();
         api_token = prefs.getString('api_token').toString();
-        _chapterData= _getChapterData();
+        _chapterData = _getChapterData();
       });
     });
   }
@@ -99,7 +95,8 @@ class _SettingsState extends State<VideosList> {
       image: NetworkImage(url),
     );
   }
-  List<bool> showExpand = new List();
+
+  List<bool> showExpand = [];
   Future _getChapterData() async {
     Map<String, String> headers = {
       // 'Content-Type': 'application/json',
@@ -109,15 +106,14 @@ class _SettingsState extends State<VideosList> {
     var response = await http.post(
       new Uri.http(BASE_URL, API_PATH + "/chapterwisevideos"),
       body: {
-        "user_id":user_id,
-        "chapter_id":chapter_id,
+        "user_id": user_id,
+        "chapter_id": chapter_id,
       },
       headers: headers,
-
     );
     print({
-      "user_id":user_id,
-      "chapter_id":chapter_id,
+      "user_id": user_id,
+      "chapter_id": chapter_id,
     });
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -128,14 +124,15 @@ class _SettingsState extends State<VideosList> {
       throw Exception('Something went wrong');
     }
   }
-  String getYoutubeVideoId(String url) {
+
+  String? getYoutubeVideoId(String url) {
     RegExp regExp = new RegExp(
       r'.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*',
       caseSensitive: false,
       multiLine: false,
     );
-    final match = regExp.firstMatch(url).group(1); // <- This is the fix
-    String str = match;
+    final match = regExp.firstMatch(url)!.group(1); // <- This is the fix
+    String? str = match;
     return str;
   }
 
@@ -144,8 +141,8 @@ class _SettingsState extends State<VideosList> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var response = snapshot.data['Response'];
-          var errorCode = snapshot.data['ErrorCode'];
+          var response = jsonDecode(snapshot.data.toString())['Response'];
+          var errorCode = jsonDecode(snapshot.data.toString())['ErrorCode'];
           if (errorCode == 0) {
             return GridView.count(
                 shrinkWrap: true,
@@ -155,77 +152,73 @@ class _SettingsState extends State<VideosList> {
                     left: 15, right: 15, bottom: 10, top: 3),
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 10,
-                children:
-                List.generate(response.length, (index) {
+                children: List.generate(response.length, (index) {
                   return InkWell(
                       onTap: () {
-
-
-                          Navigator.pushNamed(
-                            context,
-                            '/videos-detail',
-
-                            arguments: <String, String>{
-                              '_youtube_id': getYoutubeVideoId(response[index]['video_link']),
-                              '_heading': response[index]['topic'],
-                            },
-
-                          );
-
-
+                        Navigator.pushNamed(
+                          context,
+                          '/videos-detail',
+                          arguments: <String, String>{
+                            '_youtube_id':
+                                getYoutubeVideoId(response[index]['video_link'])
+                                    .toString(),
+                            '_heading': response[index]['topic'],
+                          },
+                        );
                       },
                       child: Column(children: [
-                        Stack(
-                            children: [
-                              Container(
-                                height: MediaQuery.of(context).size.height * 0.15,
-                                padding: const EdgeInsets.only(
-                                    left: 3, right: 3, bottom: 3, top: 3),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(color: Color(0xff2E2A4A).withOpacity(0.80)),
-                                    borderRadius:
+                        Stack(children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.15,
+                            padding: const EdgeInsets.only(
+                                left: 3, right: 3, bottom: 3, top: 3),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Color(0xff2E2A4A).withOpacity(0.80)),
+                                borderRadius:
                                     BorderRadius.all(Radius.circular(0.0))),
-                                child: Container(
-                                  child: Image(
-                                      image: CachedNetworkImageProvider(
-                                          'https://img.youtube.com/vi/'+getYoutubeVideoId(response[index]['video_link'])+'/0.jpg'),
-                                      fit: BoxFit.fill,
-                                      width: 1000.0),
+                            child: Container(
+                              child: Image(
+                                  image: CachedNetworkImageProvider(
+                                      'https://img.youtube.com/vi/' +
+                                          getYoutubeVideoId(
+                                                  response[index]['video_link'])
+                                              .toString() +
+                                          '/0.jpg'),
+                                  fit: BoxFit.fill,
+                                  width: 1000.0),
+                            ),
+                          ),
+                          Positioned(
+                              right: 0,
+                              left: 0,
+                              bottom: 0,
+                              top: 0,
+                              child: Container(
+                                decoration: new BoxDecoration(
+                                  color: Colors.white.withOpacity(0.8),
+                                  shape: BoxShape.circle,
                                 ),
-                              ),
-                              Positioned(
-                                  right: 0,
-                                  left: 0,
-                                  bottom: 0,
-                                  top: 0,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 40, horizontal: 40),
+                                child: Center(
                                   child: Container(
-                                    decoration: new BoxDecoration(
-                                      color: Colors.white.withOpacity(0.8),
-                                      shape: BoxShape.circle,
-                                    ),
-
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 40, horizontal: 40),
-
-                                    child: Center(
-                                      child: Container(
-                                        width: 35,
-                                        height: 35,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5, vertical:5),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
+                                    width: 35,
+                                    height: 35,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
                                             BorderRadius.circular(20.0),
-                                            image: DecorationImage(
-                                                image: AssetImage('assets/images/play.png'),
-                                                fit: BoxFit.fill)
-                                        ),
-                                      ),
-
-                                    ),
-                                  ))
-                            ]),
+                                        image: DecorationImage(
+                                            image: AssetImage(
+                                                'assets/images/play.png'),
+                                            fit: BoxFit.fill)),
+                                  ),
+                                ),
+                              ))
+                        ]),
                         Expanded(
                           child: Container(
                             padding: EdgeInsets.only(left: 5, right: 5),
@@ -242,32 +235,29 @@ class _SettingsState extends State<VideosList> {
                             ),
                           ),
                         ),
-
-
                       ]));
                 }));
+          } else {
+            return _emptyOrders();
           }
-          else {
-            return  _emptyOrders();
-          }
-
-        }  else {
+        } else {
           return Center(
               child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  child: SpinKitFadingCube(
-                    itemBuilder: (_, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index.isEven ? Color(0xff017EFF) :Color(0xffFFC700),
-                        ),
-                      );
-                    },
-                    size: 30.0,
-                  ),
-                ),
-              ));
+            alignment: Alignment.center,
+            child: Container(
+              child: SpinKitFadingCube(
+                itemBuilder: (_, int index) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color:
+                          index.isEven ? Color(0xff017EFF) : Color(0xffFFC700),
+                    ),
+                  );
+                },
+                size: 30.0,
+              ),
+            ),
+          ));
         }
       },
     );
@@ -277,13 +267,12 @@ class _SettingsState extends State<VideosList> {
     return Center(
       child: Container(
           child: Text(
-            'NO RECORDS FOUND!',
-            style: TextStyle(fontSize: 20, letterSpacing: 1, color: Color(0xff2E2A4A)),
-          )),
+        'NO RECORDS FOUND!',
+        style:
+            TextStyle(fontSize: 20, letterSpacing: 1, color: Color(0xff2E2A4A)),
+      )),
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +281,7 @@ class _SettingsState extends State<VideosList> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0.0,
-          leading:Row(children: <Widget>[
+          leading: Row(children: <Widget>[
             IconButton(
               icon: Image(
                 image: AssetImage("assets/images/Icon.png"),
@@ -304,7 +293,6 @@ class _SettingsState extends State<VideosList> {
                 Navigator.of(context).pop(false);
               },
             ),
-
           ]),
           centerTitle: true,
           title: Container(
@@ -331,7 +319,7 @@ class _SettingsState extends State<VideosList> {
           ),
           backgroundColor: Colors.transparent,
         ),
-        body:ModalProgressHUD(
+        body: ModalProgressHUD(
           inAsyncCall: isLoading,
           child: Container(
               decoration: BoxDecoration(
@@ -344,8 +332,7 @@ class _SettingsState extends State<VideosList> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-
-                  /*  Container(
+                    /*  Container(
                       padding: EdgeInsets.only(left: 15, right: 15, top: 5),
                       margin: EdgeInsets.only( bottom: 10),
                       child: Row(children: <Widget>[
@@ -413,7 +400,7 @@ class _SettingsState extends State<VideosList> {
                             ),
                           ),
                         ),
-                        *//* SizedBox(
+                        */ /* SizedBox(
                         width: 10.0,
                       ),
                       Container(
@@ -425,27 +412,25 @@ class _SettingsState extends State<VideosList> {
                             height: 15,
                             width: 15,
                             fit: BoxFit.fill),
-                      ),*//*
+                      ),*/ /*
                       ]),
                     ),
 */
-                    Expanded(child:
-                    Container(
-                      padding: EdgeInsets.only(bottom: 5),
-                      child: chapterList(deviceSize),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: chapterList(deviceSize),
+                      ),
                     ),
-
-                    ),
-
                     SizedBox(
                       height: 10.0,
                     ),
                   ],
                 ),
               )),
-        )
-    );
+        ));
   }
+
   onSearchTextChanged(String text) async {
     print(text);
     _searchResult.clear();
@@ -467,15 +452,13 @@ class _SettingsState extends State<VideosList> {
 }
 
 class UserDetails {
-  final String id,
-      chapter_name,
-      short_description;
+  final String id, chapter_name, short_description;
 
-  UserDetails(
-      {this.id,
-        this.chapter_name,
-        this.short_description,
-      });
+  UserDetails({
+    required this.id,
+    required this.chapter_name,
+    required this.short_description,
+  });
 
   factory UserDetails.fromJson(Map<String, dynamic> json) {
     return new UserDetails(

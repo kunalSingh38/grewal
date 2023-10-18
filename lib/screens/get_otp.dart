@@ -35,7 +35,7 @@ class _LoginWithLogoState extends State<GetOTP> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter mobile number/email id';
                   }
                   return null;
@@ -99,8 +99,8 @@ class _LoginWithLogoState extends State<GetOTP> {
                 // textColor: Colors.white,
                 // color: Color(0xff017EFF),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     setState(() {
                       _loading = true;
                     });

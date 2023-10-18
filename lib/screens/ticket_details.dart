@@ -16,7 +16,7 @@ import '../constants.dart';
 class TicketDetails extends StatefulWidget {
   final Object argument;
 
-  const TicketDetails({Key key, this.argument}) : super(key: key);
+  const TicketDetails({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -24,7 +24,7 @@ class TicketDetails extends StatefulWidget {
 
 class _SettingsState extends State<TicketDetails> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -61,6 +61,7 @@ class _SettingsState extends State<TicketDetails> {
 
     _getUser();
   }
+
   String api_token = "";
   _getUser() async {
     Preference().getPreferences().then((prefs) {
@@ -127,7 +128,7 @@ class _SettingsState extends State<TicketDetails> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['ErrorCode'] == 0) {
+          if (jsonDecode(snapshot.data.toString())['ErrorCode'] == 0) {
             return Column(children: <Widget>[
               Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
                 Padding(
@@ -154,7 +155,7 @@ class _SettingsState extends State<TicketDetails> {
                                 Container(
                                   padding: EdgeInsets.all(5.0),
                                   child: new Text(
-                                    "${snapshot.data['student_message']['reply_message']}",
+                                    "${jsonDecode(snapshot.data.toString())['student_message']['reply_message']}",
                                     style: normalText1,
                                   ),
                                 ),
@@ -162,7 +163,7 @@ class _SettingsState extends State<TicketDetails> {
                                   alignment: Alignment.centerRight,
                                   child: Container(
                                     child: new Text(
-                                      "${snapshot.data['student_message']['created_at']}",
+                                      "${jsonDecode(snapshot.data.toString())['student_message']['created_at']}",
                                       style: normalText4,
                                     ),
                                   ),
@@ -179,14 +180,17 @@ class _SettingsState extends State<TicketDetails> {
                 child: ListView.builder(
                     shrinkWrap: true,
                     primary: false,
-                    itemCount: snapshot.data['Chat_Response'].length,
+                    itemCount:
+                        jsonDecode(snapshot.data.toString())['Chat_Response']
+                            .length,
                     itemBuilder: (context, index) {
                       return Row(
-                          mainAxisAlignment: snapshot.data['Chat_Response']
-                                      [index]['by_reply'] ==
-                                  "user"
-                              ? MainAxisAlignment.start
-                              : MainAxisAlignment.end,
+                          mainAxisAlignment:
+                              jsonDecode(snapshot.data.toString())[
+                                          'Chat_Response'][index]['by_reply'] ==
+                                      "user"
+                                  ? MainAxisAlignment.start
+                                  : MainAxisAlignment.end,
                           children: <Widget>[
                             new Column(
                               children: <Widget>[
@@ -194,7 +198,8 @@ class _SettingsState extends State<TicketDetails> {
                                     padding: const EdgeInsets.all(5.0),
                                     child: Row(
                                       children: <Widget>[
-                                        snapshot.data['Chat_Response'][index]
+                                        jsonDecode(snapshot.data.toString())[
+                                                        'Chat_Response'][index]
                                                     ['by_reply'] ==
                                                 "user"
                                             ? Flex(
@@ -217,51 +222,57 @@ class _SettingsState extends State<TicketDetails> {
                                                             borderRadius:
                                                                 new BorderRadius
                                                                     .only(
-                                                              topLeft: const Radius
+                                                              topLeft:
+                                                                  const Radius
                                                                       .circular(
-                                                                  20.0),
-                                                              topRight: const Radius
+                                                                      20.0),
+                                                              topRight:
+                                                                  const Radius
                                                                       .circular(
-                                                                  20.0),
+                                                                      20.0),
                                                               bottomRight:
                                                                   const Radius
-                                                                          .circular(
+                                                                      .circular(
                                                                       20.0),
                                                             )),
-                                                    child: Column(children: <
-                                                        Widget>[
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Container(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  2.0),
-                                                          child: new Text(
-                                                            "${snapshot.data['Chat_Response'][index]['username']}",
-                                                            style: normalText8,
+                                                    child: Column(
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(2.0),
+                                                              child: new Text(
+                                                                "${jsonDecode(snapshot.data.toString())['Chat_Response'][index]['username']}",
+                                                                style:
+                                                                    normalText8,
+                                                              ),
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        child: new Text(
-                                                          "${snapshot.data['Chat_Response'][index]['reply_message']}",
-                                                          style: normalText7,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        child: Container(
-                                                          child: new Text(
-                                                            "${snapshot.data['Chat_Response'][index]['created_at']}",
-                                                            style: normalText3,
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    5.0),
+                                                            child: new Text(
+                                                              "${jsonDecode(snapshot.data.toString())['Chat_Response'][index]['reply_message']}",
+                                                              style:
+                                                                  normalText7,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      )
-                                                    ]),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Container(
+                                                              child: new Text(
+                                                                "${jsonDecode(snapshot.data.toString())['Chat_Response'][index]['created_at']}",
+                                                                style:
+                                                                    normalText3,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ]),
                                                   )
                                                 ],
                                               )
@@ -285,51 +296,57 @@ class _SettingsState extends State<TicketDetails> {
                                                             borderRadius:
                                                                 new BorderRadius
                                                                     .only(
-                                                              topLeft: const Radius
+                                                              topLeft:
+                                                                  const Radius
                                                                       .circular(
-                                                                  20.0),
-                                                              topRight: const Radius
+                                                                      20.0),
+                                                              topRight:
+                                                                  const Radius
                                                                       .circular(
-                                                                  20.0),
+                                                                      20.0),
                                                               bottomLeft:
                                                                   const Radius
-                                                                          .circular(
+                                                                      .circular(
                                                                       20.0),
                                                             )),
-                                                    child: Column(children: <
-                                                        Widget>[
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Container(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  2.0),
-                                                          child: new Text(
-                                                            "${snapshot.data['Chat_Response'][index]['username']}",
-                                                            style: normalText9,
+                                                    child: Column(
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(2.0),
+                                                              child: new Text(
+                                                                "${jsonDecode(snapshot.data.toString())['Chat_Response'][index]['username']}",
+                                                                style:
+                                                                    normalText9,
+                                                              ),
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        child: new Text(
-                                                          "${snapshot.data['Chat_Response'][index]['reply_message']}",
-                                                          style: normalText1,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        child: Container(
-                                                          child: new Text(
-                                                            "${snapshot.data['Chat_Response'][index]['created_at']}",
-                                                            style: normalText4,
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    5.0),
+                                                            child: new Text(
+                                                              "${jsonDecode(snapshot.data.toString())['Chat_Response'][index]['reply_message']}",
+                                                              style:
+                                                                  normalText1,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      )
-                                                    ]),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Container(
+                                                              child: new Text(
+                                                                "${jsonDecode(snapshot.data.toString())['Chat_Response'][index]['created_at']}",
+                                                                style:
+                                                                    normalText4,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ]),
                                                   )
                                                 ],
                                               )

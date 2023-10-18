@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 // import 'package:in_app_update/in_app_update.dart';
 
-import 'package:package_info/package_info.dart';
+// import 'package:package_info/package_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_redirect/store_redirect.dart';
@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   bool _loggedIn = false;
   bool _introIn = false;
   final splashDelay = 2;
-  String appName, packageName, version, buildNumber;
+  String? appName, packageName, version, buildNumber;
   // AppUpdateInfo _updateInfo;
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
@@ -40,17 +40,17 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     secureScreen();
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      appName = packageInfo.appName;
-      packageName = packageInfo.packageName;
-      version = packageInfo.version;
-      buildNumber = packageInfo.buildNumber;
+    // PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    //   appName = packageInfo.appName;
+    //   packageName = packageInfo.packageName;
+    //   version = packageInfo.version;
+    //   buildNumber = packageInfo.buildNumber;
 
-      print("<<<<<<<<<<<" + appName);
-      print("<<<<<<<<<<<" + packageName);
-      print("<<<<<<<<<<<" + version);
-      print("<<<<<<<<<<<" + buildNumber);
-    });
+    //   print("<<<<<<<<<<<" + appName);
+    //   print("<<<<<<<<<<<" + packageName);
+    //   print("<<<<<<<<<<<" + version);
+    //   print("<<<<<<<<<<<" + buildNumber);
+    // });
     //  _versionCheck();
     // checkForUpdate();
     _checkLoggedIn();
@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }*/
   void showSnack(String text) {
     if (_scaffoldKey.currentContext != null) {
-      ScaffoldMessenger.of(_scaffoldKey.currentContext)
+      ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
           .showSnackBar(SnackBar(content: Text(text)));
     }
   }
@@ -89,7 +89,8 @@ class _SplashScreenState extends State<SplashScreen> {
       var data = json.decode(response.body);
       print(data);
 
-      if (int.parse(data['Response'][0]['android']) <= int.parse(buildNumber)) {
+      if (int.parse(data['Response'][0]['android']) <=
+          int.parse(buildNumber.toString())) {
         _loadWidget();
       } else {
         _showCompulsoryUpdateDialog(
@@ -161,8 +162,8 @@ class _SplashScreenState extends State<SplashScreen> {
     print(_isIntroIn);
     if (_isLoggedIn == true) {
       setState(() {
-        _loggedIn = _isLoggedIn;
-        _introIn = _isIntroIn;
+        _loggedIn = _isLoggedIn!;
+        _introIn = _isIntroIn!;
       });
     } else {
       setState(() {

@@ -1,32 +1,26 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class Clock extends StatefulWidget {
-
-
   @override
   _ClockState createState() => _ClockState();
 }
 
 class _ClockState extends State<Clock> {
   int _start = 90;
-  Timer timer;
+  Timer? timer;
 
   void resetTimer() {
-
-
-    if (timer != null && timer.isActive) {
-      timer.cancel();
+    if (timer != null && timer!.isActive) {
+      timer!.cancel();
     }
 
     timer = Timer.periodic(Duration(minutes: 1), (t) {
       if (mounted) {
         if (_start == 0) {
           setState(() {
-            timer.cancel();
-
+            timer!.cancel();
           });
         } else {
           setState(() {
@@ -51,21 +45,18 @@ class _ClockState extends State<Clock> {
 
   @override
   void dispose() {
-    timer.cancel();
-    WidgetsBinding.instance.addPostFrameCallback((_) =>null);
+    timer!.cancel();
+    WidgetsBinding.instance.addPostFrameCallback((_) => null);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
-      timer.cancel();
-      WidgetsFlutterBinding.ensureInitialized()
-          .addPostFrameCallback((timeStamp) {
-        resetTimer();
-       // widget.onTimerEnd();
-      });
-
+    timer!.cancel();
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((timeStamp) {
+      resetTimer();
+      // widget.onTimerEnd();
+    });
 
     return Container(
       padding: const EdgeInsets.all(2),
@@ -80,17 +71,17 @@ class _ClockState extends State<Clock> {
         alignment: Alignment.topCenter,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-
         ),
-        child:
-              Center(
-                child: Container(
-                  child: Center(child: Text("$_start",style: TextStyle(color: Colors.white,fontSize: 16),)),
-                ),
+        child: Center(
+          child: Container(
+            child: Center(
+              child: Text(
+                "$_start",
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-
-
-
+            ),
+          ),
+        ),
       ),
     );
   }

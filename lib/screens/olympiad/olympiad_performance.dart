@@ -25,12 +25,10 @@ import 'dart:math' as math;
 
 import '../../constants.dart';
 
-
-
 class OlympiadViewPerformance extends StatefulWidget {
   final Object argument;
 
-  const OlympiadViewPerformance({Key key, this.argument}) : super(key: key);
+  const OlympiadViewPerformance({required this.argument});
 
   @override
   State<StatefulWidget> createState() => _SettingsState();
@@ -40,7 +38,7 @@ const double degrees2Radians = math.pi / 180.0;
 
 class _SettingsState extends State<OlympiadViewPerformance> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   ScreenshotController screenshotController = ScreenshotController();
   TextStyle normalText5 = GoogleFonts.montserrat(
@@ -89,7 +87,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
   String test_id = "";
   String profile_image = '';
 
-  bool show_pie=true;
+  bool show_pie = true;
   @override
   void initState() {
     super.initState();
@@ -99,6 +97,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
 
     _getUser();
   }
+
   String api_token = "";
   _getUser() async {
     Preference().getPreferences().then((prefs) {
@@ -118,10 +117,9 @@ class _SettingsState extends State<OlympiadViewPerformance> {
     );
   }
 
+  List<String> _value1 = [];
 
-  List<String> _value1 = new List();
-
-  TooltipBehavior _tooltipBehavior;
+  TooltipBehavior? _tooltipBehavior;
   var easy;
   var diff;
   var avg;
@@ -134,32 +132,28 @@ class _SettingsState extends State<OlympiadViewPerformance> {
     };
     var response = await http.post(
       new Uri.https(BASE_URL, API_PATH + "/olympiadperformance"),
-      body: {
-        "user_id": user_id,
-        "test_id": test_id
-
-      },
+      body: {"user_id": user_id, "test_id": test_id},
       headers: headers,
     );
-    print(jsonEncode({
-      "user_id": user_id,
-      "test_id": test_id
-    }));
+    print(jsonEncode({"user_id": user_id, "test_id": test_id}));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       for (int i = 0; i < data['section_wise_performance'].length; i++) {
-        if (data['section_wise_performance'][i]['total_section_right_question'].toString() != '0') {
-          var d = ((int.parse(data['section_wise_performance'][i]['total_section_right_question']
-              .toString()) *
-              100) /
-              int.parse(data['section_wise_performance'][i]['total_section_question'].toString()));
+        if (data['section_wise_performance'][i]['total_section_right_question']
+                .toString() !=
+            '0') {
+          var d = ((int.parse(data['section_wise_performance'][i]
+                          ['total_section_right_question']
+                      .toString()) *
+                  100) /
+              int.parse(data['section_wise_performance'][i]
+                      ['total_section_question']
+                  .toString()));
           _value1.add(d.round().toString());
         } else {
           _value1.add("0");
         }
       }
-
-
 
       return data;
     } else {
@@ -173,53 +167,49 @@ class _SettingsState extends State<OlympiadViewPerformance> {
 
   List<String> color = [];
 
-
   final _random = Random();
 
-  Widget winnerText(int data){
-    if(data<51){
+  Widget winnerText(int data) {
+    if (data < 51) {
       return Container(
-          child: Text("Revise your chapter and re-take tests to improve your accuracy.",
+          child: Text(
+              "Revise your chapter and re-take tests to improve your accuracy.",
               //  textAlign: TextAlign.justify,
               style: normalText4));
-
-    }
-    else if(data>75){
+    } else if (data > 75) {
       return Container(
-          child: Text("Congratulations, you have earned your badge! Keep practicing more questions.",
+          child: Text(
+              "Congratulations, you have earned your badge! Keep practicing more questions.",
+              //  textAlign: TextAlign.justify,
+              style: normalText4));
+    } else {
+      return Container(
+          child: Text(
+              "Practice more to improve your accuracy level . Identify weaker topics and revise concepts.",
               //  textAlign: TextAlign.justify,
               style: normalText4));
     }
-    else{
-      return Container(
-          child: Text("Practice more to improve your accuracy level . Identify weaker topics and revise concepts.",
-              //  textAlign: TextAlign.justify,
-              style: normalText4));
-    }
-
   }
-  Widget winner(int data){
-    if(data<51){
-      return  Image(
+
+  Widget winner(int data) {
+    if (data < 51) {
+      return Image(
         image: AssetImage(
           'assets/images/thumb_down.png',
         ),
         height: 100.0,
         width: 100.0,
       );
-
-    }
-    else if(data>75){
-      return  Image(
+    } else if (data > 75) {
+      return Image(
         image: AssetImage(
           'assets/images/badge.png',
         ),
         height: 100.0,
         width: 100.0,
       );
-    }
-    else{
-      return  Image(
+    } else {
+      return Image(
         image: AssetImage(
           'assets/images/thumb_up.png',
         ),
@@ -227,30 +217,24 @@ class _SettingsState extends State<OlympiadViewPerformance> {
         width: 100.0,
       );
     }
-
-
-
   }
-  Color widgetColor(int index){
-    if(_value1[index].toString() == "100") {
+
+  Color widgetColor(int index) {
+    if (_value1[index].toString() == "100") {
       return Color(0xff4CE364);
-    }
-    else if(_value1[index].toString() == "0"){
+    } else if (_value1[index].toString() == "0") {
       return Colors.grey.shade300;
-    }
-    else{
+    } else {
       return Color(0xff0293ee);
     }
-
-
-
   }
+
   Widget chapterList(Size deviceSize) {
     return FutureBuilder(
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data != null) {
+          if (jsonDecode(snapshot.data.toString()) != null) {
             return SingleChildScrollView(
               child: RepaintBoundary(
                 key: _key,
@@ -265,10 +249,11 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                               bottomLeft: const Radius.circular(20.0),
                               bottomRight: const Radius.circular(20.0),
                               topRight: const Radius.circular(20.0))),
-                      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
                       child: Column(children: [
-
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -283,15 +268,16 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                     child: Container(
                                       child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: <Widget>[
                                             SizedBox(
                                               width: 5.0,
                                             ),
                                             Text(
                                                 "You Scored: " +
-                                                    snapshot.data[
-                                                    'total_right_per']
+                                                    jsonDecode(snapshot.data
+                                                                .toString())[
+                                                            'total_right_per']
                                                         .toString() +
                                                     "%",
                                                 style: normalText6)
@@ -304,16 +290,17 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                   Align(
                                     alignment: Alignment.center,
                                     child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
                                           Container(
                                             child: Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                    MainAxisAlignment.center,
                                                 children: <Widget>[
                                                   CircleAvatar(
                                                     backgroundColor:
-                                                    Color(0xff1EE76E),
+                                                        Color(0xff1EE76E),
                                                     radius: 10,
                                                     child: Icon(
                                                       Icons.done,
@@ -325,7 +312,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                      "${snapshot.data['total_right_per'].toString()}% correct",
+                                                      "${jsonDecode(snapshot.data.toString())['total_right_per'].toString()}% correct",
                                                       style: normalText2)
                                                 ]),
                                           ),
@@ -335,11 +322,11 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                           Container(
                                             child: Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                    MainAxisAlignment.center,
                                                 children: <Widget>[
                                                   CircleAvatar(
                                                     backgroundColor:
-                                                    Color(0xffF45656),
+                                                        Color(0xffF45656),
                                                     radius: 10,
                                                     child: Icon(
                                                       Icons.clear,
@@ -351,7 +338,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                      "${snapshot.data['total_wrong_per'].toString()}% incorrect",
+                                                      "${jsonDecode(snapshot.data.toString())['total_wrong_per'].toString()}% incorrect",
                                                       style: normalText2)
                                                 ]),
                                           ),
@@ -360,14 +347,14 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                   SizedBox(
                                     height: 15.0,
                                   ),
-                                  winner(snapshot.data[
-                                  'total_right_per']),
-                                 /* SizedBox(
+                                  winner(jsonDecode(snapshot.data.toString())[
+                                      'total_right_per']),
+                                  /* SizedBox(
                                     height: 15.0,
                                   ),
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: winnerText(snapshot.data[
+                                    child: winnerText(jsonDecode(snapshot.data.toString())[
                                     'total_right_per']),
                                   ),
 */
@@ -390,8 +377,10 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                               bottomLeft: const Radius.circular(20.0),
                               bottomRight: const Radius.circular(20.0),
                               topRight: const Radius.circular(20.0))),
-                      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
                       child: Column(children: [
                         Container(
                           child: Text("Performance based on Sections",
@@ -404,7 +393,9 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                           child: ListView.builder(
                               shrinkWrap: true,
                               primary: false,
-                              itemCount: snapshot.data['section_wise_performance'].length,
+                              itemCount: jsonDecode(snapshot.data.toString())[
+                                      'section_wise_performance']
+                                  .length,
                               itemBuilder: (context, index) {
                                 return Container(
                                   padding: EdgeInsets.symmetric(
@@ -426,7 +417,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                         height: 10,
                                         width: 10,
                                         decoration: BoxDecoration(
-                                          color:widgetColor(index),
+                                          color: widgetColor(index),
                                           // border color
                                           shape: BoxShape.circle,
                                         ),
@@ -440,8 +431,10 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                           child: Container(
                                             padding: EdgeInsets.only(left: 10),
                                             child: Text(
-                                                snapshot.data['section_wise_performance'][index]
-                                                ['section_name'],
+                                                jsonDecode(snapshot.data
+                                                            .toString())[
+                                                        'section_wise_performance']
+                                                    [index]['section_name'],
                                                 maxLines: 2,
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -455,24 +448,41 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                                     ),
                                     Row(children: <Widget>[
                                       Container(
-                                        width: MediaQuery.of(context).size.width *
-                                            0.10,
-                                        child: Text(_value1[index].toString() + "% "+"("+snapshot.data['section_wise_performance'][index]
-                                        ['total_section_right_question'].toString()+"/"+snapshot.data['section_wise_performance'][index]
-                                        ['total_section_question'].toString()+")",
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.10,
+                                        child: Text(
+                                            _value1[index].toString() +
+                                                "% " +
+                                                "(" +
+                                                jsonDecode(snapshot.data.toString())[
+                                                                'section_wise_performance']
+                                                            [index][
+                                                        'total_section_right_question']
+                                                    .toString() +
+                                                "/" +
+                                                jsonDecode(snapshot.data
+                                                                    .toString())[
+                                                                'section_wise_performance']
+                                                            [index][
+                                                        'total_section_question']
+                                                    .toString() +
+                                                ")",
                                             style: normalText1),
                                       ),
                                       Expanded(
                                         child: Container(
                                           child: LinearPercentIndicator(
-                                            backgroundColor: Colors.grey.shade300,
+                                            backgroundColor:
+                                                Colors.grey.shade300,
                                             lineHeight: 7.0,
                                             percent: _value1.length != 0
-                                                ? double.parse(_value1[index]) / 100
+                                                ? double.parse(_value1[index]) /
+                                                    100
                                                 : 0.0,
                                             center: Text(
                                               "",
-                                              // snapshot.data['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
+                                              // jsonDecode(snapshot.data.toString())['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
                                               style: TextStyle(
                                                   color: Color(0xff0293ee),
                                                   fontSize: 12,
@@ -490,13 +500,11 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                         SizedBox(
                           height: 10,
                         ),
-
                       ]),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-
                     SizedBox(
                       height: 10,
                     ),
@@ -519,7 +527,8 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                           height: 50,
                           color: Colors.blueAccent,
                           child: Center(
-                            child: Text('Review Your Answers', style: normalText5),
+                            child:
+                                Text('Review Your Answers', style: normalText5),
                           ),
                         ),
                       ),
@@ -534,33 +543,33 @@ class _SettingsState extends State<OlympiadViewPerformance> {
         } else {
           return Center(
               child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  child: SpinKitFadingCube(
-                    itemBuilder: (_, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index.isEven ? Color(0xff017EFF) :Color(0xffFFC700),
-                        ),
-                      );
-                    },
-                    size: 30.0,
-                  ),
-                ),
-              ));
+            alignment: Alignment.center,
+            child: Container(
+              child: SpinKitFadingCube(
+                itemBuilder: (_, int index) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color:
+                          index.isEven ? Color(0xff017EFF) : Color(0xffFFC700),
+                    ),
+                  );
+                },
+                size: 30.0,
+              ),
+            ),
+          ));
         }
       },
     );
   }
 
-
   Widget _emptyOrders() {
     return Center(
       child: Container(
           child: Text(
-            'NO RECORDS FOUND!',
-            style: TextStyle(fontSize: 20, letterSpacing: 1, color: Colors.white),
-          )),
+        'NO RECORDS FOUND!',
+        style: TextStyle(fontSize: 20, letterSpacing: 1, color: Colors.white),
+      )),
     );
   }
 
@@ -582,6 +591,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
       ),
     );
   }
+
   Future<dynamic> ShowCapturedWidget(
       BuildContext context, Uint8List capturedImage) {
     return showDialog(
@@ -598,6 +608,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
       ),
     );
   }
+
   _requestPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.storage,
@@ -605,17 +616,15 @@ class _SettingsState extends State<OlympiadViewPerformance> {
 
     final info = statuses[Permission.storage].toString();
     print(info);
-
   }
+
   final GlobalKey _key = GlobalKey();
   void _takeScreenshot() async {
-
     RenderRepaintBoundary boundary =
-    _key.currentContext.findRenderObject() as RenderRepaintBoundary;
+        _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
     ui.Image image = await boundary.toImage();
-    ByteData byteData = await image.toByteData(
-        format: ui.ImageByteFormat.png);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       Uint8List pngBytes = byteData.buffer.asUint8List();
 
@@ -627,6 +636,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
       Fluttertoast.showToast(msg: "Save Successfully");
     }
   }
+
   /* Future<bool> _requestPermission(Permission permission) async {
     if (await permission.isGranted) {
       return true;
@@ -641,9 +651,8 @@ class _SettingsState extends State<OlympiadViewPerformance> {
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
-    return  WillPopScope(
+    return WillPopScope(
       onWillPop: () async {
-
         Navigator.of(context).pop();
         Navigator.pushNamed(context, '/dashboard');
         return false;
@@ -662,7 +671,6 @@ class _SettingsState extends State<OlympiadViewPerformance> {
                   color: Color(0xff2E2A4A),
                 ),
                 onPressed: () {
-
                   Navigator.of(context).pop();
                   Navigator.pushNamed(context, '/dashboard');
                 },
@@ -678,7 +686,7 @@ class _SettingsState extends State<OlympiadViewPerformance> {
             color: Color(0xffffffff),
           ),
           actions: <Widget>[
-          /*  InkWell(
+            /*  InkWell(
               onTap: (){
 
                 _takeScreenshot();
@@ -705,17 +713,9 @@ class _SettingsState extends State<OlympiadViewPerformance> {
           color: Color(0xff2E2A4A),
           child: Container(
               padding: EdgeInsets.only(bottom: 5),
-              child: chapterList(deviceSize)
-          ),
-
+              child: chapterList(deviceSize)),
         ),
       ),
-
-
     );
-
   }
-
-
 }
-

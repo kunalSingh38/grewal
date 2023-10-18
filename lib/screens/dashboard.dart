@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:async';
 import 'dart:io' as Io;
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as bg;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,7 +48,7 @@ class _MainScreenState extends State<Dashboard> {
   List subjects_list = [];
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  AndroidNotificationChannel channel;
+  AndroidNotificationChannel? channel;
   void initState() {
     super.initState();
     channel = const AndroidNotificationChannel(
@@ -107,7 +107,7 @@ class _MainScreenState extends State<Dashboard> {
         profile_image = prefs.getString('profile_image').toString();
         institute_id = prefs.getString('institute_id').toString();
         api_token = prefs.getString('api_token').toString();
-        showNotification();
+        // showNotification();
         _homeData();
       });
     });
@@ -137,7 +137,7 @@ class _MainScreenState extends State<Dashboard> {
       var data = json.decode(response.body);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       setState(() {
-        total_notification = data['totalUnread'];
+        total_notification = int.parse(data['totalUnread'].toString());
         // prefs.setBool(
         //     'payment_status', data['Response']['payment'] == 1 ? true : false);
         prefs.setBool('payment_status2',
@@ -156,47 +156,48 @@ class _MainScreenState extends State<Dashboard> {
   }
 
   showNotification() async {
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage message) {
-      if (message != null) {
-        print('hhhhhhhhhhhh');
+    // FirebaseMessaging.instance
+    //     .getInitialMessage()
+    //     .then((RemoteMessage message) {
+    //   if (message != null) {
+    //     print('hhhhhhhhhhhh');
 
-        /*Navigator.pushNamed(context, '/message',
-            arguments: MessageArguments(message, true));*/
-      }
-    });
+    //     /*Navigator.pushNamed(context, '/message',
+    //         arguments: MessageArguments(message, true));*/
+    //   }
+    // });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      RemoteNotification notification = message.notification;
+      RemoteNotification? notification = message.notification;
       var data = message.data;
 
-      AndroidNotification android = message.notification?.android;
+      AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
         print("opnnnnnn");
         print(notification.body);
         print(data['moredata']);
         print(data['bigPicture']);
 
-        final ByteArrayAndroidBitmap bigPicture = ByteArrayAndroidBitmap(
-            await _getByteArrayFromUrl(data['bigPicture']));
+        // final ByteArrayAndroidBitmap bigPicture = ByteArrayAndroidBitmap(
+        //     await _getByteArrayFromUrl(data['bigPicture']));
 
-        final BigPictureStyleInformation bigPictureStyleInformation =
-            BigPictureStyleInformation(bigPicture,
-                largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
-                contentTitle: notification.title,
-                htmlFormatContentTitle: true,
-                summaryText: notification.body,
-                htmlFormatSummaryText: true);
+        // final BigPictureStyleInformation bigPictureStyleInformation =
+        //     BigPictureStyleInformation(bigPicture,
+        //         largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
+        //         contentTitle: notification.title,
+        //         htmlFormatContentTitle: true,
+        //         summaryText: notification.body,
+        //         htmlFormatSummaryText: true);
         final AndroidNotificationDetails androidPlatformChannelSpecifics =
             AndroidNotificationDetails(
-                channel.id, channel.name, channel.description,
-                icon: '@mipmap/ic_launcher',
-                fullScreenIntent: true,
-                /* importance: Importance.max,
+          channel!.id, channel!.name, channel!.description,
+          icon: '@mipmap/ic_launcher',
+          fullScreenIntent: true,
+          /* importance: Importance.max,
       priority: Priority.high,*/
-                ongoing: false,
-                styleInformation: bigPictureStyleInformation);
+          ongoing: false,
+          // styleInformation: bigPictureStyleInformation
+        );
         final NotificationDetails platformChannelSpecifics =
             NotificationDetails(android: androidPlatformChannelSpecifics);
         flutterLocalNotificationsPlugin.show(notification.hashCode,
@@ -241,37 +242,38 @@ class _MainScreenState extends State<Dashboard> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      RemoteNotification notification = message.notification;
+      RemoteNotification? notification = message.notification;
       var data = message.data;
       print(data);
       print("wffewf");
-      print(notification.body);
+      // print(notification.body);
 
       print(data['moredata']);
       print(data['bigPicture']);
 
-      final ByteArrayAndroidBitmap bigPicture = ByteArrayAndroidBitmap(
-          await _getByteArrayFromUrl(data['bigPicture']));
-      final BigPictureStyleInformation bigPictureStyleInformation =
-          BigPictureStyleInformation(bigPicture,
-              largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
-              contentTitle: notification.title,
-              htmlFormatContentTitle: true,
-              summaryText: notification.body,
-              htmlFormatSummaryText: true);
+      // final ByteArrayAndroidBitmap bigPicture = ByteArrayAndroidBitmap(
+      //     await _getByteArrayFromUrl(data['bigPicture']));
+      // final BigPictureStyleInformation bigPictureStyleInformation =
+      //     BigPictureStyleInformation(bigPicture,
+      //         largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
+      //         contentTitle: notification!.title,
+      //         htmlFormatContentTitle: true,
+      //         summaryText: notification.body,
+      //         htmlFormatSummaryText: true);
       final AndroidNotificationDetails androidPlatformChannelSpecifics =
           AndroidNotificationDetails(
-              channel.id, channel.name, channel.description,
-              icon: '@mipmap/ic_launcher',
-              fullScreenIntent: true,
-              // importance: Importance.max,
-              // priority: Priority.high,
-              ongoing: false,
-              styleInformation: bigPictureStyleInformation);
+        channel!.id, channel!.name, channel!.description,
+        icon: '@mipmap/ic_launcher',
+        fullScreenIntent: true,
+        // importance: Importance.max,
+        // priority: Priority.high,
+        ongoing: false,
+        // styleInformation: bigPictureStyleInformation
+      );
       final NotificationDetails platformChannelSpecifics =
           NotificationDetails(android: androidPlatformChannelSpecifics);
       flutterLocalNotificationsPlugin.show(notification.hashCode,
-          notification.title, notification.body, platformChannelSpecifics,
+          notification!.title, notification.body, platformChannelSpecifics,
           payload: "");
       if (data['moredata'] == "payment") {
         Navigator.pushNamed(
@@ -320,7 +322,7 @@ class _MainScreenState extends State<Dashboard> {
                 child: new Text(
                   "No",
                   style: TextStyle(
-                    color: Color(0xff2E2A4A),
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -328,8 +330,10 @@ class _MainScreenState extends State<Dashboard> {
                 onPressed: () {
                   exit(0);
                 },
-                child:
-                    new Text("Yes", style: TextStyle(color: Color(0xff2E2A4A))),
+                child: new Text("Yes",
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
               ),
             ],
           ),
@@ -355,7 +359,7 @@ class _MainScreenState extends State<Dashboard> {
                 child: new Text(
                   "No",
                   style: TextStyle(
-                    color: Color(0xff223834),
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -370,8 +374,10 @@ class _MainScreenState extends State<Dashboard> {
                     Navigator.pushReplacementNamed(context, '/login-with-logo');
                   });
                 },
-                child:
-                    new Text("Yes", style: TextStyle(color: Color(0xff223834))),
+                child: new Text("Yes",
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
               ),
             ],
           ),
@@ -739,6 +745,8 @@ class _MainScreenState extends State<Dashboard> {
       return Container(
         child: Text("Support", style: normalText5),
       );
+    } else {
+      return SizedBox();
     }
   }
 
@@ -747,139 +755,142 @@ class _MainScreenState extends State<Dashboard> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        key: _scaffoldKey,
-        extendBody: true,
-        drawer: Drawer(
-          child: Column(
-            children: <Widget>[
-              buildUserInfo(context),
-              buildDrawerItem(),
-            ],
+          key: _scaffoldKey,
+          extendBody: true,
+          drawer: Drawer(
+            child: Column(
+              children: <Widget>[
+                buildUserInfo(context),
+                buildDrawerItem(),
+              ],
+            ),
           ),
-        ),
-        appBar: institute_id != "0"
-            ? AppBar(
-                elevation: 0.0,
-                leading: InkWell(
-                  child: Row(children: <Widget>[
-                    IconButton(
-                      icon: Image(
-                        image: AssetImage("assets/images/list_icon.png"),
-                        height: 25.0,
-                        width: 25.0,
+          appBar: institute_id != "0"
+              ? AppBar(
+                  elevation: 0.0,
+                  leading: InkWell(
+                    child: Row(children: <Widget>[
+                      IconButton(
+                        icon: Image(
+                          image: AssetImage("assets/images/list_icon.png"),
+                          height: 25.0,
+                          width: 25.0,
+                        ),
+                        onPressed: () {
+                          _scaffoldKey.currentState!.openDrawer();
+                        },
                       ),
-                      onPressed: () {
-                        _scaffoldKey.currentState.openDrawer();
-                      },
-                    ),
-                  ]),
-                ),
-                centerTitle: true,
-                title: _name(),
-                flexibleSpace: Container(
-                  height: 100,
-                  // color: Color(0xffffffff),
-                ),
-                actions: <Widget>[
-                  total_notification != 0
-                      ? InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/notifications');
-                          },
-                          child: Badge(
-                            padding: EdgeInsets.all(5),
-                            badgeColor: Color(0xff017EFF),
-                            position: BadgePosition.topEnd(top: 1, end: 8),
-                            animationDuration: Duration(milliseconds: 300),
-                            animationType: BadgeAnimationType.fade,
-                            badgeContent: Text(
-                              total_notification.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                    ]),
+                  ),
+                  centerTitle: true,
+                  title: _name(),
+                  flexibleSpace: Container(
+                    height: 100,
+                    // color: Color(0xffffffff),
+                  ),
+                  actions: <Widget>[
+                    total_notification != 0
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/notifications');
+                            },
+                            child: bg.Badge(
+                              // padding: EdgeInsets.all(5),
+                              // badgeColor: Color(0xff017EFF),
+                              position: bg.BadgePosition.topEnd(top: 1, end: 8),
+                              // animationDuration: Duration(milliseconds: 300),
+                              // animationType: bg.BadgeAnimationType.fade,
+                              badgeContent: Text(
+                                total_notification.toString(),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 13),
+                              ),
+                              child: Icon(
+                                Icons.notifications,
+                                color: Color(0xff2E2A4A),
+                                size: 24,
+                              ),
                             ),
-                            child: Icon(
+                          )
+                        : IconButton(
+                            icon: const Icon(
                               Icons.notifications,
                               color: Color(0xff2E2A4A),
                               size: 24,
                             ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/notifications');
+                            },
                           ),
-                        )
-                      : IconButton(
-                          icon: const Icon(
-                            Icons.notifications,
-                            color: Color(0xff2E2A4A),
-                            size: 24,
+                  ],
+                  iconTheme: IconThemeData(
+                    color: Colors.white, //change your color here
+                  ),
+                  backgroundColor: Colors.transparent,
+                )
+              : selectedPosition != 0
+                  ? AppBar(
+                      elevation: 0.0,
+                      leading: InkWell(
+                        child: Row(children: <Widget>[
+                          IconButton(
+                            icon: Image(
+                              image: AssetImage("assets/images/list_icon.png"),
+                              height: 25.0,
+                              width: 25.0,
+                            ),
+                            onPressed: () {
+                              _scaffoldKey.currentState!.openDrawer();
+                            },
                           ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/notifications');
-                          },
-                        ),
-                ],
-                iconTheme: IconThemeData(
-                  color: Colors.white, //change your color here
-                ),
-                backgroundColor: Colors.transparent,
-              )
-            : selectedPosition != 0
-                ? AppBar(
-                    elevation: 0.0,
-                    leading: InkWell(
-                      child: Row(children: <Widget>[
-                        IconButton(
-                          icon: Image(
-                            image: AssetImage("assets/images/list_icon.png"),
-                            height: 25.0,
-                            width: 25.0,
-                          ),
-                          onPressed: () {
-                            _scaffoldKey.currentState.openDrawer();
-                          },
-                        ),
-                      ]),
-                    ),
-                    centerTitle: true,
-                    title: _name(),
-                    flexibleSpace: Container(
-                      height: 100,
-                      color: Color(0xffffffff),
-                    ),
-                    actions: <Widget>[
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 30,
-                          child: _networkImage1(
-                            profile_image,
-                          ),
-                        ),
+                        ]),
                       ),
-                    ],
-                    iconTheme: IconThemeData(
-                      color: Colors.white, //change your color here
-                    ),
-                    backgroundColor: Colors.transparent,
-                  )
-                : null,
-        /* floatingActionButton: FloatingActionButton(
+                      centerTitle: true,
+                      title: _name(),
+                      flexibleSpace: Container(
+                        height: 100,
+                        color: Color(0xffffffff),
+                      ),
+                      actions: <Widget>[
+                        Align(
+                          alignment: Alignment.center,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 30,
+                            child: _networkImage1(
+                              profile_image,
+                            ),
+                          ),
+                        ),
+                      ],
+                      iconTheme: IconThemeData(
+                        color: Colors.white, //change your color here
+                      ),
+                      backgroundColor: Colors.transparent,
+                    )
+                  : null,
+          /* floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: Image.asset("assets/images/center_icon.png"),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,*/
-        bottomNavigationBar: _buildBottomTab(),
-        body: _children[selectedPosition],
-      ),
+          bottomNavigationBar: _buildBottomTab(),
+          body: _children[selectedPosition]),
     );
   }
 
   final List<Widget> _children = [
     HomePage(),
     UpdateProfile(""),
-    // ChapterList("", {}),
     SupportList("")
   ];
 
-  _buildBottomTab() {
+  List bottomTabs = [
+    "assets/images/dash_1.png",
+    "assets/images/dash_2.png",
+    "assets/images/chat.png"
+  ];
+  Widget _buildBottomTab() {
     return Container(
       height: kBottomNavigationBarHeight,
       width: MediaQuery.of(context).size.width,
@@ -890,50 +901,65 @@ class _MainScreenState extends State<Dashboard> {
         shape: CircularNotchedRectangle(),
         child: Container(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              TabItem(
-                icon: "assets/images/dash_1.png",
-                dot: "•",
-                isSelected: selectedPosition == 0,
-                onTap: () {
-                  setState(() {
-                    selectedPosition = 0;
-                  });
-                },
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: bottomTabs
+                  .map((e) => Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedPosition = bottomTabs.indexOf(e);
+                            });
+                          },
+                          child: Image.asset(
+                            e,
+                            scale: 2,
+                            color: selectedPosition == bottomTabs.indexOf(e)
+                                ? Colors.blue
+                                : Colors.black,
+                          ),
+                        ),
+                      ))
+                  .toList()
+
+              // <Widget>[
+              //   TabItem(
+              //     icon: "assets/images/dash_1.png",
+              //     dot: "•",
+              //     isSelected: selectedPosition == 0,
+              //     onTap:,
+              //   ),
+              //   TabItem(
+              //     icon: "assets/images/dash_2.png",
+              //     dot: "•",
+              //     isSelected: selectedPosition == 1,
+              //     onTap: () {
+              //       setState(() {
+              //         selectedPosition = 1;
+              //       });
+              //     },
+              //   ),
+              //   // TabItem(
+              //   //   icon: "assets/images/dash_3.png",
+              //   //   dot: "•",
+              //   //   isSelected: selectedPosition == 2,
+              //   //   onTap: () {
+              //   //     setState(() {
+              //   //       selectedPosition = 2;
+              //   //     });
+              //   //   },
+              //   // ),
+              //   // TabItem(
+              //   //   icon: "assets/images/chat.png",
+              //   //   dot: "•",
+              //   //   isSelected: selectedPosition == 2 ? true : false,
+              //   //   onTap: () {
+              //   //     // setState(() {
+              //   //     selectedPosition = 2;
+              //   //     // });
+              //   //   },
+              //   // ),
+              // ],
               ),
-              TabItem(
-                icon: "assets/images/dash_2.png",
-                dot: "•",
-                isSelected: selectedPosition == 1,
-                onTap: () {
-                  setState(() {
-                    selectedPosition = 1;
-                  });
-                },
-              ),
-              // TabItem(
-              //   icon: "assets/images/dash_3.png",
-              //   dot: "•",
-              //   isSelected: selectedPosition == 2,
-              //   onTap: () {
-              //     setState(() {
-              //       selectedPosition = 2;
-              //     });
-              //   },
-              // ),
-              TabItem(
-                icon: "assets/images/chat.png",
-                dot: "•",
-                isSelected: selectedPosition == 2,
-                onTap: () {
-                  setState(() {
-                    selectedPosition = 2;
-                  });
-                },
-              ),
-            ],
-          ),
         ),
       ),
     );

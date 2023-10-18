@@ -20,14 +20,14 @@ import '../constants.dart';
 class MyPlan extends StatefulWidget {
   final Object argument;
 
-  const MyPlan({Key key, this.argument}) : super(key: key);
+  const MyPlan({required this.argument});
 
   @override
   _MyPlanState createState() => _MyPlanState();
 }
 
 class _MyPlanState extends State<MyPlan> {
-  Razorpay _razorpay;
+  Razorpay? _razorpay;
   bool _loading = false;
   bool isEnabled1 = true;
   bool isEnabled2 = false;
@@ -70,8 +70,8 @@ class _MyPlanState extends State<MyPlan> {
   bool dis_show = false;
   String api_token = "";
   List subPlansList = [];
-  bool payment_status;
-  bool payment_status2;
+  bool? payment_status;
+  bool? payment_status2;
   List details = [];
   bool coupenApplied = false;
   @override
@@ -86,9 +86,9 @@ class _MyPlanState extends State<MyPlan> {
     out = data['out'];
     currentTime = DateTime.now();
     _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay!.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     Preference().getPreferences().then((prefs) {
       setState(() {
         // payment_status = prefs.getBool('payment_status');
@@ -116,11 +116,11 @@ class _MyPlanState extends State<MyPlan> {
             });
           } else {
             value.forEach((element) {
-              if (element["subject_id"] == 0 && !payment_status) {
+              if (element["subject_id"] == 0 && !payment_status!) {
                 element['selected'] = false;
                 element['cutPlanInd'] = "500";
                 subPlansList.add(element);
-              } else if (element["subject_id"] == 9 && !payment_status2) {
+              } else if (element["subject_id"] == 9 && !payment_status2!) {
                 element['selected'] = false;
                 element['cutPlanInd'] = "800";
                 subPlansList.add(element);
@@ -144,7 +144,7 @@ class _MyPlanState extends State<MyPlan> {
         user_id = prefs.getString('user_id').toString();
         // disc_amount = prefs.getInt('disc_amount');
         // base_amount = prefs.getInt('base_amount');
-        currency = prefs.getString('currency');
+        currency = prefs.getString('currency').toString();
         api_token = prefs.getString('api_token').toString();
         // if (disc_amount == 0) {
         //   amount = prefs.getInt('base_amount');
@@ -247,7 +247,7 @@ class _MyPlanState extends State<MyPlan> {
   }
 
   Future<void> _handlePaymentError(PaymentFailureResponse response) async {
-    print("ERROR: " + response.message);
+    // print("ERROR: " + response.message);
     // final msg = jsonEncode({
     //   "signup_id": signupid,
     //   "order_id": order_id,
@@ -299,7 +299,7 @@ class _MyPlanState extends State<MyPlan> {
             msg: "ERROR: " +
                 response.code.toString() +
                 " - " +
-                response.message);
+                response.message.toString());
       } else {
         showAlertDialog(context, ALERT_DIALOG_TITLE, errorMessage);
       }
@@ -307,8 +307,9 @@ class _MyPlanState extends State<MyPlan> {
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    Fluttertoast.showToast(msg: "EXTERNAL_WALLET: " + response.walletName);
-    print("EXTERNAL_WALLET: " + response.walletName);
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName.toString());
+    print("EXTERNAL_WALLET: " + response.walletName.toString());
   }
 
   void displayModalBottomSheet(context, String tran_id) {
@@ -475,7 +476,7 @@ class _MyPlanState extends State<MyPlan> {
     };
 
     try {
-      _razorpay.open(options);
+      _razorpay!.open(options);
     } catch (e) {
       debugPrint("Error " + e.toString());
     }
@@ -483,16 +484,16 @@ class _MyPlanState extends State<MyPlan> {
 
   @override
   void dispose() {
-    _razorpay.clear();
+    _razorpay!.clear();
     super.dispose();
   }
 
   Widget CustomDialog(
-      {String title,
-      String description,
-      String buttonText,
-      String applyButtonText,
-      String planId}) {
+      {required String title,
+      required String description,
+      required String buttonText,
+      required String applyButtonText,
+      required String planId}) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -547,7 +548,7 @@ class _MyPlanState extends State<MyPlan> {
                     cursorColor: Color(0xff000000),
                     textCapitalization: TextCapitalization.sentences,
                     onSaved: (value) {
-                      nameController.text = value;
+                      nameController.text = value!;
                     },
                     decoration: InputDecoration(
                         isDense: true,

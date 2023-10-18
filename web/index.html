@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -24,19 +25,20 @@
   <!-- <link rel="apple-touch-icon" href="icons/ir-logo.png"> -->
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="ir-logo.png"/>
+  <link rel="icon" type="image/png" href="ir-logo.png" />
 
   <title>Grewal Conceptual Learning</title>
   <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
-       <script src="//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.min.js"></script>
-<script type="text/javascript">
-   pdfjsLib.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.worker.min.js";
-</script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.min.js"></script>
+  <script type="text/javascript">
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.worker.min.js";
+  </script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
@@ -45,21 +47,22 @@
     }
   </script>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
 
-<script>
-  var firebaseConfig = {
-    apiKey: "AIzaSyAaYbhePJdlq_YknyQC3EpYoJ-bUuLF1_o",
-    authDomain: "grewal-academy-d44be.firebaseapp.com",
-    projectId: "grewal-academy-d44be",
-    storageBucket: "grewal-academy-d44be.appspot.com",
-    messagingSenderId: "750774149943",
-    appId: "1:750774149943:web:befe835296542bce8ab0b2",
-    measurementId: "G-9Y2NXN8FK9"
-  };
-  firebase.initializeApp(firebaseConfig);
-</script>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyAaYbhePJdlq_YknyQC3EpYoJ-bUuLF1_o",
+      authDomain: "grewal-academy-d44be.firebaseapp.com",
+      projectId: "grewal-academy-d44be",
+      storageBucket: "grewal-academy-d44be.appspot.com",
+      messagingSenderId: "750774149943",
+      appId: "1:750774149943:web:befe835296542bce8ab0b2",
+      measurementId: "G-9Y2NXN8FK9"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
+
 </html>

@@ -44,7 +44,7 @@ class DataListOfSubjects {
 
   Future<List> getSubjectsList() async {
     print(BASE_URL + API_PATH);
-    print(URL);
+
     await getToken();
     var response = await http.post(
       new Uri.https(BASE_URL, API_PATH + "/subject"),

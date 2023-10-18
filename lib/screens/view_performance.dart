@@ -28,7 +28,7 @@ import '../constants.dart';
 class ViewPerformance extends StatefulWidget {
   final Object argument;
 
-  const ViewPerformance({Key key, this.argument}) : super(key: key);
+  const ViewPerformance({required this.argument});
 
   @override
   State<StatefulWidget> createState() => _SettingsState();
@@ -38,7 +38,7 @@ const double degrees2Radians = math.pi / 180.0;
 
 class _SettingsState extends State<ViewPerformance> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   ScreenshotController screenshotController = ScreenshotController();
   TextStyle normalText5 = GoogleFonts.montserrat(
@@ -119,10 +119,10 @@ class _SettingsState extends State<ViewPerformance> {
     );
   }
 
-  List<bool> showExpand = new List();
-  List<String> _value1 = new List();
+  List<bool> showExpand = [];
+  List<String> _value1 = [];
   List<ChartData> chartData = [];
-  TooltipBehavior _tooltipBehavior;
+  TooltipBehavior? _tooltipBehavior;
   var easy;
   var diff;
   var avg;
@@ -160,56 +160,73 @@ class _SettingsState extends State<ViewPerformance> {
           _value1.add("0");
         }
       }
-
+      setState(() {
+        chartData.clear();
+      });
       if (data['question_type'].length != 0) {
-        setState(() {
-          if (data['question_type'].length == 3) {
-            chartData = [
-              ChartData(
-                  data['question_type'][0]['questiontype_name'],
-                  double.parse(data['question_type'][0]['total_percentage']),
-                  data['question_type'][0]['total_question'].toString(),
-                  data['question_type'][0]['question_type_id'].toString(),
-                  Color(0xff017EFF)),
-              ChartData(
-                  data['question_type'][1]['questiontype_name'],
-                  double.parse(data['question_type'][1]['total_percentage']),
-                  data['question_type'][1]['total_question'].toString(),
-                  data['question_type'][1]['question_type_id'].toString(),
-                  Color(0xffFFC700)),
-              ChartData(
-                  data['question_type'][2]['questiontype_name'],
-                  double.parse(data['question_type'][2]['total_percentage']),
-                  data['question_type'][2]['total_question'].toString(),
-                  data['question_type'][2]['question_type_id'].toString(),
-                  Color(0xff4CE364)),
-            ];
-          } else if (data['question_type'].length == 2) {
-            chartData = [
-              ChartData(
-                  data['question_type'][0]['questiontype_name'],
-                  double.parse(data['question_type'][0]['total_percentage']),
-                  data['question_type'][0]['total_question'].toString(),
-                  data['question_type'][0]['question_type_id'].toString(),
-                  Color(0xff017EFF)),
-              ChartData(
-                  data['question_type'][1]['questiontype_name'],
-                  double.parse(data['question_type'][1]['total_percentage']),
-                  data['question_type'][1]['total_question'].toString(),
-                  data['question_type'][1]['question_type_id'].toString(),
-                  Color(0xffFFC700)),
-            ];
-          } else {
-            chartData = [
-              ChartData(
-                  data['question_type'][0]['questiontype_name'],
-                  double.parse(data['question_type'][0]['total_percentage']),
-                  data['question_type'][0]['total_question'].toString(),
-                  data['question_type'][0]['question_type_id'].toString(),
-                  Color(0xff017EFF)),
-            ];
-          }
-        });
+        List totalQuestionType = data['question_type'];
+        for (var i = 0; i < totalQuestionType.length; i++) {
+          setState(() {
+            chartData.add(ChartData(
+              data['question_type'][i]['questiontype_name'],
+              double.parse(
+                  data['question_type'][i]['total_question'].toString()),
+              // data['question_type'][i]['total_question'].toString(),
+              // data['question_type'][i]['question_type_id'].toString(),
+              // Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+              //     .withOpacity(1.0)),
+            ));
+          });
+        }
+
+        // setState(() {
+        //   if (data['question_type'].length == 3) {
+        //     chartData = [
+        //       ChartData(
+        //           data['question_type'][0]['questiontype_name'],
+        //           double.parse(data['question_type'][0]['total_percentage']),
+        //           data['question_type'][0]['total_question'].toString(),
+        //           data['question_type'][0]['question_type_id'].toString(),
+        //           Color(0xff017EFF)),
+        //       ChartData(
+        //           data['question_type'][1]['questiontype_name'],
+        //           double.parse(data['question_type'][1]['total_percentage']),
+        //           data['question_type'][1]['total_question'].toString(),
+        //           data['question_type'][1]['question_type_id'].toString(),
+        //           Color(0xffFFC700)),
+        //       ChartData(
+        //           data['question_type'][2]['questiontype_name'],
+        //           double.parse(data['question_type'][2]['total_percentage']),
+        //           data['question_type'][2]['total_question'].toString(),
+        //           data['question_type'][2]['question_type_id'].toString(),
+        //           Color(0xff4CE364)),
+        //     ];
+        //   } else if (data['question_type'].length == 2) {
+        //     chartData = [
+        //       ChartData(
+        //           data['question_type'][0]['questiontype_name'],
+        //           double.parse(data['question_type'][0]['total_percentage']),
+        //           data['question_type'][0]['total_question'].toString(),
+        //           data['question_type'][0]['question_type_id'].toString(),
+        //           Color(0xff017EFF)),
+        //       ChartData(
+        //           data['question_type'][1]['questiontype_name'],
+        //           double.parse(data['question_type'][1]['total_percentage']),
+        //           data['question_type'][1]['total_question'].toString(),
+        //           data['question_type'][1]['question_type_id'].toString(),
+        //           Color(0xffFFC700)),
+        //     ];
+        //   } else {
+        //     chartData = [
+        //       ChartData(
+        //           data['question_type'][0]['questiontype_name'],
+        //           double.parse(data['question_type'][0]['total_percentage']),
+        //           data['question_type'][0]['total_question'].toString(),
+        //           data['question_type'][0]['question_type_id'].toString(),
+        //           Color(0xff017EFF)),
+        //     ];
+        //   }
+        // });
       } else {
         setState(() {
           show_pie = false;
@@ -342,7 +359,14 @@ class _SettingsState extends State<ViewPerformance> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data != null) {
+          Map map = snapshot.data as Map;
+          print(map);
+          List data = map['evaluation'];
+          List data1 = map['questionwiseanalytic'];
+          List data2 = map['chapterwiseanalytic'];
+          List data4 = map['topic'];
+          List data5 = map['question_type'];
+          if (data.length != 0) {
             return SingleChildScrollView(
               child: RepaintBoundary(
                 key: _key,
@@ -389,8 +413,7 @@ class _SettingsState extends State<ViewPerformance> {
                                             ),
                                             Text(
                                                 "You Scored: " +
-                                                    snapshot.data[
-                                                            'total_test_percentage']
+                                                    map['total_test_percentage']
                                                         .toString() +
                                                     "%",
                                                 style: normalText6)
@@ -406,7 +429,7 @@ class _SettingsState extends State<ViewPerformance> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: <Widget>[
-                                          Container(
+                                          Expanded(
                                             child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -425,14 +448,14 @@ class _SettingsState extends State<ViewPerformance> {
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                      "${snapshot.data['total_test_right_percentage'].toString()}% correct",
+                                                      "${map['total_test_right_percentage'].toString()}%\ncorrect",
                                                       style: normalText2)
                                                 ]),
                                           ),
                                           SizedBox(
-                                            width: 20.0,
+                                            width: 5.0,
                                           ),
-                                          Container(
+                                          Expanded(
                                             child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -451,7 +474,7 @@ class _SettingsState extends State<ViewPerformance> {
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                      "${snapshot.data['total_test_wrong_percentage'].toString()}% incorrect",
+                                                      "${map['total_test_wrong_percentage'].toString()}%\nincorrect",
                                                       style: normalText2)
                                                 ]),
                                           ),
@@ -460,8 +483,7 @@ class _SettingsState extends State<ViewPerformance> {
                                   SizedBox(
                                     height: 15.0,
                                   ),
-                                  winner(
-                                      snapshot.data['total_test_percentage']),
+                                  winner(map['total_test_percentage']),
                                   SizedBox(
                                     height: 15.0,
                                   ),
@@ -469,7 +491,7 @@ class _SettingsState extends State<ViewPerformance> {
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 10),
                                     child: winnerText(
-                                        snapshot.data['total_test_percentage']),
+                                        map['total_test_percentage']),
                                   ),
                                 ],
                               ),
@@ -506,7 +528,7 @@ class _SettingsState extends State<ViewPerformance> {
                           child: ListView.builder(
                               shrinkWrap: true,
                               primary: false,
-                              itemCount: snapshot.data['topic'].length,
+                              itemCount: data4.length,
                               itemBuilder: (context, index) {
                                 return Container(
                                   padding: EdgeInsets.symmetric(
@@ -542,8 +564,7 @@ class _SettingsState extends State<ViewPerformance> {
                                           child: Container(
                                             padding: EdgeInsets.only(left: 10),
                                             child: Text(
-                                                snapshot.data['topic'][index]
-                                                    ['topic_name'],
+                                                data4[index]['topic_name'],
                                                 maxLines: 2,
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -564,11 +585,11 @@ class _SettingsState extends State<ViewPerformance> {
                                             _value1[index].toString() +
                                                 "% " +
                                                 "(" +
-                                                snapshot.data['topic'][index][
+                                                data4[index][
                                                         'total_topic_right_question']
                                                     .toString() +
                                                 "/" +
-                                                snapshot.data['topic'][index]
+                                                data4[index]
                                                         ['total_topic_question']
                                                     .toString() +
                                                 ")",
@@ -586,7 +607,7 @@ class _SettingsState extends State<ViewPerformance> {
                                                 : 0.0,
                                             center: Text(
                                               "",
-                                              // snapshot.data['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
+                                              //  jsonDecode(jsonDecode(snapshot.data.toString()).toString())['cart_quantity'] > 0 ? 'Go to Basket' : 'Add to Basket',
                                               style: TextStyle(
                                                   color: Color(0xff0293ee),
                                                   fontSize: 12,
@@ -676,13 +697,11 @@ class _SettingsState extends State<ViewPerformance> {
                           Expanded(
                             child: Container(
                                 child: FAProgressBar(
-                              currentValue: int.parse(
-                                  snapshot.data['easy_right_per'].toString()),
+                              currentValue: double.parse(
+                                  map['easy_right_per'].toString()),
                               displayText: '%',
                               displayTextStyle: TextStyle(
-                                  color: snapshot.data['easy_right_per']
-                                              .toString() !=
-                                          "0"
+                                  color: map['easy_right_per'].toString() != "0"
                                       ? Colors.white
                                       : Color(0xff22215B)),
                               backgroundColor: Color(0xffEEF7FE),
@@ -705,16 +724,14 @@ class _SettingsState extends State<ViewPerformance> {
                           Expanded(
                             child: Container(
                                 child: FAProgressBar(
-                              currentValue: int.parse(snapshot
-                                  .data['average_right_per']
-                                  .toString()),
+                              currentValue: double.parse(
+                                  map['average_right_per'].toString()),
                               displayText: '%',
                               displayTextStyle: TextStyle(
-                                  color: snapshot.data['average_right_per']
-                                              .toString() !=
-                                          "0"
-                                      ? Colors.white
-                                      : Color(0xff017EFF)),
+                                  color:
+                                      map['average_right_per'].toString() != "0"
+                                          ? Colors.white
+                                          : Color(0xff017EFF)),
                               backgroundColor: Color(0xffEEF7FE),
                               progressColor: Color(0xff017EFF),
                               verticalDirection: VerticalDirection.up,
@@ -735,13 +752,11 @@ class _SettingsState extends State<ViewPerformance> {
                           Expanded(
                             child: Container(
                                 child: FAProgressBar(
-                              currentValue: int.parse(snapshot
-                                  .data['diffcult_right_per']
-                                  .toString()),
+                              currentValue: double.parse(
+                                  map['diffcult_right_per'].toString()),
                               displayText: '%',
                               displayTextStyle: TextStyle(
-                                  color: snapshot.data['diffcult_right_per']
-                                              .toString() !=
+                                  color: map['diffcult_right_per'].toString() !=
                                           "0"
                                       ? Colors.white
                                       : Color(0xffFF317B)),
@@ -797,12 +812,9 @@ class _SettingsState extends State<ViewPerformance> {
                         ),
                         Container(
                           child: Text(
-                              snapshot.data['evaluation'][0]
-                                          ['total_time_taken_minut']
-                                      .toString() +
+                              data[0]['total_time_taken_minut'].toString() +
                                   " Min " +
-                                  snapshot.data['evaluation'][0]
-                                          ['total_time_taken_second']
+                                  data[0]['total_time_taken_second']
                                       .toString() +
                                   " Sec",
                               style: normalText6),
@@ -822,17 +834,14 @@ class _SettingsState extends State<ViewPerformance> {
                                   animationDuration: 1200,
                                   radius: 100.0,
                                   lineWidth: 10.0,
-                                  percent: double.parse(snapshot
-                                          .data['evaluation'][0]
+                                  percent: double.parse(data[0]
                                               ['accuracy_level']
                                           .toString()) /
                                       100,
                                   backgroundColor: Color(0xffF2F2F2),
 
                                   center: new Text(
-                                      snapshot.data['evaluation'][0]
-                                                  ['accuracy_level']
-                                              .toString() +
+                                      data[0]['accuracy_level'].toString() +
                                           "%",
                                       style: normalText9),
                                   linearGradient: LinearGradient(
@@ -852,49 +861,43 @@ class _SettingsState extends State<ViewPerformance> {
                                       style: normalText1),
                                 ),
                               ]),
-                              new Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.0),
-                              ),
-                              Column(children: <Widget>[
-                                new CircularPercentIndicator(
-                                  //  radius: 45.0,
-                                  animation: true,
-                                  animationDuration: 1200,
-                                  radius: 100.0,
-                                  lineWidth: 10.0,
-                                  reverse: true,
-                                  backgroundColor: Color(0xffF2F2F2),
-                                  percent: snapshot.data['evaluation'][0]
-                                              ['answer_speed'] >
-                                          100
-                                      ? (100 / 100)
-                                      : double.parse(snapshot.data['evaluation']
-                                                  [0]['answer_speed']
-                                              .toString()) /
-                                          100,
-                                  center: new Text(
-                                      snapshot.data['evaluation'][0]
-                                                  ['answer_speed']
-                                              .toString() +
-                                          " s",
-                                      style: normalText9),
-                                  linearGradient: LinearGradient(
-                                    colors: [
-                                      Color(0xffFF317B),
-                                      Color(0xffFF3D0D),
-                                    ],
-                                    begin: FractionalOffset.topCenter,
-                                    end: FractionalOffset.bottomCenter,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  child: Text("Answer Speed/Question",
-                                      style: normalText1),
-                                ),
-                              ]),
+                              // new Padding(
+                              //   padding: EdgeInsets.symmetric(horizontal: 5.0),
+                              // ),
+                              // Column(children: <Widget>[
+                              //   new CircularPercentIndicator(
+                              //     //  radius: 45.0,
+                              //     animation: true,
+                              //     animationDuration: 1200,
+                              //     radius: 100.0,
+                              //     lineWidth: 10.0,
+                              //     reverse: true,
+                              //     backgroundColor: Color(0xffF2F2F2),
+                              //     percent: data[0]['answer_speed'] > 100
+                              //         ? (100 / 100)
+                              //         : double.parse(data[0]['answer_speed']
+                              //                 .toString()) /
+                              //             100,
+                              //     center: new Text(
+                              //         data[0]['answer_speed'].toString() + " s",
+                              //         style: normalText9),
+                              //     linearGradient: LinearGradient(
+                              //       colors: [
+                              //         Color(0xffFF317B),
+                              //         Color(0xffFF3D0D),
+                              //       ],
+                              //       begin: FractionalOffset.topCenter,
+                              //       end: FractionalOffset.bottomCenter,
+                              //     ),
+                              //   ),
+                              //   SizedBox(
+                              //     height: 10,
+                              //   ),
+                              //   Container(
+                              //     child: Text("Answer Speed/Question",
+                              //         style: normalText1),
+                              //   ),
+                              // ]),
                             ],
                           ),
                         ),
@@ -952,55 +955,82 @@ class _SettingsState extends State<ViewPerformance> {
                                 children: [
                                   Center(
                                     child: Container(
-                                      child: Text(
-                                          "Question Type Result Analysis (Correct)",
-                                          style: normalText6),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _getPerformanceData();
+                                        },
+                                        child: Text(
+                                            "Question Type Result Analysis (Correct)",
+                                            style: normalText6),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   Container(
-                                    child: SfCircularChart(
-                                        tooltipBehavior: _tooltipBehavior,
-                                        legend: Legend(
-                                            isVisible: true,
-                                            position: LegendPosition.bottom,
-                                            height: "150",
-                                            padding: 20,
-                                            orientation:
-                                                LegendItemOrientation.vertical,
-                                            textStyle: normalTex10),
-                                        series: <CircularSeries>[
-                                          DoughnutSeries<ChartData, String>(
-                                            animationDuration: 2000,
-                                            enableSmartLabels: true,
-                                            enableTooltip: true,
-                                            explode: true,
+                                      child: SfCartesianChart(
+                                          primaryXAxis: CategoryAxis(),
+                                          // primaryYAxis: NumericAxis(
+                                          //     minimum: 0,
+                                          //     maximum: 40,
+                                          //     interval: 10),
+
+                                          tooltipBehavior: _tooltipBehavior,
+                                          enableAxisAnimation: true,
+                                          series: <ChartSeries<ChartData,
+                                              String>>[
+                                        BarSeries<ChartData, String>(
+                                            // isTrackVisible: true,
                                             dataSource: chartData,
-                                            selectionBehavior:
-                                                SelectionBehavior(
-                                              enable: true,
-                                            ),
-                                            dataLabelSettings:
-                                                DataLabelSettings(
-                                              isVisible: true,
-                                            ),
-                                            dataLabelMapper:
-                                                (ChartData sales, _) =>
-                                                    sales.y1.toString(),
-                                            pointColorMapper:
-                                                (ChartData data, _) =>
-                                                    data.color,
                                             xValueMapper: (ChartData data, _) =>
                                                 data.x,
                                             yValueMapper: (ChartData data, _) =>
                                                 data.y,
-                                            radius: "80",
-                                            innerRadius: "30",
-                                          )
-                                        ]),
-                                  )
+                                            // name: 'Gold',
+                                            color:
+                                                Color.fromRGBO(8, 142, 255, 1))
+                                      ])
+                                      // SfCircularChart(
+                                      //     tooltipBehavior: _tooltipBehavior,
+                                      //     legend: Legend(
+                                      //         isVisible: true,
+                                      //         position: LegendPosition.bottom,
+                                      //         height: "200",
+                                      //         padding: 20,
+                                      //         orientation:
+                                      //             LegendItemOrientation.vertical,
+                                      //         textStyle: normalTex10),
+                                      //     series: <CircularSeries>[
+                                      //       DoughnutSeries<ChartData, String>(
+                                      //         animationDuration: 200,
+                                      //         enableSmartLabels: true,
+                                      //         enableTooltip: true,
+                                      //         explode: true,
+                                      //         dataSource: chartData,
+                                      //         selectionBehavior:
+                                      //             SelectionBehavior(
+                                      //           enable: true,
+                                      //         ),
+                                      //         dataLabelSettings:
+                                      //             DataLabelSettings(
+                                      //           isVisible: true,
+                                      //         ),
+                                      //         dataLabelMapper:
+                                      //             (ChartData sales, _) =>
+                                      //                 sales.y1.toString(),
+                                      //         pointColorMapper:
+                                      //             (ChartData data, _) =>
+                                      //                 data.color,
+                                      //         xValueMapper: (ChartData data, _) =>
+                                      //             data.x,
+                                      //         yValueMapper: (ChartData data, _) =>
+                                      //             data.y,
+                                      //         radius: "80",
+                                      //         innerRadius: "30",
+                                      //       )
+                                      //     ]),
+                                      )
                                 ]),
                           )
                         : Container(),
@@ -1118,10 +1148,10 @@ class _SettingsState extends State<ViewPerformance> {
   final GlobalKey _key = GlobalKey();
   void _takeScreenshot() async {
     RenderRepaintBoundary boundary =
-        _key.currentContext.findRenderObject() as RenderRepaintBoundary;
+        _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
     ui.Image image = await boundary.toImage();
-    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       Uint8List pngBytes = byteData.buffer.asUint8List();
 
@@ -1243,10 +1273,8 @@ class Clipper extends CustomClipper<Path> {
 }
 
 class ChartData {
-  ChartData(this.x, this.y, this.y1, this.z, [this.color]);
+  ChartData(this.x, this.y);
+
   final String x;
   final double y;
-  final String y1;
-  final String z;
-  final Color color;
 }

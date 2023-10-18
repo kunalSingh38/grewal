@@ -14,15 +14,13 @@ import 'package:http/http.dart' as http;
 import '../constants.dart';
 
 class AnswerList extends StatefulWidget {
-
-
   @override
   _SettingsState createState() => _SettingsState();
 }
 
 class _SettingsState extends State<AnswerList> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
   TextStyle normalText5 = GoogleFonts.montserrat(
       fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff2E2A4A));
@@ -83,8 +81,6 @@ class _SettingsState extends State<AnswerList> {
     );
   }
 
-
-
   Future _getChapterData() async {
     Map<String, String> headers = {
       // 'Content-Type': 'application/json',
@@ -95,18 +91,15 @@ class _SettingsState extends State<AnswerList> {
       new Uri.https(BASE_URL, API_PATH + "/mtp-ans-list"),
       body: {
         "user_id": user_id,
-
       },
       headers: headers,
     );
 
     print(jsonEncode({
       "user_id": user_id,
-
     }));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-
 
       return data;
     } else {
@@ -114,39 +107,40 @@ class _SettingsState extends State<AnswerList> {
     }
   }
 
-
-
-
-
-
-
   Widget chapterList(Size deviceSize) {
     return FutureBuilder(
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data['Response']['mtpList'].length != 0) {
+          if (jsonDecode(snapshot.data.toString())['Response']['mtpList']
+                  .length !=
+              0) {
             return Container(
               child: ListView.builder(
                   shrinkWrap: true,
                   primary: false,
-                  itemCount: snapshot.data['Response']['mtpList'].length,
+                  itemCount: jsonDecode(snapshot.data.toString())['Response']
+                          ['mtpList']
+                      .length,
                   itemBuilder: (context, index) {
                     return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
+                      // actionPane: SlidableDrawerActionPane(),
+                      // actionExtentRatio: 0.25,
                       child: InkWell(
                         onTap: () {
-
-                            Navigator.pushNamed(
-                              context,
-                              '/mts',
-                              arguments: <String, String>{
-                                'url': snapshot.data['Response']['mtpList'][index]['ansKey'].toString(),
-                                'name': snapshot.data['Response']['mtpList'][index]['ans_key_name'].toString(),
-                              },
-                            );
-
+                          Navigator.pushNamed(
+                            context,
+                            '/mts',
+                            arguments: <String, String>{
+                              'url': jsonDecode(snapshot.data.toString())[
+                                      'Response']['mtpList'][index]['ansKey']
+                                  .toString(),
+                              'name': jsonDecode(
+                                          snapshot.data.toString())['Response']
+                                      ['mtpList'][index]['ans_key_name']
+                                  .toString(),
+                            },
+                          );
                         },
                         child: Column(children: <Widget>[
                           Stack(children: <Widget>[
@@ -162,30 +156,28 @@ class _SettingsState extends State<AnswerList> {
                                   children: <Widget>[
                                     Center(
                                       child: Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 5),
                                         height: 30,
                                         width: 30,
                                         decoration: new BoxDecoration(
-                                          // color: Color(0xffF6F6F6),
+                                            // color: Color(0xffF6F6F6),
                                             borderRadius: new BorderRadius.only(
                                                 topLeft:
-                                                const Radius.circular(5.0),
+                                                    const Radius.circular(5.0),
                                                 bottomLeft:
-                                                const Radius.circular(5.0),
+                                                    const Radius.circular(5.0),
                                                 bottomRight:
-                                                const Radius.circular(5.0),
+                                                    const Radius.circular(5.0),
                                                 topRight: const Radius.circular(
                                                     5.0))),
                                         child: Image(
-                                            image: AssetImage(
-                                              'assets/images/problem_solving.png',
-                                            ),
-                                            height: 16.0,
-                                            width: 16.0,
-
+                                          image: AssetImage(
+                                            'assets/images/problem_solving.png',
                                           ),
-
-
+                                          height: 16.0,
+                                          width: 16.0,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(
@@ -194,28 +186,30 @@ class _SettingsState extends State<AnswerList> {
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               Expanded(
                                                 child: Text(
-                                                    snapshot.data['Response']['mtpList']
-                                                    [index]['ans_key_name'],
+                                                    jsonDecode(snapshot.data
+                                                                    .toString())[
+                                                                'Response']
+                                                            ['mtpList'][index]
+                                                        ['ans_key_name'],
                                                     maxLines: 2,
                                                     softWrap: true,
                                                     overflow:
-                                                    TextOverflow.ellipsis,
+                                                        TextOverflow.ellipsis,
                                                     style: normalText5),
                                               ),
                                             ],
                                           ),
-
                                         ],
                                       ),
                                     ),
@@ -229,13 +223,9 @@ class _SettingsState extends State<AnswerList> {
                                     )
                                   ]),
                             ),
-
                           ]),
-
-
                         ]),
                       ),
-
                     );
                   }),
             );
@@ -245,20 +235,21 @@ class _SettingsState extends State<AnswerList> {
         } else {
           return Center(
               child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  child: SpinKitFadingCube(
-                    itemBuilder: (_, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index.isEven ? Color(0xff017EFF) :Color(0xffFFC700),
-                        ),
-                      );
-                    },
-                    size: 30.0,
-                  ),
-                ),
-              ));
+            alignment: Alignment.center,
+            child: Container(
+              child: SpinKitFadingCube(
+                itemBuilder: (_, int index) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color:
+                          index.isEven ? Color(0xff017EFF) : Color(0xffFFC700),
+                    ),
+                  );
+                },
+                size: 30.0,
+              ),
+            ),
+          ));
         }
       },
     );
@@ -268,10 +259,10 @@ class _SettingsState extends State<AnswerList> {
     return Center(
       child: Container(
           child: Text(
-            'NO RECORD FOUND!',
-            style:
+        'NO RECORD FOUND!',
+        style:
             TextStyle(fontSize: 20, letterSpacing: 1, color: Color(0xff2E2A4A)),
-          )),
+      )),
     );
   }
 
@@ -322,8 +313,6 @@ class _SettingsState extends State<AnswerList> {
           ),
           backgroundColor: Colors.transparent,
         ),
-
-
         body: ModalProgressHUD(
           inAsyncCall: isLoading,
           child: Container(
@@ -337,7 +326,6 @@ class _SettingsState extends State<AnswerList> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.only(bottom: 5),

@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as bg;
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 
@@ -20,7 +20,7 @@ import 'package:grewal/screens/subject_list.dart';
 import 'package:grewal/screens/update_profile.dart';
 import 'package:grewal/services/shared_preferences.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:package_info/package_info.dart';
+// import 'package:package_info/package_info.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -81,7 +81,7 @@ class _ChangePageState extends State<HomePage> {
   String totalChapterTerm1 = "";
   String total_chapter = "0";
   // String totalChapterTerm2 = "";
-  int signout;
+  int? signout;
   double average = 0.0;
   String banner = "";
   String api_token = "";
@@ -137,8 +137,8 @@ class _ChangePageState extends State<HomePage> {
   }
 
   versionCheck(context) async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
-    print(info.version);
+    // final PackageInfo info = await PackageInfo.fromPlatform();
+    // print(info.version);
     DataListOfSubjects().getAppVersion().then((value) {
       if (value.length > 0) {
         int apiVer = Platform.isAndroid
@@ -148,7 +148,7 @@ class _ChangePageState extends State<HomePage> {
                 .replaceAll(".", ""))
             : int.parse(
                 value[0]['ios'].toString().split("+")[0].replaceAll(".", ""));
-        int appVer = int.parse(info.version.replaceAll(".", ""));
+        int appVer = int.parse("".replaceAll(".", ""));
 
         if (apiVer > appVer) {
           Alert(
@@ -496,7 +496,7 @@ class _ChangePageState extends State<HomePage> {
                 child: new Text(
                   "No",
                   style: TextStyle(
-                    color: Color(0xff223834),
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -511,8 +511,10 @@ class _ChangePageState extends State<HomePage> {
                     Navigator.pushReplacementNamed(context, '/login-with-logo');
                   });
                 },
-                child:
-                    new Text("Yes", style: TextStyle(color: Color(0xff223834))),
+                child: new Text("Yes",
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
               ),
             ],
           ),
@@ -1302,8 +1304,7 @@ class _ChangePageState extends State<HomePage> {
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
                                                                         .center,
-                                                                children: <
-                                                                    Widget>[
+                                                                children: <Widget>[
                                                                   Text(
                                                                       total_right_questions,
                                                                       style:
@@ -1323,8 +1324,7 @@ class _ChangePageState extends State<HomePage> {
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
                                                                         .center,
-                                                                children: <
-                                                                    Widget>[
+                                                                children: <Widget>[
                                                                   Text(
                                                                       total_wrong_questions,
                                                                       style:
@@ -1353,8 +1353,7 @@ class _ChangePageState extends State<HomePage> {
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
                                                                         .center,
-                                                                children: <
-                                                                    Widget>[
+                                                                children: <Widget>[
                                                                   Text(
                                                                       total_skip_questions,
                                                                       style:
@@ -1374,8 +1373,7 @@ class _ChangePageState extends State<HomePage> {
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
                                                                         .center,
-                                                                children: <
-                                                                    Widget>[
+                                                                children: <Widget>[
                                                                   Text(
                                                                       total_tests,
                                                                       style:
@@ -1443,7 +1441,7 @@ class _ChangePageState extends State<HomePage> {
                                                         ),
                                                         onPressed: () {
                                                           _scaffoldKey
-                                                              .currentState
+                                                              .currentState!
                                                               .openDrawer();
                                                         },
                                                       ),
@@ -1454,26 +1452,24 @@ class _ChangePageState extends State<HomePage> {
                                                                     context,
                                                                     '/notifications');
                                                               },
-                                                              child: Badge(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(5),
-                                                                badgeColor: Color(
-                                                                    0xff017EFF),
-                                                                position:
-                                                                    BadgePosition
-                                                                        .topEnd(
-                                                                            top:
-                                                                                1,
-                                                                            end:
-                                                                                8),
-                                                                animationDuration:
-                                                                    Duration(
-                                                                        milliseconds:
-                                                                            300),
-                                                                animationType:
-                                                                    BadgeAnimationType
-                                                                        .fade,
+                                                              child: bg.Badge(
+                                                                // padding:
+                                                                //     EdgeInsets
+                                                                //         .all(5),
+                                                                // badgeColor: Color(
+                                                                //     0xff017EFF),
+                                                                position: bg
+                                                                        .BadgePosition
+                                                                    .topEnd(
+                                                                        top: 1,
+                                                                        end: 8),
+                                                                // animationDuration:
+                                                                //     Duration(
+                                                                //         milliseconds:
+                                                                //             300),
+                                                                // animationType: bg
+                                                                //     .BadgeAnimationType
+                                                                //     .fade,
                                                                 badgeContent:
                                                                     Text(
                                                                   total_notification
@@ -1630,7 +1626,7 @@ class _ChangePageState extends State<HomePage> {
                                                     ),
                                                   ],
                                                   borderRadius: new BorderRadius
-                                                          .only(
+                                                      .only(
                                                       topLeft:
                                                           const Radius.circular(
                                                               15.0),
@@ -1689,14 +1685,17 @@ class _ChangePageState extends State<HomePage> {
                                                                         0xffF2F2F2),
 
                                                                 center: Padding(
-                                                                  padding: const EdgeInsets
+                                                                  padding:
+                                                                      const EdgeInsets
                                                                           .only(
-                                                                      left: 5,
-                                                                      right: 5,
-                                                                      top: 30),
+                                                                          left:
+                                                                              5,
+                                                                          right:
+                                                                              5,
+                                                                          top:
+                                                                              30),
                                                                   child: Column(
-                                                                      children: <
-                                                                          Widget>[
+                                                                      children: <Widget>[
                                                                         Text(
                                                                             average.toString() +
                                                                                 "%",
@@ -1739,17 +1738,14 @@ class _ChangePageState extends State<HomePage> {
                                                                   crossAxisAlignment:
                                                                       CrossAxisAlignment
                                                                           .center,
-                                                                  children: <
-                                                                      Widget>[
+                                                                  children: <Widget>[
                                                                     Row(
                                                                         mainAxisAlignment:
                                                                             MainAxisAlignment
                                                                                 .center,
                                                                         crossAxisAlignment:
-                                                                            CrossAxisAlignment
-                                                                                .center,
-                                                                        children: <
-                                                                            Widget>[
+                                                                            CrossAxisAlignment.center,
+                                                                        children: <Widget>[
                                                                           Column(
                                                                               mainAxisAlignment: MainAxisAlignment.center,
                                                                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1778,10 +1774,8 @@ class _ChangePageState extends State<HomePage> {
                                                                             MainAxisAlignment
                                                                                 .center,
                                                                         crossAxisAlignment:
-                                                                            CrossAxisAlignment
-                                                                                .center,
-                                                                        children: <
-                                                                            Widget>[
+                                                                            CrossAxisAlignment.center,
+                                                                        children: <Widget>[
                                                                           Column(
                                                                               mainAxisAlignment: MainAxisAlignment.center,
                                                                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1930,8 +1924,7 @@ class _ChangePageState extends State<HomePage> {
                                                                       .pushNamed(
                                                                     context,
                                                                     '/ticket-list',
-                                                                    arguments: <
-                                                                        String,
+                                                                    arguments: <String,
                                                                         String>{
                                                                       'chapter_id':
                                                                           e['id']
@@ -2045,7 +2038,7 @@ class _ChangePageState extends State<HomePage> {
                                     "Complete Syllabus",
                                     "Test",
                                     Colors.amber,
-                                    Colors.amber[50]),
+                                    Colors.amber.shade50),
                               ),
                             ),
                             const SizedBox(width: 16.0),
@@ -2062,7 +2055,7 @@ class _ChangePageState extends State<HomePage> {
                                     "Interactive Dashboard",
                                     "Overall Performance",
                                     Colors.green,
-                                    Colors.green[50]),
+                                    Colors.green.shade50),
                               ),
                             ),
                           ],
@@ -2088,7 +2081,7 @@ class _ChangePageState extends State<HomePage> {
                                     "Videos",
                                     "Innovative Videos",
                                     Colors.blue,
-                                    Colors.blue[50],
+                                    Colors.blue.shade50,
                                   )),
                             ),
                             const SizedBox(width: 16.0),
@@ -2100,7 +2093,7 @@ class _ChangePageState extends State<HomePage> {
                                     "NEWS Letter",
                                     "Latest Updates",
                                     Colors.purple,
-                                    Colors.purple[50]),
+                                    Colors.purple.shade50),
                               ),
                             ),
                           ],
@@ -2126,7 +2119,7 @@ class _ChangePageState extends State<HomePage> {
                                     "Cross-Word",
                                     "Challenge Yourself",
                                     Colors.teal,
-                                    Colors.teal[50],
+                                    Colors.teal.shade50,
                                   )),
                             ),
                             const SizedBox(width: 16.0),
@@ -2246,7 +2239,7 @@ class _ChangePageState extends State<HomePage> {
             scrollDirection: Axis.horizontal,
           ),
           itemCount: 2,
-          itemBuilder: (BuildContext context, int itemIndex) {
+          itemBuilder: (context, itemIndex, realIndex) {
             if (itemIndex == 1) {
               return InkWell(
                   onTap: () {
@@ -2416,9 +2409,7 @@ class _ChangePageState extends State<HomePage> {
                         top: 10, bottom: 1, left: 10, right: 10),
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: banner != ""
-                            ? NetworkImage(banner)
-                            : AssetImage('assets/images/back.jpeg'),
+                        image: NetworkImage(banner),
                         fit: BoxFit.fill,
                       ),
                       borderRadius: BorderRadius.only(

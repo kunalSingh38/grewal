@@ -13,7 +13,7 @@ import 'package:grewal/components/progress_bar.dart';
 class MCQLevelTest extends StatefulWidget {
   final Object argument;
 
-  const MCQLevelTest({Key key, this.argument}) : super(key: key);
+  const MCQLevelTest({required this.argument});
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -36,8 +36,8 @@ class _SettingsState extends State<MCQLevelTest> {
 
   TextStyle style = TextStyle(color: Colors.white);
 
-  String student_id;
-  String chapter_id;
+  String? student_id;
+  String? chapter_id;
   bool isLoading = true;
   // bool payment_status;
   List setList = [];
@@ -48,7 +48,7 @@ class _SettingsState extends State<MCQLevelTest> {
         // payment_status = prefs.getBool('payment_status');
       });
       MCQLevelTestAPI()
-          .getSetList(prefs.getString('user_id').toString(), chapter_id)
+          .getSetList(prefs.getString('user_id').toString(), chapter_id!)
           .then((value) {
         if (value.length > 0) {
           setState(() {
@@ -215,8 +215,7 @@ class _SettingsState extends State<MCQLevelTest> {
                                                                         .pushNamed(
                                                                       context,
                                                                       '/view-performance-new',
-                                                                      arguments: <
-                                                                          String,
+                                                                      arguments: <String,
                                                                           String>{
                                                                         'test_id': e['testId']
                                                                             .toString()

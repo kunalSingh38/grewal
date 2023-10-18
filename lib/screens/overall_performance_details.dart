@@ -27,7 +27,7 @@ import '../constants.dart';
 class OverAllDetails extends StatefulWidget {
   final Object argument;
 
-  const OverAllDetails({Key key, this.argument}) : super(key: key);
+  const OverAllDetails({required this.argument});
 
   @override
   State<StatefulWidget> createState() => _SettingsState();
@@ -37,7 +37,7 @@ const double degrees2Radians = math.pi / 180.0;
 
 class _SettingsState extends State<OverAllDetails> {
   bool _value = false;
-  Future _chapterData;
+  Future? _chapterData;
   bool isLoading = false;
 
   TextStyle normalText5 = GoogleFonts.montserrat(
@@ -86,7 +86,7 @@ class _SettingsState extends State<OverAllDetails> {
   String type = "";
   String question_id = "";
   String profile_image = '';
-  ZoomPanBehavior _zoomPanBehavior;
+  ZoomPanBehavior? _zoomPanBehavior;
   String api_token = "";
   @override
   void initState() {
@@ -120,6 +120,7 @@ class _SettingsState extends State<OverAllDetails> {
       image: NetworkImage(url),
     );
   }
+
   _requestPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.storage,
@@ -127,13 +128,13 @@ class _SettingsState extends State<OverAllDetails> {
 
     final info = statuses[Permission.storage].toString();
     print(info);
-
   }
-  List<bool> showExpand = new List();
-  List<String> _value1 = new List();
+
+  List<bool> showExpand = [];
+  List<String> _value1 = [];
   List<SalesData> chartData = [];
   List<ChartData> salesData = [];
-  TooltipBehavior _tooltipBehavior;
+  TooltipBehavior? _tooltipBehavior;
   var easy;
   var diff;
   var avg;
@@ -289,7 +290,7 @@ class _SettingsState extends State<OverAllDetails> {
       future: _chapterData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data != null) {
+          if (jsonDecode(snapshot.data.toString()) != null) {
             return SingleChildScrollView(
               child: RepaintBoundary(
                 key: _key,
@@ -304,8 +305,10 @@ class _SettingsState extends State<OverAllDetails> {
                               bottomLeft: const Radius.circular(20.0),
                               bottomRight: const Radius.circular(20.0),
                               topRight: const Radius.circular(20.0))),
-                      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
                       child: Column(children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -337,7 +340,8 @@ class _SettingsState extends State<OverAllDetails> {
                                   Align(
                                     alignment: Alignment.center,
                                     child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
                                           Container(
                                             child: Row(
@@ -368,7 +372,8 @@ class _SettingsState extends State<OverAllDetails> {
                                   Align(
                                     alignment: Alignment.center,
                                     child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
                                           Center(
                                             child: Container(
@@ -377,9 +382,9 @@ class _SettingsState extends State<OverAllDetails> {
                                                       MainAxisAlignment.start,
                                                   children: <Widget>[
                                                     Text(
-                                                        "${snapshot.data['time_taken'][0]['total_time_taken_minut'].toString()}" +
+                                                        "${jsonDecode(snapshot.data.toString())['time_taken'][0]['total_time_taken_minut'].toString()}" +
                                                             ":" +
-                                                            "${snapshot.data['time_taken'][0]['total_time_taken_second'].toString()}",
+                                                            "${jsonDecode(snapshot.data.toString())['time_taken'][0]['total_time_taken_second'].toString()}",
                                                         style: normalText6)
                                                   ]),
                                             ),
@@ -393,7 +398,7 @@ class _SettingsState extends State<OverAllDetails> {
                                                     MainAxisAlignment.start,
                                                 children: <Widget>[
                                                   Text(
-                                                      "${snapshot.data['time_taken'][0]['average_time_taken'].toString()}",
+                                                      "${jsonDecode(snapshot.data.toString())['time_taken'][0]['average_time_taken'].toString()}",
                                                       style: normalText6)
                                                 ]),
                                           ),
@@ -415,8 +420,10 @@ class _SettingsState extends State<OverAllDetails> {
                               bottomLeft: const Radius.circular(20.0),
                               bottomRight: const Radius.circular(20.0),
                               topRight: const Radius.circular(20.0))),
-                      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
                       child: Column(children: [
                         Container(
                           child: Text("Difficulty Level Wise Analysis",
@@ -434,11 +441,18 @@ class _SettingsState extends State<OverAllDetails> {
                               StackedBar100Series<SalesData, String>(
                                   dataSource: chartData,
                                   dataLabelSettings: DataLabelSettings(
-                                      isVisible: true, showCumulativeValues: true),
+                                      isVisible: true,
+                                      showCumulativeValues: true),
                                   dataLabelMapper: (SalesData sales, _) =>
-                                      sales.right1.toString()+ " ("+sales.right.toString()+"%"+") ",
-                                  xValueMapper: (SalesData sales, _) => sales.name,
-                                  yValueMapper: (SalesData sales, _) => sales.right,
+                                      sales.right1.toString() +
+                                      " (" +
+                                      sales.right.toString() +
+                                      "%" +
+                                      ") ",
+                                  xValueMapper: (SalesData sales, _) =>
+                                      sales.name,
+                                  yValueMapper: (SalesData sales, _) =>
+                                      sales.right,
                                   pointColorMapper: (SalesData sales, _) =>
                                       Color(0xff57E56E),
                                   width: 0.5,
@@ -446,11 +460,18 @@ class _SettingsState extends State<OverAllDetails> {
                               StackedBar100Series<SalesData, String>(
                                   dataSource: chartData,
                                   dataLabelSettings: DataLabelSettings(
-                                      isVisible: true, showCumulativeValues: true),
+                                      isVisible: true,
+                                      showCumulativeValues: true),
                                   dataLabelMapper: (SalesData sales, _) =>
-                                      sales.wrong1.toString()+ " ("+sales.wrong.toString()+"%"+") ",
-                                  xValueMapper: (SalesData sales, _) => sales.name,
-                                  yValueMapper: (SalesData sales, _) => sales.wrong,
+                                      sales.wrong1.toString() +
+                                      " (" +
+                                      sales.wrong.toString() +
+                                      "%" +
+                                      ") ",
+                                  xValueMapper: (SalesData sales, _) =>
+                                      sales.name,
+                                  yValueMapper: (SalesData sales, _) =>
+                                      sales.wrong,
                                   pointColorMapper: (SalesData sales, _) =>
                                       Color(0xffFF3E3E),
                                   width: 0.5,
@@ -484,12 +505,14 @@ class _SettingsState extends State<OverAllDetails> {
                               bottomLeft: const Radius.circular(20.0),
                               bottomRight: const Radius.circular(20.0),
                               topRight: const Radius.circular(20.0))),
-                      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
                       child: Column(children: [
                         Container(
                           child: Text(
-                              "Question Type Wise Analysis (${snapshot.data['question_type_wise'][0]['questiontype_name'].toString()})",
+                              "Question Type Wise Analysis (${jsonDecode(snapshot.data.toString())['question_type_wise'][0]['questiontype_name'].toString()})",
                               style: normalText6),
                         ),
                         SizedBox(
@@ -504,29 +527,41 @@ class _SettingsState extends State<OverAllDetails> {
                               StackedColumnSeries<ChartData, String>(
                                   groupName: 'Group A',
                                   dataLabelSettings: DataLabelSettings(
-                                      isVisible: true, showCumulativeValues: true),
+                                      isVisible: true,
+                                      showCumulativeValues: true),
                                   dataLabelMapper: (ChartData sales, _) =>
-                                      sales.right1.toString()+ " ("+sales.right.toString()+"%"+") ",
-                                  enableTooltip:true,
+                                      sales.right1.toString() +
+                                      " (" +
+                                      sales.right.toString() +
+                                      "%" +
+                                      ") ",
+                                  enableTooltip: true,
                                   dataSource: salesData,
                                   width: 0.5,
                                   pointColorMapper: (ChartData sales, _) =>
                                       Color(0xff017EFF),
-                                  xValueMapper: (ChartData sales, _) => sales.name,
+                                  xValueMapper: (ChartData sales, _) =>
+                                      sales.name,
                                   yValueMapper: (ChartData sales, _) =>
                                       sales.right),
                               StackedColumnSeries<ChartData, String>(
                                   groupName: 'Group B',
                                   dataLabelSettings: DataLabelSettings(
-                                      isVisible: true, showCumulativeValues: true),
+                                      isVisible: true,
+                                      showCumulativeValues: true),
                                   dataLabelMapper: (ChartData sales, _) =>
-                                      sales.wrong1.toString()+ " ("+sales.wrong.toString()+"%"+") ",
-                                  enableTooltip:true,
+                                      sales.wrong1.toString() +
+                                      " (" +
+                                      sales.wrong.toString() +
+                                      "%" +
+                                      ") ",
+                                  enableTooltip: true,
                                   dataSource: salesData,
                                   width: 0.5,
                                   pointColorMapper: (ChartData sales, _) =>
                                       Color(0xffFF317B),
-                                  xValueMapper: (ChartData sales, _) => sales.name,
+                                  xValueMapper: (ChartData sales, _) =>
+                                      sales.name,
                                   yValueMapper: (ChartData sales, _) =>
                                       sales.wrong),
                             ])),
@@ -579,8 +614,8 @@ class _SettingsState extends State<OverAllDetails> {
                                 },
                                 children: [
                                   TableRow(
-                                      decoration:
-                                          BoxDecoration(color: Color(0xff017EFF)),
+                                      decoration: BoxDecoration(
+                                          color: Color(0xff017EFF)),
                                       children: [
                                         Container(
                                             padding: EdgeInsets.only(
@@ -647,10 +682,14 @@ class _SettingsState extends State<OverAllDetails> {
                                   3: FlexColumnWidth(100.0),
                                 },
                                 children: List.generate(
-                                    snapshot.data['topic_wise_array'].length,
+                                    jsonDecode(snapshot.data.toString())[
+                                            'topic_wise_array']
+                                        .length,
                                     (index) => _getDataRow1(
-                                        snapshot.data['topic_wise_array'][index],
-                                        snapshot.data['topic_wise_array'])),
+                                        jsonDecode(snapshot.data.toString())[
+                                            'topic_wise_array'][index],
+                                        jsonDecode(snapshot.data.toString())[
+                                            'topic_wise_array'])),
                               ),
                             ),
                             Container(
@@ -697,7 +736,8 @@ class _SettingsState extends State<OverAllDetails> {
                                                 bottom: 8),
                                             alignment: Alignment.center,
                                             child: AutoSizeText(
-                                                snapshot.data[
+                                                jsonDecode(snapshot.data
+                                                            .toString())[
                                                         'total_typewrong_question']
                                                     .toString(),
                                                 textAlign: TextAlign.center,
@@ -709,7 +749,8 @@ class _SettingsState extends State<OverAllDetails> {
                                             padding: EdgeInsets.all(5),
                                             alignment: Alignment.center,
                                             child: AutoSizeText(
-                                                snapshot.data[
+                                                jsonDecode(snapshot.data
+                                                            .toString())[
                                                         'total_typeright_question']
                                                     .toString(),
                                                 textAlign: TextAlign.center,
@@ -725,9 +766,11 @@ class _SettingsState extends State<OverAllDetails> {
                                                 bottom: 8),
                                             alignment: Alignment.center,
                                             child: AutoSizeText(
-                                                (snapshot.data[
+                                                (jsonDecode(snapshot.data
+                                                                .toString())[
                                                             'total_typewrong_question'] +
-                                                        snapshot.data[
+                                                        jsonDecode(snapshot.data
+                                                                .toString())[
                                                             'total_typeright_question'])
                                                     .toString(),
                                                 textAlign: TextAlign.center,
@@ -760,7 +803,6 @@ class _SettingsState extends State<OverAllDetails> {
                         ),
                       ]),
                     ),
-
                   ],
                 ),
               ),
@@ -771,20 +813,21 @@ class _SettingsState extends State<OverAllDetails> {
         } else {
           return Center(
               child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  child: SpinKitFadingCube(
-                    itemBuilder: (_, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index.isEven ? Color(0xff017EFF) :Color(0xffFFC700),
-                        ),
-                      );
-                    },
-                    size: 30.0,
-                  ),
-                ),
-              ));
+            alignment: Alignment.center,
+            child: Container(
+              child: SpinKitFadingCube(
+                itemBuilder: (_, int index) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color:
+                          index.isEven ? Color(0xff017EFF) : Color(0xffFFC700),
+                    ),
+                  );
+                },
+                size: 30.0,
+              ),
+            ),
+          ));
         }
       },
     );
@@ -818,15 +861,14 @@ class _SettingsState extends State<OverAllDetails> {
       ),
     );
   }
+
   final GlobalKey _key = GlobalKey();
   void _takeScreenshot() async {
-
     RenderRepaintBoundary boundary =
-    _key.currentContext.findRenderObject() as RenderRepaintBoundary;
+        _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
     ui.Image image = await boundary.toImage();
-    ByteData byteData = await image.toByteData(
-        format: ui.ImageByteFormat.png);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       Uint8List pngBytes = byteData.buffer.asUint8List();
 
@@ -838,6 +880,7 @@ class _SettingsState extends State<OverAllDetails> {
       Fluttertoast.showToast(msg: "Save Successfully");
     }
   }
+
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
@@ -876,18 +919,18 @@ class _SettingsState extends State<OverAllDetails> {
           ),
           actions: <Widget>[
             InkWell(
-              onTap: (){
-
+              onTap: () {
                 _takeScreenshot();
-
-
               },
               child: Align(
                 alignment: Alignment.center,
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 30,
-                  child: Icon(Icons.download,color:Color(0xff2E2A4A) ,),
+                  child: Icon(
+                    Icons.download,
+                    color: Color(0xff2E2A4A),
+                  ),
                 ),
               ),
             ),
@@ -899,10 +942,10 @@ class _SettingsState extends State<OverAllDetails> {
         ),
         body: Container(
           color: Color(0xff2E2A4A),
-          child:  Container(
-              padding: EdgeInsets.only(bottom: 5),
-              child: chapterList(deviceSize),
-            ),
+          child: Container(
+            padding: EdgeInsets.only(bottom: 5),
+            child: chapterList(deviceSize),
+          ),
         ),
       ),
     );

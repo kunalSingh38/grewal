@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+
 import 'dart:async';
 import 'dart:io';
 // import 'package:facebook_app_events/facebook_app_events.dart';
@@ -73,7 +75,7 @@ import 'package:grewal/screens/view_performance_new.dart';
 import 'package:grewal/screens/view_test.dart';
 import 'package:grewal/screens/work_flow.dart';
 import 'package:grewal/services/Timer_Data.dart';
-import 'package:package_info/package_info.dart';
+// import 'package:package_info/package_info.dart';
 
 import 'package:page_transition/page_transition.dart';
 
@@ -105,12 +107,12 @@ Future<void> main() async {
 }
 
 class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
+  // @override
+  // HttpClient createHttpClient(SecurityContext context) {
+  //   return super.createHttpClient(context)
+  //     ..badCertificateCallback =
+  //         (X509Certificate cert, String host, int port) => true;
+  // }
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -128,7 +130,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _loggedIn = false;
   int id = 0;
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
   // static final facebookAppEvents = FacebookAppEvents();
@@ -221,9 +223,11 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/reset-password':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
-                  child: RestPassword(argument: obj),
+                  child: RestPassword(
+                    argument: obj,
+                  ),
                   type: PageTransitionType.leftToRight,
                   settings: settings,
                 );
@@ -236,7 +240,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/get-otp':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: GetOTP(),
                   type: PageTransitionType.leftToRight,
@@ -245,15 +249,17 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/otp-verification':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
-                  child: OTPVerification(argument: obj),
+                  child: OTPVerification(
+                    argument: obj,
+                  ),
                   type: PageTransitionType.leftToRight,
                   settings: settings,
                 );
                 break;
               case '/sign-otp-verification':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: SignOTPVerification(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -262,7 +268,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/plan':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: MyPlan(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -270,7 +276,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/sign-up':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: SignIn(),
                   type: PageTransitionType.leftToRight,
@@ -315,7 +321,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/chapter-overview':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ChapterOverview(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -323,7 +329,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/create-mcq':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: CreateMCQ(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -331,7 +337,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/create-mcq-new':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: CreateMCQ2(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -339,7 +345,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/create-ticket':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: CreateTicket(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -347,7 +353,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/test-list':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: TestList(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -355,7 +361,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/ticket-list':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: TicketList(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -363,7 +369,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/ticket-details':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: TicketDetails(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -371,7 +377,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/test-correct-new':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: StartMCQ2(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -379,7 +385,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/test-correct':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: StartMCQ(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -387,7 +393,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/view-test-new':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ViewMCQ2(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -395,7 +401,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/view-performance-new':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ViewPerformance2(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -403,7 +409,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/test-correct':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: StartMCQ(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -411,7 +417,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/view-test':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ViewMCQ(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -419,7 +425,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/view-performance':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ViewPerformance(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -427,7 +433,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/open-pdf':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: Viewer(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -435,7 +441,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/sample':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ViewPerformanceChart(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -444,7 +450,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/chapter-select':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ChapterListScreen(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -452,7 +458,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/support-list':
-                //  var obj = settings.arguments;
+                //  var obj = settings.arguments as Object;
                 return PageTransition(
                   child: SupportList("yes"),
                   type: PageTransitionType.leftToRight,
@@ -461,7 +467,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/support-detail':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: SupportOverview(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -470,7 +476,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/add-support':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: AddSupport(),
                   type: PageTransitionType.leftToRight,
@@ -486,7 +492,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/overall-performance-details':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: OverAllDetails(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -494,7 +500,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/videos':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: VideosList(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -502,7 +508,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/videos-detail':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: VideoDetail(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -524,7 +530,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/t-c':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: TAndC(),
                   type: PageTransitionType.leftToRight,
@@ -533,7 +539,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/t-c':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: TAndC(),
                   type: PageTransitionType.leftToRight,
@@ -541,7 +547,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/mts':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: MTS(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -549,7 +555,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/model-dash':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ModelDash(),
                   type: PageTransitionType.leftToRight,
@@ -558,7 +564,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/notifications':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: NotificationsPage(),
                   type: PageTransitionType.leftToRight,
@@ -567,7 +573,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/work-flow':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: AppFlow(),
                   type: PageTransitionType.leftToRight,
@@ -575,7 +581,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/institute-test-list':
-                //var obj = settings.arguments;
+                //var obj = settings.arguments as Object;
                 return PageTransition(
                   child: InstituteTestList(),
                   type: PageTransitionType.leftToRight,
@@ -590,7 +596,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/section-list':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: SectionList(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -599,7 +605,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/start-test-new':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: StartOlyMCQNEW(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -607,7 +613,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/review-test':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ReViewMCQ(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -616,7 +622,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/project':
-                // var obj = settings.arguments;
+                // var obj = settings.arguments as Object;
                 return PageTransition(
                   child: Project(),
                   type: PageTransitionType.leftToRight,
@@ -624,7 +630,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/mtp-list':
-                // var obj = settings.arguments;
+                // var obj = settings.arguments as Object;
                 return PageTransition(
                   child: MTPList(),
                   type: PageTransitionType.leftToRight,
@@ -632,7 +638,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/answer-list':
-                // var obj = settings.arguments;
+                // var obj = settings.arguments as Object;
                 return PageTransition(
                   child: AnswerList(),
                   type: PageTransitionType.leftToRight,
@@ -641,7 +647,7 @@ class _MyAppState extends State<MyApp> {
                 break;
 
               case '/olympiad-performance':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: OlympiadViewPerformance(argument: obj),
                   type: PageTransitionType.leftToRight,
@@ -665,7 +671,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/mcq-level-testing':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: MCQLevelTest(
                     argument: obj,
@@ -675,7 +681,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/subjective_test':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: StartSubjectiveTest(
                     argument: obj,
@@ -685,7 +691,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/create-subjective':
-                // var obj = settings.arguments;
+                // var obj = settings.arguments as Object;
                 return PageTransition(
                   child: CreateSubjective(
                       // argument: obj,
@@ -695,7 +701,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/start-subjective-test':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: StartSubjective(
                     argument: obj,
@@ -705,7 +711,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/start-subjective-list':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: SubjectiveTestListGiven(
                     argument: obj,
@@ -716,7 +722,13 @@ class _MyAppState extends State<MyApp> {
                 break;
               case '/subject-list':
                 return PageTransition(
-                  child: SubjectList(),
+                  child: SubjectList(
+                      email_id: "",
+                      mobile: '',
+                      order_id: '',
+                      payment: '',
+                      total_test: '',
+                      user_id: ''),
                   type: PageTransitionType.leftToRight,
                   settings: settings,
                 );
@@ -729,7 +741,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/test-series':
-                var obj = settings.arguments;
+                var obj = settings.arguments as Object;
                 return PageTransition(
                   child: TestSeries(
                     argument: obj,
@@ -739,7 +751,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/model-test-paper-new':
-                // var obj = settings.arguments;
+                // var obj = settings.arguments as Object;
                 return PageTransition(
                   child: ModelTestPaperNewList(),
                   type: PageTransitionType.leftToRight,
@@ -747,7 +759,7 @@ class _MyAppState extends State<MyApp> {
                 );
                 break;
               case '/videos-link':
-                // var obj = settings.arguments;
+                // var obj = settings.arguments as Object;
                 return PageTransition(
                   child: VideosLink(),
                   type: PageTransitionType.leftToRight,
@@ -769,7 +781,7 @@ class _MyAppState extends State<MyApp> {
     // return FutureBuilder(
     // future: facebookAppEvents.getAnonymousId(),
     // builder: (context, snapshot) {
-    //   final id = snapshot.data ?? '???';
+    //   final id = jsonDecode(snapshot.data.toString()) ?? '???';
     //   print('Anonymous ID: $id');
     return SplashScreen();
     // },

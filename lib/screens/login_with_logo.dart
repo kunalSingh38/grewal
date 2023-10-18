@@ -10,7 +10,7 @@ import 'package:grewal/components/general.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:package_info/package_info.dart';
+// import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
@@ -44,20 +44,20 @@ class _LoginWithLogoState extends State<LoginWithLogo> {
   bool _isHidden = true;
   bool _autoValidate = false;
   String fcmToken = "";
-  Stream<String> _tokenStream;
-  StreamSubscription iosSubscription;
+  Stream<String>? _tokenStream;
+  StreamSubscription? iosSubscription;
   String appVersion = "";
   @override
   void initState() {
     super.initState();
-    getVersion().then((value) {
-      setState(() {
-        appVersion = value;
-      });
-    });
-    FirebaseMessaging.instance.getToken().then(setToken);
+    // getVersion().then((value) {
+    //   setState(() {
+    //     appVersion = value;
+    //   });
+    // });
+    FirebaseMessaging.instance.getToken();
     _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
-    _tokenStream.listen(setToken);
+    _tokenStream!.listen(setToken);
   }
 
   void setToken(String token) {
@@ -67,10 +67,10 @@ class _LoginWithLogoState extends State<LoginWithLogo> {
     });
   }
 
-  Future<String> getVersion() async {
-    PackageInfo info = await PackageInfo.fromPlatform();
-    return info.version;
-  }
+  // Future<String> getVersion() async {
+  //   // PackageInfo info = await PackageInfo.fromPlatform();
+  //   return info.version;
+  // }
 
   Widget _loginContent1() {
     return Container(
@@ -86,7 +86,7 @@ class _LoginWithLogoState extends State<LoginWithLogo> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter Mobile Number';
                   }
                   return null;
@@ -135,7 +135,7 @@ class _LoginWithLogoState extends State<LoginWithLogo> {
                 cursorColor: Color(0xff000000),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Please enter password';
                   }
                   return null;
@@ -222,8 +222,8 @@ class _LoginWithLogoState extends State<LoginWithLogo> {
                 // textColor: Colors.white,
                 // color: Color(0xff017EFF),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     setState(() {
                       _loading = true;
                     });
